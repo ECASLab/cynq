@@ -6,7 +6,7 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
-#include "include/cynq/cynq.hpp"
+#include "cynq/cynq.hpp"
 
 int main(){
   return 0;
