@@ -20,14 +20,18 @@ add_global_arguments(
 #############################
 ## Dependencies definition ##
 #############################
-
-# options
-
-build_tests = get_option('build_tests')
+build_tests = get_option('build-tests')
 
 # directories
-projectinc = include_directories('.',
-'include')
+projectinc = include_directories('.', 'include')
+
+# Install pre-commit hooks
+developer_mode = get_option('developer-mode')
+if developer_mode
+  pre_commit = find_program('pre-commit', required: true, native: true)
+  run_command(pre_commit, 'install', check: false)
+  run_command(pre_commit, 'install', '--hook-type', 'commit-msg', check: false)
+endif
 
 subdir('examples')
 
