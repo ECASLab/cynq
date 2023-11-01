@@ -8,6 +8,4 @@
  */
 #pragma once
 
-namespace cynq {
-
-}
+namespace cynq {}
