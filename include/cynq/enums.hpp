@@ -8,36 +8,85 @@
  */
 #pragma once
 
+namespace cynq {
+/**
+ * @brief HardwareArchitecture
+ * Defines the architecture of the Create method. This is used by classes
+ * that implement the IHardware interface.
+ */
 enum class HardwareArchitecture {
-	UltraScale
+  /** For ultra scale xilinx devices */
+  UltraScale
 }
 
+/**
+ * @brief SyncType
+ * Declares the orientation of data synchronization in the Sync method.
+ * This is used by any class that implements the IMemory interface.
+ */
 enum class SyncType {
-	HostToDevice,
-	DeviceToHost,
+  /** Synchronization from host (CPU) to the device (FPGA) */
+  HostToDevice,
+  /** Synchronization from device (FPGA) to the host (CPU) */
+  DeviceToHost,
 }
 
+/**
+ * @brief StartMode
+ * Mode for the Start method of IAccelerator. This is used by any class
+ * that implements the IAcelerator interface.
+ */
 enum class StartMode {
-	Once,
-	Continuos
+  /** Mode is Once at initialiization */
+  Once,
+  /** Mode is Continuos at initialization */
+  Continuos
 }
 
+/**
+ * @brief ExecutionType
+ * Style of execution for the API. This is used by any class that implements
+ * the IDataMover interface.
+ */
 enum ExecutionType {
-	Sync,
-	Async
+  /* Syncrhonous style of execution for IDataMover **/
+  Sync,
+  /* Asyncrhonous style of execution for IDataMover **/
+  Async
 }
 
+/**
+ * @brief DeviceStatus
+ * Possible state flags used to determine state of the device,
+ * these are used by any class that implements the IAccelerator
+ * and IDataMover interfaces as the return of GetStatus().
+ */
 enum class DeviceStatus {
-	Unkown,
-	Done,
-	Idle,
-	Running,
-	Error
+  /** Uknown status for IAccelerator **/
+  Unknown,
+  /** Done status for IAccelerator **/
+  Done,
+  /** Idle status for IAccelerator **/
+  Idle,
+  /** Running status for IAccelerator **/
+  Running,
+  /** Error status for IAccelerator **/
+  Error
 }
 
+/**
+ * @brief MemoryType
+ * Types of memory for a IDataMover. This is used by any class that implements
+ * IDataMover in the GetBuffer() method.
+ */
 enum class MemoryType {
-	Dual,
-	Cacheable,
-	Host,
-	Device
+  /** GetBuffer receives dual as memory type. */
+  Dual,
+  /** GetBuffer receives cacheable as memory type. */
+  Cacheable,
+  /** GetBuffer receives host as memory type. */
+  Host,
+  /** GetBuffer receives device as memory type. */
+  Device
 }
+}  // namespace cynq
