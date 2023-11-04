@@ -1,0 +1,50 @@
+/*
+ * See LICENSE for more information about licensing
+ *
+ * Copyright 2023
+ * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
+ *         Diego Arturo Avila Torres <diego.avila@uned.cr>
+ *
+ */
+#pragma once
+
+#include <string>
+
+/**
+ * @brief Structure to define the return characteristics of each function
+ *
+ * It includes a code and a description that works to track errors
+ */
+struct Status {
+  /** Error codes */
+  enum {
+    OK = 0,            /** OK Status */
+    FILE_ERROR,        /** File error that can be read or write */
+    INVALID_PARAMETER, /** Invalid argument or parameter. i.e. nullptr */
+    /** Incompatible parameter that it is not supported
+                              by a function */
+    INCOMPATIBLE_PARAMETER,
+    NOT_IMPLEMENTED, /** Not implemented error */
+  };
+
+  int code;        /** Code of the error */
+  std::string msg; /** Description of the error */
+
+  /**
+   * @brief Construct a new Status object
+   *
+   * It default the error to be 0 or OK
+   */
+  Status() noexcept : code{0} {}
+
+  /**
+   * @brief Construct a new Status object
+   *
+   * It defines the constructor to define a custom code and description
+   *
+   * @param code code of the error
+   * @param msg description
+   */
+  Status(const int code, const std::string &msg) noexcept
+      : code{code}, msg{msg} {}
+};
