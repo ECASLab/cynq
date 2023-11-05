@@ -10,6 +10,7 @@
 
 #include <string>
 
+namespace cynq {
 /**
  * @brief Structure to define the return characteristics of each function
  *
@@ -48,3 +49,4 @@ struct Status {
   Status(const int code, const std::string &msg) noexcept
       : code{code}, msg{msg} {}
 };
+}  // namespace cynq

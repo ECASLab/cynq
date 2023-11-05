@@ -13,14 +13,52 @@
 #include "cynq/status.hpp"
 
 namespace cynq {
+/**
+ * @brief Interface for standardising the API of Memory devices:
+ * - no inheritors -
+ *
+ */
 class IMemory {
  public:
-  virtual ~IMemory() {}
-  virtual Status Sync(const SyncType type);
-  virtual size_t Size();
+  /**
+   * @brief ~IMemory destructor method
+   * Destroy the IMemory object
+   */
+  virtual ~IMemory() = default;
+  /**
+   * @brief Sync method
+   * Synchronizes the memory in terms of transactions.
+   *
+   * @param type The orientation of the Synchronizaton this can be host to host
+   * to device (HostToDevice) or device to host (DeviceToHost).
+   *
+   * @return Status
+   */
+  virtual Status Sync(const SyncType type) = 0;
+  /**
+   * @brief Size method
+   * Gives the value for the memory size in bytes.
+   *
+   * @return size_t
+   */
+  virtual size_t Size() = 0;
 
  protected:
-  virtual std::shared_ptr<uint64_t> GetHostAddress();
-  virtual std::shared_ptr<uint64_t> GetDeviceAddress();
-}
+  /**
+   * @brief GetHostAddress method
+   * Get the Address that belongs to the host.
+   * [Reference] shared memory pointer with reference counting.
+   *
+   * @return std::shared_ptr<uint8_t>
+   */
+  virtual std::shared_ptr<uint8_t> GetHostAddress() = 0;
+  /**
+   * @brief GetDeviceAddress method
+   * Get the Address that belongs to the device.
+   * [Reference] shared memory pointer with reference counting.
+   *
+   * @return std::shared_ptr<uint8_t>
+   */
+  virtual std::shared_ptr<uint8_t> GetDeviceAddress() = 0;
+};
 }  // namespace cynq
