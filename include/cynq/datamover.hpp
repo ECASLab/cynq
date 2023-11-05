@@ -7,7 +7,20 @@
  *
  */
 #pragma once
+#include <memory>
+
+#include "cynq/enums.hpp"
+#include "cynq/status.hpp"
 
 namespace cynq {
-class IDataMover {}
+class IDataMover {
+ public:
+  virtual ~IDataMover() {}
+  virtual std::shared_ptr<IMemory> GetBuffer(const size_t size,
+                                             const MemoryType type);
+  virtual Status Upload(const std::shared_ptr<IMemory> mem, const size_t size,
+                        const ExecutionType exetype);
+  virtual Status Sync();
+  virtual DeviceStatus GetStatus();
+}
 }  // namespace cynq

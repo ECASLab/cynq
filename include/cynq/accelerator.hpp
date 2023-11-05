@@ -7,7 +7,21 @@
  *
  */
 #pragma once
+#include "cynq/enums.hpp"
+#include "cynq/status.hpp"
 
 namespace cynq {
-class IAccelerator {}
+class IAccelerator {
+ public:
+  virtual ~IAccelerator() {}
+  virtual Status Start(const StartMode mode);
+  virtual Status Stop();
+  virtual DeviceStatus GetStatus();
+
+ protected:
+  virtual Status WriteRegister(const uint64_t address, uint64_t *data,
+                               const size_t size);
+  virtual Status ReadRegister(const uint64_t address, uint64_t *data,
+                              const size_t size);
+}
 }  // namespace cynq
