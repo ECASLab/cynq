@@ -25,7 +25,8 @@ class IHardware {
  public:
   /**
    * @brief ~IHardware destructor method
-   * Destroy the IHardware object
+   * Destroy the IHardware object.
+   *
    */
   virtual ~IHardware() = default;
   /**
@@ -66,7 +67,7 @@ class IHardware {
   /**
    * @brief Create method
    * Factory method to create a hardware-specific subclasses for accelerators
-   * and data movers
+   * and data movers.
    *
    * @example
    * - no implementations -

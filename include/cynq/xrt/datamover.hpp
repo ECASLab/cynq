@@ -23,6 +23,7 @@ namespace cynq {
  */
 class XRTDataMover : public IDataMover {
  public:
+  XRTDataMover() {}
   /**
    * @brief ~XRTDatamover destructor method
    * Destroy the XRTDatamover object.

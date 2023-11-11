@@ -25,6 +25,7 @@ namespace cynq {
  */
 class UltraScale : public IHardware {
  public:
+  UltraScale() {}
   /**
    * @brief ~UltraScale destructor method
    * Destroy the UltraScale object.

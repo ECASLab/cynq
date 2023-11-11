@@ -7,6 +7,8 @@
  *
  */
 #pragma once
+#include <memory>
+
 #include "cynq/enums.hpp"
 #include "cynq/status.hpp"
 
@@ -19,9 +21,16 @@ class IAccelerator {
  public:
   /**
    * @brief ~IAccelerator destructor method
-   * Destroy the IAccelerator object
+   * Destroy the IAccelerator object.
+   *
    */
   virtual ~IAccelerator() = default;
+  /**
+   * @brief Type
+   * Type of runtime supported by the IAccelerator.
+   *
+   */
+  enum Type { None = 0, XRT };
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
@@ -51,6 +60,25 @@ class IAccelerator {
    * @return DeviceStatus
    */
   virtual DeviceStatus GetStatus() = 0;
+  /**
+   * @brief Create method
+   * Factory method used for creating specific subclasses of IAccelerator.
+   *
+   * @example
+   * - no implementations -
+   *
+   * @param impl
+   * Used for establishing if the object is dependent on a runtime, use None if
+   * this is not the case.
+   *
+   * @param addr
+   * A 64 bit unsigned integer establishing the address from which the address
+   * space of the accelerator starts.
+   *
+   * @return std::shared_ptr<IAccelerator>
+   */
+  static std::shared_ptr<IAccelerator> Create(IAccelerator::Type impl,
+                                              const uint64_t addr);
 
  protected:
   /**

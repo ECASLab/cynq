@@ -21,6 +21,7 @@ class XRTMemory : public IMemory {
    *
    */
  public:
+  XRTMemory() {}
   /**
    * @brief ~XRTMemory destructor method
    * Destroy the XRTMemory object.
@@ -45,23 +46,19 @@ class XRTMemory : public IMemory {
    */
   size_t Size() override;
   /**
-   * @brief HostAddress
+   * @brief HostAddress method
    * Gets the HostAddres pointer mapping the memory object for input or output.
    *
-   *
-   * @tparam T
-   * @return std::shared_ptr<T>
+   * @return std::shared_ptr<uint64_t>
    */
-  template <Typename T>
-  std::shared_ptr<T> HostAddress();
+  std::shared_ptr<uint64_t> HostAddress();
   /**
-   * @brief
+   * @brief DeviceAddress method
+   * Gets the DeviceAddres pointer mapping the memory object from the host.
    *
-   * @tparam T
-   * @return std::shared_ptr<T>
+   * @return std::shared_ptr<uint64_t>
    */
-  template <Typename T>
-  std::shared_ptr<T> DeviceAddress();
+  std::shared_ptr<uint64_t> DeviceAddress();
 
  protected:
   /**

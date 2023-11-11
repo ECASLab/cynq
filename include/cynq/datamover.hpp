@@ -17,16 +17,23 @@ namespace cynq {
 /**
  * @brief Interface for standardising the API of DataMover for a specific
  * device:
- * - no inheritors -
+ * XRTDataMover
  *
  */
 class IDataMover {
  public:
   /**
    * @brief ~IDataMover destructor method
-   * Destroy the IDataMover object
+   * Destroy the IDataMover object.
+   *
    */
   virtual ~IDataMover() = default;
+  /**
+   * @brief Type
+   * Type of runtime supported by the IDataMover.
+   *
+   */
+  enum Type { None = 0, XRT };
   /**
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,
@@ -95,5 +102,24 @@ class IDataMover {
    * @return DeviceStatus
    */
   virtual DeviceStatus GetStatus() = 0;
+  /**
+   * @brief Create method
+   * Factory method used for creating specific subclasses of IDataMover.
+   *
+   * @example
+   * - no implementations -
+   *
+   * @param impl
+   * Used for establishin if the object is dependent on a runtime, use None if
+   * this is not the case.
+   *
+   * @param addr
+   * A 64 bit unsigned integer representing the beginning address of the
+   * IDataMover.
+   *
+   * @return std::shared_ptr<IDataMover>
+   */
+  static std::shared_ptr<IDataMover> Create(IDataMover::Type impl,
+                                            const uint64_t addr);
 };
 }  // namespace cynq

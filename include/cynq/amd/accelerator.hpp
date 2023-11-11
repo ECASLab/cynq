@@ -18,6 +18,7 @@ namespace cynq {
  *
  */
 class AmdAccelerator : public IAccelerator {
+  AmdAccelerator() {}
   /**
    * @brief ~AmdAccelerator destructor method
    * Destroy the AmdAccelerator object
@@ -56,9 +57,7 @@ class AmdAccelerator : public IAccelerator {
    */
   DeviceStatus GetStatus() override;
   /**
-   * @brief
-   *
-   * @tparam T
+   * @brief Write method
    *
    * @param address
    * Address of the accelerator, this is a 64 bit unsigned integer.
@@ -74,12 +73,9 @@ class AmdAccelerator : public IAccelerator {
    *
    * @return Status
    */
-  template <Typename T>
-  Status Write(const uint64_t address, T *data, const size_t size);
+  Status Write(const uint64_t address, const uint8_t *data, const size_t size);
   /**
-   * @brief
-   *
-   * @tparam T
+   * @brief Read method
    *
    * @param address
    * Address of the accelerator, this is a 64 bit unsigned integer.
@@ -95,8 +91,7 @@ class AmdAccelerator : public IAccelerator {
    *
    * @return Status
    */
-  template <Typename T>
-  Status Read(const uint64_t address, T *data, const size_t size);
+  Status Read(const uint64_t address, const uint8_t *data, const size_t size);
 
  protected:
   /**
