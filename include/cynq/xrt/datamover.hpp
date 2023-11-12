@@ -47,10 +47,10 @@ class XRTDataMover : public IDataMover {
    * Host (Memory from the host)
    * Device (Memory from the device to be mapped)
    *
-   * @return std::shared_ptr<XRTMemory>
+   * @return std::shared_ptr<IMemory>
    */
-  std::shared_ptr<XRTMemory> GetBuffer(const size_t size,
-                                       const MemoryType type) override;
+  std::shared_ptr<IMemory> GetBuffer(const size_t size,
+                                     const MemoryType type) override;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.
@@ -67,12 +67,12 @@ class XRTDataMover : public IDataMover {
    *
    * @return Status
    */
-  Status Upload(const std::shared_ptr<XRTMemory> mem, const size_t size,
+  Status Upload(const std::shared_ptr<IMemory> mem, const size_t size,
                 const ExecutionType exetype) override;
   /**
    * @brief Download method
    *
-   * @param mem XRTMemory instance to download.
+   * @param mem IMemory instance to download.
    *
    * @param size Size in bytes of data being downloaded from the memory device
    * by making use of the buffer.
@@ -82,7 +82,7 @@ class XRTDataMover : public IDataMover {
    *
    * @return Status
    */
-  Status Download(const std::shared_ptr<XRTMemory> mem, const size_t size,
+  Status Download(const std::shared_ptr<IMemory> mem, const size_t size,
                   const ExecutionType exetype) override;
   /**
    * @brief Sync method
@@ -98,5 +98,5 @@ class XRTDataMover : public IDataMover {
    * @return DeviceStatus
    */
   DeviceStatus GetStatus() override;
-}
+};
 }  // namespace cynq

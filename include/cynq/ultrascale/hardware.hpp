@@ -40,29 +40,28 @@ class UltraScale : public IHardware {
   Status Reset() override;
   /**
    * @brief GetDataMover method
-   * Used for accessing the XRTDatamover instance of the UltraScale object.
+   * Used for accessing the IDataMover instance of the UltraScale object.
    *
    * @param address a unsigned integer of 64 bits representing an address.
    *
-   * @return std::shared_ptr<XRTDataMover>
-   * Returns an XRTDataMover pointer with reference counting. It should be
+   * @return std::shared_ptr<IDataMover>
+   * Returns an IDataMover pointer with reference counting. It should be
    * thread-safe.
    *
    */
-  std::shared_ptr<XRTDataMover> GetDataMover(const uint64_t address) override;
+  std::shared_ptr<IDataMover> GetDataMover(const uint64_t address) override;
   /**
    * @brief GetAccelerator method
-   * Instance of AmdAccelerator inheritors separating the hardware
+   * Instance of IAccelerator inheritors separating the hardware
    * logic from the specific logic of the accelerator.
    *
    * @param address a unsigned integer of 64 bits representing an address.
    *
-   * @return std::shared_ptr<AmdAccelerator>
-   * Returns an AmdAccelerator pointer with reference counting. It should be
+   * @return std::shared_ptr<IAccelerator>
+   * Returns an IAccelerator pointer with reference counting. It should be
    * thread-safe.
    *
    */
-  std::shared_ptr<AmdAccelerator> GetAccelerator(
-      const uint64_t address) override;
-}
+  std::shared_ptr<IAccelerator> GetAccelerator(const uint64_t address) override;
+};
 }  // namespace cynq

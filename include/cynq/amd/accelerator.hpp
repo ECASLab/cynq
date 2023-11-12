@@ -18,6 +18,7 @@ namespace cynq {
  *
  */
 class AmdAccelerator : public IAccelerator {
+ public:
   AmdAccelerator() {}
   /**
    * @brief ~AmdAccelerator destructor method
@@ -38,7 +39,6 @@ class AmdAccelerator : public IAccelerator {
    */
   Status Start(const StartMode mode) override;
 
- public:
   /**
    * @brief Stop method
    * This asynchronously turns off the accelerator by removing the autorestart
@@ -73,7 +73,7 @@ class AmdAccelerator : public IAccelerator {
    *
    * @return Status
    */
-  Status Write(const uint64_t address, const uint8_t *data, const size_t size);
+  Status Write(const uint64_t address, const uint8_t data, const size_t size);
   /**
    * @brief Read method
    *

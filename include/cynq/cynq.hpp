@@ -8,4 +8,9 @@
  */
 #pragma once
 
-namespace cynq {}
+namespace cynq {
+class IAccelerator;
+class IDataMover;
+class IHardware;
+class IMemory;
+}  // namespace cynq

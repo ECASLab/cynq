@@ -29,6 +29,7 @@ class IHardware {
    *
    */
   virtual ~IHardware() = default;
+  enum Type { None = 0, XRT };
   /**
    * @brief Reset method
    * Sets the IHardware instance to its initial state.

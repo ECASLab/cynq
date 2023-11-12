@@ -77,5 +77,5 @@ class XRTMemory : public IMemory {
    * @return std::shared_ptr<uint8_t>
    */
   std::shared_ptr<uint8_t> GetDeviceAddress() override;
-}
+};
 }  // namespace cynq
