@@ -7,9 +7,9 @@
  *
  */
 #pragma once
-#include "cynq/accelerator.hpp"
-#include "cynq/enums.hpp"
-#include "cynq/status.hpp"
+#include <cynq/accelerator.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/status.hpp>
 
 namespace cynq {
 /**
@@ -56,42 +56,6 @@ class AmdAccelerator : public IAccelerator {
    * @return DeviceStatus
    */
   DeviceStatus GetStatus() override;
-  /**
-   * @brief Write method
-   *
-   * @param address
-   * Address of the accelerator, this is a 64 bit unsigned integer.
-   *
-   * @param data
-   * Number of data units for this write operation, this is how many elements
-   * are present in the data mover being used as the inputs expected by the
-   * accelerator.
-   *
-   * @param size
-   * Size of the data units this is the size in bytes for the instances being
-   * written to the accelerator.
-   *
-   * @return Status
-   */
-  Status Write(const uint64_t address, const uint8_t data, const size_t size);
-  /**
-   * @brief Read method
-   *
-   * @param address
-   * Address of the accelerator, this is a 64 bit unsigned integer.
-   *
-   * @param data
-   * Number of data units for the read operations, this is how many elements are
-   * expected in the data mover being used as the expected output from the
-   * accelerator.
-   *
-   * @param size
-   * Size of the data units this is the size in bytes for the instances being
-   * written to the accelerator.
-   *
-   * @return Status
-   */
-  Status Read(const uint64_t address, const uint8_t *data, const size_t size);
 
  protected:
   /**
@@ -107,7 +71,7 @@ class AmdAccelerator : public IAccelerator {
    *
    * @return Status
    */
-  Status WriteRegister(const uint64_t address, uint8_t data,
+  Status WriteRegister(const uint64_t address, const uint8_t *data,
                        const size_t size) override;
   /**
    * @brief ReadRegister method

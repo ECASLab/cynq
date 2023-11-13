@@ -9,8 +9,8 @@
 #pragma once
 #include <memory>
 
-#include "cynq/enums.hpp"
-#include "cynq/status.hpp"
+#include <cynq/enums.hpp>
+#include <cynq/status.hpp>
 
 namespace cynq {
 /**
@@ -48,6 +48,17 @@ class IMemory {
    * @return size_t
    */
   virtual size_t Size() = 0;
+
+  template <typename T>
+  std::shared_ptr<T> HostAddress() {
+    return std::reinterpret_pointer_cast<T>(this->GetHostAddress());
+  }
+
+  template <typename T>
+  std::shared_ptr<T> DeviceAddress() {
+    return std::reinterpret_pointer_cast<T>(this->GetDeviceAddress());
+  }
+
   /**
    * @brief Create method
    * Factory method to create specific subclasses of IMemory.

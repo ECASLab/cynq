@@ -9,8 +9,8 @@
 #pragma once
 #include <memory>
 
-#include "cynq/enums.hpp"
-#include "cynq/status.hpp"
+#include <cynq/enums.hpp>
+#include <cynq/status.hpp>
 
 namespace cynq {
 /**
@@ -80,6 +80,18 @@ class IAccelerator {
   static std::shared_ptr<IAccelerator> Create(IAccelerator::Type impl,
                                               const uint64_t addr);
 
+  template <typename T>
+  Status Write(const uint64_t address, const T *data, const size_t elements) {
+    return this->WriteRegister(address, reinterpret_cast<const uint8_t *>(data),
+                               elements * sizeof(T));
+  }
+
+  template <typename T>
+  Status Read(const uint64_t address, T *data, const size_t elements) {
+    return this->ReadRegister(address, reinterpret_cast<uint8_t *>(data),
+                              elements * sizeof(T));
+  }
+
  protected:
   /**
    * @brief WriteRegister method
@@ -94,7 +106,7 @@ class IAccelerator {
    *
    * @return Status
    */
-  virtual Status WriteRegister(const uint64_t address, uint8_t data,
+  virtual Status WriteRegister(const uint64_t address, const uint8_t *data,
                                const size_t size) = 0;
   /**
    * @brief ReadRegister method

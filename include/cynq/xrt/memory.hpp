@@ -9,9 +9,9 @@
 #pragma once
 #include <memory>
 
-#include "cynq/enums.hpp"
-#include "cynq/memory.hpp"
-#include "cynq/status.hpp"
+#include <cynq/enums.hpp>
+#include <cynq/memory.hpp>
+#include <cynq/status.hpp>
 
 namespace cynq {
 class XRTMemory : public IMemory {
@@ -45,20 +45,6 @@ class XRTMemory : public IMemory {
    * @return size_t
    */
   size_t Size() override;
-  /**
-   * @brief HostAddress method
-   * Gets the HostAddres pointer mapping the memory object for input or output.
-   *
-   * @return std::shared_ptr<uint64_t>
-   */
-  std::shared_ptr<uint64_t> HostAddress();
-  /**
-   * @brief DeviceAddress method
-   * Gets the DeviceAddres pointer mapping the memory object from the host.
-   *
-   * @return std::shared_ptr<uint64_t>
-   */
-  std::shared_ptr<uint64_t> DeviceAddress();
 
  protected:
   /**
