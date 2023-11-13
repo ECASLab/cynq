@@ -6,37 +6,28 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
-#include "cynq/accelerator.hpp"
 
-#include "cynq/enums.hpp"
-#include "cynq/status.hpp"
+#include <cynq/amd/accelerator.hpp>
 
-using cynq::AmdAccelerator;
-using cynq::DeviceStatus;
-using cynq::Status;
+#include <cynq/accelerator.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/status.hpp>
 
-Status AmdAccelerator::Start(const StartMode mode) { return Status::OK; }
+namespace cynq {
+Status AmdAccelerator::Start(const StartMode /*mode*/) { return Status{}; }
 
-Status AmdAccelerator::Stop() { return Status::OK; }
+Status AmdAccelerator::Stop() { return Status{}; }
 
 DeviceStatus AmdAccelerator::GetStatus() { return DeviceStatus::Idle; }
 
-Status AmdAccelerator::Write(const uint64_t address, const uint8_t data,
-                             const size_t size) {
-  return Status::OK;
+Status AmdAccelerator::WriteRegister(const uint64_t /*address*/,
+                                     const uint8_t* /*data*/,
+                                     const size_t /*size*/) {
+  return Status{};
 }
 
-Status AmdAccelerator::Read(const uint64_t address, const uint8_t *data,
-                            const size_t size) {
-  return Status::OK;
+Status AmdAccelerator::ReadRegister(const uint64_t /*address*/,
+                                    uint8_t* /*data*/, const size_t /*size*/) {
+  return Status{};
 }
-
-Status AmdAccelerator::WriteRegister(const uint64_t address, uint8_t data,
-                                     const size_t size) {
-  return Status::OK;
-}
-
-Status AmdAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
-                                    const size_t size) {
-  return Status::OK;
-}
+}  // namespace cynq

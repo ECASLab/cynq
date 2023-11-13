@@ -6,18 +6,20 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
-#include "cynq/accelerator.hpp"
+#include <cynq/accelerator.hpp>
 
 #include <memory>
 
-#include "cynq/amd/accelerator.hpp"
+#include <cynq/amd/accelerator.hpp>
 
+namespace cynq {
 std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
-                                                   const uint64_t addr) {
+                                                   const uint64_t /*addr*/) {
   switch (impl) {
-    case impl::XRT:
+    case IAccelerator::Type::XRT:
       return std::make_shared<AmdAccelerator>();
     default:
       return nullptr;
   }
 }
+}  // namespace cynq
