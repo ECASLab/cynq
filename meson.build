@@ -25,6 +25,13 @@ build_tests = get_option('build-tests')
 # directories
 projectinc = include_directories('.', 'include')
 
+# cflags
+cpp_args = []
+c_args = []
+
+# dependencies
+project_deps = []
+
 # Install pre-commit hooks
 developer_mode = get_option('developer-mode')
 if developer_mode
@@ -33,6 +40,7 @@ if developer_mode
   run_command(pre_commit, 'install', '--hook-type', 'commit-msg', check: false)
 endif
 
+subdir('src')
 subdir('examples')
 
 # Testing suite
