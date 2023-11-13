@@ -9,13 +9,15 @@
 #pragma once
 #include <memory>
 
+// cynq headers
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
 
 namespace cynq {
 /**
  * @brief Interface for standardising the API for any Accelerator device:
- * - no inheritors -
+ * XRTAccelerator
+ *
  */
 class IAccelerator {
  public:
@@ -30,7 +32,12 @@ class IAccelerator {
    * Type of runtime supported by the IAccelerator.
    *
    */
-  enum Type { None = 0, XRT };
+  enum Type {
+    /** No runtime */
+    None = 0,
+    /** Xilinx runtime */
+    XRT
+  };
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
@@ -76,16 +83,57 @@ class IAccelerator {
    * space of the accelerator starts.
    *
    * @return std::shared_ptr<IAccelerator>
+   * This is a shared_ptr with reference counting, the type will depend
+   * on the value of impl, the options are the following:
+   * XRT -> XRTAccelerator
+   * None -> nullptr
+   *
    */
   static std::shared_ptr<IAccelerator> Create(IAccelerator::Type impl,
                                               const uint64_t addr);
-
+  /**
+   * @brief Write method
+   * Performs a write operation to the accelerator through a register.
+   *
+   * @tparam T
+   * Datatype used as the individual unit of information being written to the
+   * device.
+   *
+   * @param address
+   * Address of the accelerator.
+   *
+   * @param data
+   * Raw pointer of type T used by the register to access the data.
+   *
+   * @param elements
+   * Number of elements being written to the device.
+   *
+   * @return Status
+   */
   template <typename T>
   Status Write(const uint64_t address, const T *data, const size_t elements) {
     return this->WriteRegister(address, reinterpret_cast<const uint8_t *>(data),
                                elements * sizeof(T));
   }
-
+  /**
+   * @brief Read method
+   * Performs a write operation to the accelerator through a register.
+   *
+   * @tparam T
+   * Datatype used as the individual unit of information being read from the
+   * device.
+   *
+   * @param address
+   * Address of the accelerator.
+   *
+   * @param data
+   * Raw pointer of type T used by the register to access the data.
+   *
+   * @param elements
+   * Number of elements being read from the device.
+   *
+   * @return Status
+   */
   template <typename T>
   Status Read(const uint64_t address, T *data, const size_t elements) {
     return this->ReadRegister(address, reinterpret_cast<uint8_t *>(data),

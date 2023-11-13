@@ -20,7 +20,8 @@
 namespace cynq {
 /**
  * @brief UltraScale class
- * Provides an interface to access IP Cores in Xilinx FPGAs.
+ * Provides an interface to access IP Cores in Xilinx FPGAs, the compatible
+ * devices are the following: ZCU102, ZCU106, K26.
  *
  */
 class UltraScale : public IHardware {

@@ -8,12 +8,14 @@
  */
 
 #include <cstdint>
+#include <memory>
+#include <string>
+
+// cynq headers
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
-#include <memory>
-#include <string>
 
 static constexpr char kBitstream[] = "./overlay.bit";
 static constexpr char kXclBin[] = "./default.xclbin";
@@ -26,7 +28,6 @@ static constexpr uint64_t kDmaAddress = 0xa0010000;
 static constexpr uint64_t kAccelNumDataAddr = 0x20;
 static constexpr uint kNumData = 64;
 
-// All structures developed in cynq must be in cynq namespace
 int main() {
   using namespace cynq;  // NOLINT
 

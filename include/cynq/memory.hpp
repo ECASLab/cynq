@@ -7,15 +7,14 @@
  *
  */
 #pragma once
-#include <memory>
-
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
+#include <memory>
 
 namespace cynq {
 /**
  * @brief Interface for standardising the API of Memory devices:
- * - no inheritors -
+ * XRTMemory
  *
  */
 class IMemory {
@@ -23,6 +22,7 @@ class IMemory {
   /**
    * @brief ~IMemory destructor method
    * Destroy the IMemory object.
+   *
    */
   virtual ~IMemory() = default;
   /**
@@ -30,13 +30,19 @@ class IMemory {
    * Type of runtime supported by the IMemory.
    *
    */
-  enum Type { None = 0, XRT };
+
+  enum Type {
+    /** No runtime */
+    None = 0,
+    /** Xilinx runtime */
+    XRT
+  };
   /**
    * @brief Sync method
    * Synchronizes the memory in terms of transactions.
    *
-   * @param type The orientation of the Synchronizaton this can be host to host
-   * to device (HostToDevice) or device to host (DeviceToHost).
+   * @param type The orientation of the Synchronizaton this can be host to
+   * host to device (HostToDevice) or device to host (DeviceToHost).
    *
    * @return Status
    */
@@ -48,12 +54,30 @@ class IMemory {
    * @return size_t
    */
   virtual size_t Size() = 0;
-
+  /**
+   * @brief HostAddress method
+   * Getter for the address of the host.
+   *
+   * @tparam T
+   * A type which is used for type casting within this method.
+   *
+   * @return std::shared_ptr<T>
+   *
+   */
   template <typename T>
   std::shared_ptr<T> HostAddress() {
     return std::reinterpret_pointer_cast<T>(this->GetHostAddress());
   }
-
+  /**
+   * @brief DeviceAddress method
+   * Getter for the address of the device.
+   *
+   * @tparam T
+   * A type which is used for type casting within this method.
+   *
+   * @return std::shared_ptr<T>
+   *
+   */
   template <typename T>
   std::shared_ptr<T> DeviceAddress() {
     return std::reinterpret_pointer_cast<T>(this->GetDeviceAddress());
@@ -83,6 +107,12 @@ class IMemory {
    * to the device.
    *
    * @return std::shared_ptr<IMemory>
+   * This is a shared_ptr with reference counting, the type will depend
+   * on the value of impl, the options are the following:
+   * following:
+   * XRT -> XRTMemory
+   * None -> nullptr
+   *
    */
   static std::shared_ptr<IMemory> Create(IMemory::Type impl,
                                          const std::size_t size,

@@ -9,17 +9,19 @@
 #pragma once
 #include <memory>
 
+// cynq headers
 #include <cynq/enums.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
 
 namespace cynq {
+/**
+ * @brief XRTMemory class
+ * Provides the api for configuring the data buffers, this class is based
+ * on the Buffer object from the xilinx runtime.
+ *
+ */
 class XRTMemory : public IMemory {
-  /**
-   * @brief XRTMemory class
-   * Provides the api for configuring the memory being used by the device.
-   *
-   */
  public:
   XRTMemory() {}
   /**

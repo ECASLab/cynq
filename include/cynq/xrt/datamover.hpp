@@ -9,16 +9,18 @@
 #pragma once
 #include <memory>
 
-#include "cynq/datamover.hpp"
-#include "cynq/enums.hpp"
-#include "cynq/status.hpp"
-#include "cynq/xrt/memory.hpp"
+// cynq headers
+#include <cynq/datamover.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/status.hpp>
+#include <cynq/xrt/memory.hpp>
 
 namespace cynq {
 /**
  * @brief XRTDataMover class
  * Provides the api from which to interact with the data buffers responsable for
- * memory operations.
+ * memory operations making use of the Xilinx runtime (XRT) the types are the
+ * following: BO (Buffer object) DMA (Direct memory allocation)
  *
  */
 class XRTDataMover : public IDataMover {

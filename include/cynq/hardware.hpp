@@ -29,7 +29,17 @@ class IHardware {
    *
    */
   virtual ~IHardware() = default;
-  enum Type { None = 0, XRT };
+  /**
+   * @brief Type
+   * Type of runtime supported by the IHardware.
+   *
+   */
+  enum Type {
+    /** No runtime */
+    None = 0,
+    /** Xilinx runtime */
+    XRT
+  };
   /**
    * @brief Reset method
    * Sets the IHardware instance to its initial state.
