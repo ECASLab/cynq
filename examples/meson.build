@@ -8,3 +8,4 @@
 #
 
 executable('example','main.cpp',include_directories: [projectinc])
+executable('use_case','use_case.cpp',include_directories: [projectinc])

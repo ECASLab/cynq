@@ -107,7 +107,7 @@ class AmdAccelerator : public IAccelerator {
    *
    * @return Status
    */
-  Status WriteRegister(const uint64_t address, uint8_t *data,
+  Status WriteRegister(const uint64_t address, uint8_t data,
                        const size_t size) override;
   /**
    * @brief ReadRegister method

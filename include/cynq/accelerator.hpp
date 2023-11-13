@@ -94,7 +94,7 @@ class IAccelerator {
    *
    * @return Status
    */
-  virtual Status WriteRegister(const uint64_t address, uint8_t *data,
+  virtual Status WriteRegister(const uint64_t address, uint8_t data,
                                const size_t size) = 0;
   /**
    * @brief ReadRegister method
