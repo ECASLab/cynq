@@ -8,9 +8,9 @@
  */
 #pragma once
 
-namespace cynq {
-class IAccelerator;
-class IDataMover;
-class IHardware;
-class IMemory;
-}  // namespace cynq
+#include <cynq/accelerator.hpp>
+#include <cynq/datamover.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/hardware.hpp>
+#include <cynq/memory.hpp>
+#include <cynq/status.hpp>

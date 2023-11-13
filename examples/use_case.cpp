@@ -27,12 +27,9 @@ static constexpr uint64_t kAccelNumDataAddr = 0x20;
 static constexpr uint kNumData = 64;
 
 // All structures developed in cynq must be in cynq namespace
-using cynq::IAccelerator;
-using cynq::IDataMover;
-using cynq::IHardware;
-using cynq::IMemory;
-
 int main() {
+  using namespace cynq;  // NOLINT
+
   const int input_size = kNumData * sizeof(float);
   const int output_size = kNumData * sizeof(float);
 
@@ -52,15 +49,13 @@ int main() {
       mover->GetBuffer(output_size, MemoryType::Dual);
 
   // Get the host pointers for input/outut
-  std::shared_ptr<float> in_data =
-      std::reinterpret_pointer_cast<float>(in_mem)->GetHostAddress();
-  std::shared_ptr<float> out_data =
-      std::reinterpret_pointer_cast<float>(out_mem)->GetHostAddress();
+  std::shared_ptr<float> in_data = in_mem->HostAddress<float>();
+  std::shared_ptr<float> out_data = out_mem->HostAddress<float>();
 
   // Fill data on *in_data*...
 
   // Configure the accel
-  accel->Write(kAccelNumDataAddr, kNumData, sizeof(kNumData));
+  accel->Write(kAccelNumDataAddr, &kNumData, kNumData);
 
   // Start the accel in autorestart
   accel->Start(StartMode::Continuous);
