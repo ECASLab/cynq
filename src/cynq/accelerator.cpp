@@ -17,7 +17,7 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
                                                    const uint64_t /*addr*/) {
   switch (impl) {
     case IAccelerator::Type::XRT:
-      return std::make_shared<AmdAccelerator>();
+      return std::make_shared<XRTAccelerator>();
     default:
       return nullptr;
   }

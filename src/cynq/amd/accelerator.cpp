@@ -14,19 +14,19 @@
 #include <cynq/status.hpp>
 
 namespace cynq {
-Status AmdAccelerator::Start(const StartMode /*mode*/) { return Status{}; }
+Status XRTAccelerator::Start(const StartMode /*mode*/) { return Status{}; }
 
-Status AmdAccelerator::Stop() { return Status{}; }
+Status XRTAccelerator::Stop() { return Status{}; }
 
-DeviceStatus AmdAccelerator::GetStatus() { return DeviceStatus::Idle; }
+DeviceStatus XRTAccelerator::GetStatus() { return DeviceStatus::Idle; }
 
-Status AmdAccelerator::WriteRegister(const uint64_t /*address*/,
+Status XRTAccelerator::WriteRegister(const uint64_t /*address*/,
                                      const uint8_t* /*data*/,
                                      const size_t /*size*/) {
   return Status{};
 }
 
-Status AmdAccelerator::ReadRegister(const uint64_t /*address*/,
+Status XRTAccelerator::ReadRegister(const uint64_t /*address*/,
                                     uint8_t* /*data*/, const size_t /*size*/) {
   return Status{};
 }

@@ -63,7 +63,7 @@ class IHardware {
    * thread-safe.
    *
    */
-  virtual std::shared_ptr<IAccelerator> GetAcceleratorMover(
+  virtual std::shared_ptr<IAccelerator> GetAccelerator(
       const uint64_t address) = 0;
   /**
    * @brief Create method

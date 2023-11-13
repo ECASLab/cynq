@@ -13,19 +13,19 @@
 
 namespace cynq {
 /**
- * @brief AmdAccelerator class
+ * @brief XRTAccelerator class
  * This class provides the api to operate the accelerator.
  *
  */
-class AmdAccelerator : public IAccelerator {
+class XRTAccelerator : public IAccelerator {
  public:
-  AmdAccelerator() {}
+  XRTAccelerator() {}
   /**
-   * @brief ~AmdAccelerator destructor method
-   * Destroy the AmdAccelerator object
+   * @brief ~XRTAccelerator destructor method
+   * Destroy the XRTAccelerator object
    *
    */
-  virtual ~AmdAccelerator() = default;
+  virtual ~XRTAccelerator() = default;
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
