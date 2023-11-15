@@ -6,16 +6,14 @@
 #         Luis G. Leon Vega <luis.leon@ieee.org>
 #
 
-sources = []
+pynq_c_sources = [
+  files('pynq_api.c')
+]
 
-subdir('cynq')
-
-libcynq = shared_library('libcynq' ,
-  sources, 
-  cpp_args : cpp_args,
-  install : true,
-  include_directories : [projectinc],
+libpynqc = static_library('libpynqc' ,
+  pynq_c_sources, 
   dependencies : [project_deps]
 )
 
-libcynq_dep = declare_dependency(link_with: libcynq)
+libpynqc_dep = declare_dependency(link_with: libpynqc)
+project_deps += libpynqc_dep
