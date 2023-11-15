@@ -15,6 +15,15 @@
 
 namespace cynq {
 /**
+ * @brief Define an abstract representation of the accelerator parameters
+ * with some prefilled fields
+ */
+struct AcceleratorParameters {
+  /** Virtual destructor required for the inheritance */
+  virtual ~AcceleratorParameters() = default;
+};
+
+/**
  * @brief Interface for standardising the API for any Accelerator device:
  * XRTAccelerator
  *
