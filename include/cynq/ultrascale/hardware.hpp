@@ -11,10 +11,10 @@
 #include <memory>
 #include <string>
 
-#include "cynq/amd/accelerator.hpp"
 #include "cynq/enums.hpp"
 #include "cynq/hardware.hpp"
 #include "cynq/status.hpp"
+#include "cynq/xrt/accelerator.hpp"
 #include "cynq/xrt/datamover.hpp"
 
 namespace cynq {

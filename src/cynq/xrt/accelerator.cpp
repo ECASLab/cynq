@@ -7,7 +7,7 @@
  *
  */
 
-#include <cynq/amd/accelerator.hpp>
+#include <cynq/xrt/accelerator.hpp>
 
 #include <cynq/accelerator.hpp>
 #include <cynq/enums.hpp>

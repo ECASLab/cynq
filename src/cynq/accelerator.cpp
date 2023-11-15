@@ -10,7 +10,7 @@
 
 #include <memory>
 
-#include <cynq/amd/accelerator.hpp>
+#include <cynq/xrt/accelerator.hpp>
 
 namespace cynq {
 std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
