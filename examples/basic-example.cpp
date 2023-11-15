@@ -8,6 +8,7 @@
  */
 
 #include <cstdint>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -26,8 +27,8 @@ static constexpr char kBitstream[] = EXAMPLE_BITSTREAM_LOCATION;
 static constexpr char kXclBin[] = EXAMPLE_DEFAULT_XCLBIN_LOCATION;
 
 // Given by the design
-static constexpr uint64_t kAccelAddress = 0xa0000000;
-static constexpr uint64_t kDmaAddress = 0xa0010000;
+static constexpr uint64_t kAccelAddress = EXAMPLE_ACCEL_ADDR;
+static constexpr uint64_t kDmaAddress = EXAMPLE_DMA_ADDR;
 
 // Addresses of the accelerator
 static constexpr uint64_t kAccelNumDataAddr = 0x20;
@@ -60,11 +61,28 @@ int main() {
 
   // Fill data on *in_data*...
 
-  // Configure the accel
-  accel->Write(kAccelNumDataAddr, &kNumData, kNumData);
-
   // Start the accel in autorestart
   accel->Start(StartMode::Continuous);
+
+  // Read the defaults:
+  uint32_t incols = 0;
+  uint32_t outcols = 0;
+
+  accel->Read(32, &incols, 1);
+  accel->Read(48, &outcols, 1);
+  std::cout << "Initial InCols: " << incols << std::endl;
+  std::cout << "Initial OutCols: " << outcols << std::endl;
+
+  // Configure the accel
+  incols = kNumData;
+  outcols = kNumData;
+  accel->Write(24, &incols, 1);
+  accel->Write(40, &outcols, 1);
+
+  accel->Read(32, &incols, 1);
+  accel->Read(48, &outcols, 1);
+  std::cout << "Configured InCols: " << incols << std::endl;
+  std::cout << "Configured OutCols: " << outcols << std::endl;
 
   // Move the data
   in_mem->Sync(SyncType::HostToDevice);
