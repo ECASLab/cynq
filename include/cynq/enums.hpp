@@ -17,7 +17,7 @@ namespace cynq {
 enum class HardwareArchitecture {
   /** For ultra scale xilinx devices */
   UltraScale
-}
+};
 
 /**
  * @brief SyncType
@@ -28,8 +28,8 @@ enum class SyncType {
   /** Synchronization from host (CPU) to the device (FPGA) */
   HostToDevice,
   /** Synchronization from device (FPGA) to the host (CPU) */
-  DeviceToHost,
-}
+  DeviceToHost
+};
 
 /**
  * @brief StartMode
@@ -40,20 +40,20 @@ enum class StartMode {
   /** Mode is Once at initialiization */
   Once,
   /** Mode is Continuos at initialization */
-  Continuos
-}
+  Continuous
+};
 
 /**
  * @brief ExecutionType
  * Style of execution for the API. This is used by any class that implements
  * the IDataMover interface.
  */
-enum ExecutionType {
+enum class ExecutionType {
   /* Syncrhonous style of execution for IDataMover **/
   Sync,
   /* Asyncrhonous style of execution for IDataMover **/
   Async
-}
+};
 
 /**
  * @brief DeviceStatus
@@ -72,7 +72,7 @@ enum class DeviceStatus {
   Running,
   /** Error status for IAccelerator **/
   Error
-}
+};
 
 /**
  * @brief MemoryType
@@ -88,5 +88,5 @@ enum class MemoryType {
   Host,
   /** GetBuffer receives device as memory type. */
   Device
-}
+};
 }  // namespace cynq

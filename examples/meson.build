@@ -7,4 +7,14 @@
 #
 #
 
-executable('example','main.cpp',include_directories: [projectinc])
+executable('example',
+  ['main.cpp'],
+  include_directories: [projectinc],
+  dependencies : [project_deps, libcynq_dep]
+)
+
+executable('basic-example',
+  ['basic-example.cpp'],
+  include_directories: [projectinc],
+  dependencies : [project_deps, libcynq_dep]
+)

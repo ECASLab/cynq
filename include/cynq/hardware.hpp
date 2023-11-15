@@ -25,9 +25,21 @@ class IHardware {
  public:
   /**
    * @brief ~IHardware destructor method
-   * Destroy the IHardware object
+   * Destroy the IHardware object.
+   *
    */
   virtual ~IHardware() = default;
+  /**
+   * @brief Type
+   * Type of runtime supported by the IHardware.
+   *
+   */
+  enum Type {
+    /** No runtime */
+    None = 0,
+    /** Xilinx runtime */
+    XRT
+  };
   /**
    * @brief Reset method
    * Sets the IHardware instance to its initial state.
@@ -61,12 +73,12 @@ class IHardware {
    * thread-safe.
    *
    */
-  virtual std::shared_ptr<IAccelerator> GetAcceleratorMover(
+  virtual std::shared_ptr<IAccelerator> GetAccelerator(
       const uint64_t address) = 0;
   /**
    * @brief Create method
    * Factory method to create a hardware-specific subclasses for accelerators
-   * and data movers
+   * and data movers.
    *
    * @example
    * - no implementations -

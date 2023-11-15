@@ -17,32 +17,41 @@ namespace cynq {
 /**
  * @brief Interface for standardising the API of DataMover for a specific
  * device:
- * - no inheritors -
+ * XRTDataMover
  *
  */
 class IDataMover {
  public:
   /**
    * @brief ~IDataMover destructor method
-   * Destroy the IDataMover object
+   * Destroy the IDataMover object.
+   *
    */
   virtual ~IDataMover() = default;
+  /**
+   * @brief Type
+   * Type of runtime supported by the IDataMover.
+   *
+   */
+  enum Type {
+    /** No runtime */
+    None = 0,
+    /** Xilinx runtime */
+    XRT
+  };
   /**
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,
    * it allocates memory in a contiguous or memory region
    * (non-pageable) or non contiguous memory region depending on the Memory
-   * typed past to the method. The memory can be mirrored with pageable memory
-   * for its use in the host (or CPU).
+   * typed past to the method. The memory can be mirrored with pageable
+   * memory for its use in the host (or CPU).
    *
    * @param size Size in bytes of the buffer.
    *
-   * @param type One of the values in the MemoryType enum class which can be one
-   * of the following:
-   * Dual (DIMM memory)
-   * Cacheable (cache)
-   * Host (Memory from the host)
-   * Device (Memory from the device to be mapped)
+   * @param type One of the values in the MemoryType enum class which can be
+   * one of the following: Dual (DIMM memory) Cacheable (cache) Host (Memory
+   * from the host) Device (Memory from the device to be mapped)
    *
    * @return std::shared_ptr<IMemory>
    */
@@ -95,5 +104,30 @@ class IDataMover {
    * @return DeviceStatus
    */
   virtual DeviceStatus GetStatus() = 0;
+  /**
+   * @brief Create method
+   * Factory method used for creating specific subclasses of IDataMover.
+   *
+   * @example
+   * - no implementations -
+   *
+   * @param impl
+   * Used for establishin if the object is dependent on a runtime, use None if
+   * this is not the case.
+   *
+   * @param addr
+   * A 64 bit unsigned integer representing the beginning address of the
+   * IDataMover.
+   *
+   * @return std::shared_ptr<IDataMover>
+   * This is a shared_ptr with reference counting, the type will depend
+   * on the value of impl, the options are the following:
+   * following:
+   * XRT -> XRTDatamover
+   * None -> nullptr
+   *
+   */
+  static std::shared_ptr<IDataMover> Create(IDataMover::Type impl,
+                                            const uint64_t addr);
 };
 }  // namespace cynq
