@@ -48,7 +48,7 @@ class UltraScale : public IHardware {
    * @brief ~UltraScale destructor method
    * Destroy the UltraScale object.
    */
-  virtual ~UltraScale() = default;
+  virtual ~UltraScale();
   /**
    * @brief Reset method
    * Sets the UltraScale instance to its initial state.

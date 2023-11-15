@@ -26,6 +26,8 @@ struct HardwareParameters {
   std::string bitstream_file;
   /** XCLbin file path */
   std::string xclbin_file;
+  /** Virtual destructor required for the inheritance */
+  virtual ~HardwareParameters() = default;
 };
 
 /**
