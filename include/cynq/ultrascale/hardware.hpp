@@ -23,10 +23,27 @@ namespace cynq {
  * Provides an interface to access IP Cores in Xilinx FPGAs, the compatible
  * devices are the following: ZCU102, ZCU106, K26.
  *
+ * This class DO NOT have the support for XCLBIN kernels YET.
+ *
  */
 class UltraScale : public IHardware {
  public:
-  UltraScale() {}
+  /**
+   * @brief Construct a new UltraScale object
+   *
+   * Configure the FPGA with an overlay (bitstream) or a xclbin object. The
+   * configuration files are mutually exclusive. If using a bitstream, the
+   * xclbin must be the default one. If no bitstream passed (empty), the xclbin
+   * file is mandatory.
+   *
+   * @param bitstream_file full path to the bitstream object (.bit file)
+   * @param xclbin_file full path to the xclbin object.
+   */
+  UltraScale(const std::string &bitstream_file, const std::string &xclbin_file);
+  /**
+   * No default constructor required
+   */
+  UltraScale() = delete;
   /**
    * @brief ~UltraScale destructor method
    * Destroy the UltraScale object.
@@ -64,5 +81,18 @@ class UltraScale : public IHardware {
    *
    */
   std::shared_ptr<IAccelerator> GetAccelerator(const uint64_t address) override;
+
+  Status DeviceQuery();
+
+  Status KernelQuery();
+
+ private:
+  std::unique_ptr<HardwareParameters> parameters_;
+
+  Status LoadBitstream(const std::string &bitstream_file);
+
+  Status ConfigureBuses();
+
+  Status LoadXclBin(const std::string &xclbin_file, const int device_idx = 0);
 };
 }  // namespace cynq
