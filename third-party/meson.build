@@ -11,3 +11,5 @@ subdir('pynq-c-api')
 projectinc += [
   include_directories('pynq-c-api')
 ]
+
+subdir('resources')
