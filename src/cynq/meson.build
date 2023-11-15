@@ -13,6 +13,13 @@ sources += [
   files('memory.cpp'),
 ]
 
-subdir('amd')
+# Detect the dependencies
+# XRT Dependency is a must in the meantime. It will be optional
+xrt_dep = dependency('xrt', required: true)
+xrt_inc = include_directories('/usr/include/xrt')
+
+project_deps += xrt_dep
+projectinc += xrt_inc
+
 subdir('ultrascale')
 subdir('xrt')

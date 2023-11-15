@@ -18,10 +18,10 @@
 #include <xrt/xrt/xrt_device.h>
 
 #include <cynq/accelerator.hpp>
-#include <cynq/amd/accelerator.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/status.hpp>
+#include <cynq/xrt/accelerator.hpp>
 #include <cynq/xrt/datamover.hpp>
 
 namespace cynq {
@@ -34,7 +34,7 @@ struct UltraScaleParameters : public HardwareParameters {
   /** XRT Device linked to the FPGA */
   xrt::device device_;
   /** XRT UUID that matches the device with the loaded XCLBIN */
-  xrt::uuid uuid_;
+  xrt::uuid *uuid_;
   /** XRT class representing the xclbin object */
   xrt::xclbin xclbin_;
 };
@@ -44,6 +44,7 @@ UltraScale::UltraScale(const std::string &bitstream_file,
     : parameters_{std::make_unique<UltraScaleParameters>()} {
   /* For the UltraScale, there is only a single device. It is possible to
      load either a bitstream or a xclbin. */
+  Status st{};
 
   /* Initial check: we want to make sure that both parameters are OK */
   if (xclbin_file.empty()) {
@@ -52,7 +53,7 @@ UltraScale::UltraScale(const std::string &bitstream_file,
 
   /* Load the bitstream: the exception must propagate upwards */
   if (!bitstream_file.empty()) {
-    Status st = LoadBitstream(bitstream_file);
+    st = LoadBitstream(bitstream_file);
     if (st.code != Status::OK) {
       std::string msg = "Error while loading the bitstream: ";
       msg += st.msg;
@@ -61,7 +62,7 @@ UltraScale::UltraScale(const std::string &bitstream_file,
   }
 
   /* Configure the buses accordingly to the default design */
-  Status st = ConfigureBuses();
+  st = ConfigureBuses();
   if (st.code != Status::OK) {
     std::string msg = "Error while configuring the buses: ";
     msg += st.msg;
@@ -69,7 +70,7 @@ UltraScale::UltraScale(const std::string &bitstream_file,
   }
 
   /* Configure the buses accordingly to the default design */
-  Status st = LoadXclBin(xclbin_file);
+  st = LoadXclBin(xclbin_file);
   if (st.code != Status::OK) {
     std::string msg = "Error while configuring the buses: ";
     msg += st.msg;
@@ -77,14 +78,14 @@ UltraScale::UltraScale(const std::string &bitstream_file,
   }
 }
 
-Status UltraScale::LoadBitstream(const std::string &bitstream_file) {
+Status UltraScale::LoadBitstream(const std::string & /*bitstream_file*/) {
   return Status{};
 }
 
 Status UltraScale::ConfigureBuses() { return Status{}; }
 
-Status UltraScale::LoadXclBin(const std::string &xclbin_file,
-                              const int device_idx = 0) {
+Status UltraScale::LoadXclBin(const std::string & /*xclbin_file*/,
+                              const int /*device_idx*/) {
   return Status{};
 }
 

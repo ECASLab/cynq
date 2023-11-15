@@ -23,7 +23,7 @@ add_global_arguments(
 build_tests = get_option('build-tests')
 
 # directories
-projectinc = include_directories('.', 'include')
+projectinc = [include_directories('.', 'include')]
 
 # cflags
 cpp_args = []
