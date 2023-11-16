@@ -11,13 +11,30 @@
 #include <memory>
 #include <string>
 
-#include "cynq/enums.hpp"
-#include "cynq/hardware.hpp"
-#include "cynq/status.hpp"
-#include "cynq/xrt/accelerator.hpp"
-#include "cynq/xrt/datamover.hpp"
+#include <xrt/xrt.h>
+#include <xrt/xrt/xrt_device.h>
+
+#include <cynq/enums.hpp>
+#include <cynq/hardware.hpp>
+#include <cynq/status.hpp>
+#include <cynq/xrt/accelerator.hpp>
+#include <cynq/xrt/datamover.hpp>
 
 namespace cynq {
+/**
+ * @brief Specialisation of the parameters given by the UltraScale. This is
+ * only available by the source file to encapsulate the dependencies involved.
+ */
+struct UltraScaleParameters : public HardwareParameters {
+  /** XRT Device linked to the FPGA */
+  xrt::device device_;
+  /** XRT class representing the xclbin object */
+  xrt::xclbin xclbin_;
+
+  /** Virtual destructor required for the inheritance */
+  virtual ~UltraScaleParameters() = default;
+};
+
 /**
  * @brief UltraScale class
  * Provides an interface to access IP Cores in Xilinx FPGAs, the compatible
@@ -100,7 +117,7 @@ class UltraScale : public IHardware {
 
  private:
   /** Parameters used for internal hardware configuration */
-  std::unique_ptr<HardwareParameters> parameters_;
+  std::shared_ptr<HardwareParameters> parameters_;
   /**
    * @brief Loads the bitstream
    *

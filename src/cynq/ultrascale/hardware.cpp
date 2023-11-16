@@ -41,24 +41,9 @@ extern "C" {
   }
 
 namespace cynq {
-
-/**
- * @brief Specialisation of the parameters given by the UltraScale. This is
- * only available by the source file to encapsulate the dependencies involved.
- */
-struct UltraScaleParameters : public HardwareParameters {
-  /** XRT Device linked to the FPGA */
-  xrt::device device_;
-  /** XRT class representing the xclbin object */
-  xrt::xclbin xclbin_;
-
-  /** Virtual destructor required for the inheritance */
-  virtual ~UltraScaleParameters() = default;
-};
-
 UltraScale::UltraScale(const std::string &bitstream_file,
                        const std::string &xclbin_file)
-    : parameters_{std::make_unique<UltraScaleParameters>()} {
+    : parameters_{std::make_shared<UltraScaleParameters>()} {
   /* For the UltraScale, there is only a single device. It is possible to
      load either a bitstream or a xclbin. */
   Status st{};
@@ -179,7 +164,7 @@ Status UltraScale::LoadXclBin(const std::string &xclbin_file,
 Status UltraScale::Reset() { return Status{}; }
 
 std::shared_ptr<IDataMover> UltraScale::GetDataMover(const uint64_t address) {
-  return IDataMover::Create(IDataMover::XRT, address);
+  return IDataMover::Create(IDataMover::XRT, address, this->parameters_);
 }
 
 std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
