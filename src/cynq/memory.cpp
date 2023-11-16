@@ -14,12 +14,12 @@
 
 namespace cynq {
 std::shared_ptr<IMemory> IMemory::Create(IMemory::Type impl,
-                                         const std::size_t /*size*/,
-                                         uint8_t* /*hostptr*/,
-                                         uint8_t* /*devptr*/) {
+                                         const std::size_t size,
+                                         uint8_t* hostptr, uint8_t* devptr,
+                                         void* moverptr) {
   switch (impl) {
     case IMemory::Type::XRT:
-      return std::make_shared<XRTMemory>();
+      return std::make_shared<XRTMemory>(size, hostptr, devptr, moverptr);
     default:
       return nullptr;
   }

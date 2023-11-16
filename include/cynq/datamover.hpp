@@ -14,6 +14,22 @@
 #include "cynq/status.hpp"
 
 namespace cynq {
+
+struct HardwareParameters;
+
+/**
+ * @brief Define an abstract representation of the data mover parameters
+ * with some prefilled fields
+ */
+struct DataMoverParameters {
+  /** HW Parameters */
+  std::shared_ptr<HardwareParameters> hw_params_;
+  /** Virtual destructor required for the inheritance */
+  virtual ~DataMoverParameters() = default;
+};
+
+struct HardwareParameters;
+
 /**
  * @brief Interface for standardising the API of DataMover for a specific
  * device:
@@ -119,6 +135,10 @@ class IDataMover {
    * A 64 bit unsigned integer representing the beginning address of the
    * IDataMover.
    *
+   * @param hwparams
+   * Hardware-specific parameters to configure the data mover and grab the
+   * correct memory blocks
+   *
    * @return std::shared_ptr<IDataMover>
    * This is a shared_ptr with reference counting, the type will depend
    * on the value of impl, the options are the following:
@@ -127,7 +147,8 @@ class IDataMover {
    * None -> nullptr
    *
    */
-  static std::shared_ptr<IDataMover> Create(IDataMover::Type impl,
-                                            const uint64_t addr);
+  static std::shared_ptr<IDataMover> Create(
+      IDataMover::Type impl, const uint64_t addr,
+      std::shared_ptr<HardwareParameters> hwparams);
 };
 }  // namespace cynq

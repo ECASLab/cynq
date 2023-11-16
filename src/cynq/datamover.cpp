@@ -13,11 +13,12 @@
 #include <cynq/xrt/datamover.hpp>
 
 namespace cynq {
-std::shared_ptr<IDataMover> IDataMover::Create(IDataMover::Type impl,
-                                               const uint64_t /*addr*/) {
+std::shared_ptr<IDataMover> IDataMover::Create(
+    IDataMover::Type impl, const uint64_t addr,
+    std::shared_ptr<HardwareParameters> hwparams) {
   switch (impl) {
     case IDataMover::Type::XRT:
-      return std::make_shared<XRTDataMover>();
+      return std::make_shared<XRTDataMover>(addr, hwparams);
     default:
       return nullptr;
   }

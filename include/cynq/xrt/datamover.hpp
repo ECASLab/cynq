@@ -9,13 +9,25 @@
 #pragma once
 #include <memory>
 
-// cynq headers
+#include <xrt/xrt/xrt_bo.h>
+
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
+#include <cynq/hardware.hpp>
 #include <cynq/status.hpp>
 #include <cynq/xrt/memory.hpp>
 
 namespace cynq {
+/**
+ * @brief Metadata inserted into each XRTMemory instance
+ */
+struct XRTDataMoverMeta {
+  /** Buffer object */
+  std::shared_ptr<xrt::bo> bo_;
+  /** Memory type */
+  MemoryType type_;
+};
+
 /**
  * @brief XRTDataMover class
  * Provides the api from which to interact with the data buffers responsable for
@@ -25,13 +37,31 @@ namespace cynq {
  */
 class XRTDataMover : public IDataMover {
  public:
-  XRTDataMover() {}
+  /**
+   * @brief Construct a new XRTDataMover object
+   *
+   * This constructs a data mover that uses DMA to execute the transfers
+   * between the host and the device. Moreover, it uses XRT buffer object as
+   * memory buffers.
+   * @param addr DMA address in the physical memory map
+   * @param hwparams Hardware-specific params
+   */
+  XRTDataMover(const uint64_t addr,
+               std::shared_ptr<HardwareParameters> hwparams);
+
+  /**
+   * @brief Default constructor
+   *
+   * The default constructor is deleted since the address is mandatory for the
+   * DMA transfer.
+   */
+  XRTDataMover() = delete;
   /**
    * @brief ~XRTDatamover destructor method
    * Destroy the XRTDatamover object.
    *
    */
-  virtual ~XRTDataMover() = default;
+  virtual ~XRTDataMover();
   /**
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,
@@ -100,5 +130,9 @@ class XRTDataMover : public IDataMover {
    * @return DeviceStatus
    */
   DeviceStatus GetStatus() override;
+
+ private:
+  /** Data Mover Parameters */
+  std::unique_ptr<DataMoverParameters> data_mover_params_;
 };
 }  // namespace cynq

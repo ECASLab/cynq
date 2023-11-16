@@ -7,12 +7,13 @@
  *
  */
 #pragma once
+
 #include <memory>
 
-// cynq headers
 #include <cynq/enums.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
+#include <cynq/xrt/datamover.hpp>
 
 namespace cynq {
 /**
@@ -23,13 +24,31 @@ namespace cynq {
  */
 class XRTMemory : public IMemory {
  public:
-  XRTMemory() {}
+  /**
+   * @brief Construct a new XRTDataMover object
+   *
+   * @param size size of the memory region in bytes
+   * @param hostptr host pointer where to store the host related memory. It can
+   * be null in case of using moverptr.
+   * @param devptr host pointer where to store the device related memory. It can
+   * be null in case of using moverptr.
+   * @param moverptr data mover specific metadata
+   */
+  XRTMemory(const std::size_t size, uint8_t* hostptr, uint8_t* devptr,
+            void* moverptr);
+  /**
+   * @brief Default constructor
+   *
+   * The default constructor is deleted because the Memory depends on the
+   * mover
+   */
+  XRTMemory() = delete;
   /**
    * @brief ~XRTMemory destructor method
    * Destroy the XRTMemory object.
    *
    */
-  virtual ~XRTMemory() = default;
+  virtual ~XRTMemory();
   /**
    * @brief Sync method
    * Synchronizes the memory in terms of transactions.
@@ -48,6 +67,9 @@ class XRTMemory : public IMemory {
    */
   size_t Size() override;
 
+  /** Define the friend relacionship between the mover and the memory */
+  friend class XRTDataMover;
+
  protected:
   /**
    * @brief GetHostAddress method
@@ -65,5 +87,15 @@ class XRTMemory : public IMemory {
    * @return std::shared_ptr<uint8_t>
    */
   std::shared_ptr<uint8_t> GetDeviceAddress() override;
+
+ private:
+  /** Memory region size */
+  std::size_t size_;
+  /** Host memory pointer */
+  uint8_t* host_ptr_;
+  /** Device memory pointer */
+  uint8_t* dev_ptr_;
+  /** Mover metadata pointer */
+  void* mover_ptr_;
 };
 }  // namespace cynq
