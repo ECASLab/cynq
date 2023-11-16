@@ -28,6 +28,7 @@ struct Status {
     CONFIGURATION_ERROR, /** Configuration error*/
     REGISTER_IO_ERROR,   /** Register MMIO error */
     NOT_IMPLEMENTED,     /** Not implemented error */
+    MEMBER_ABSENT,       /** Missing member */
   };
 
   int code;        /** Code of the error */
