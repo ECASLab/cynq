@@ -122,7 +122,7 @@ Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
   }
 
   /* Verify the sizes and offsets */
-  if ((size + offset) >= mem->Size()) {
+  if ((size + offset) > mem->Size()) {
     return Status{Status::INVALID_PARAMETER,
                   "The offset and size exceeds the memory size"};
   }
@@ -165,7 +165,7 @@ Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
   }
 
   /* Verify the sizes and offsets */
-  if ((size + offset) >= mem->Size()) {
+  if ((size + offset) > mem->Size()) {
     return Status{Status::INVALID_PARAMETER,
                   "The offset and size exceeds the memory size"};
   }
