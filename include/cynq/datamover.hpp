@@ -71,8 +71,8 @@ class IDataMover {
    *
    * @return std::shared_ptr<IMemory>
    */
-  virtual std::shared_ptr<IMemory> GetBuffer(const size_t size,
-                                             const MemoryType type) = 0;
+  virtual std::shared_ptr<IMemory> GetBuffer(
+      const size_t size, const MemoryType type = MemoryType::Dual) = 0;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.

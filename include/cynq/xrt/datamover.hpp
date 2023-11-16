@@ -81,8 +81,8 @@ class XRTDataMover : public IDataMover {
    *
    * @return std::shared_ptr<IMemory>
    */
-  std::shared_ptr<IMemory> GetBuffer(const size_t size,
-                                     const MemoryType type) override;
+  std::shared_ptr<IMemory> GetBuffer(
+      const size_t size, const MemoryType type = MemoryType::Dual) override;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.
