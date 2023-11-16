@@ -30,17 +30,25 @@ static constexpr char kXclBin[] = EXAMPLE_DEFAULT_XCLBIN_LOCATION;
 static constexpr uint64_t kAccelAddress = EXAMPLE_ACCEL_ADDR;
 static constexpr uint64_t kDmaAddress = EXAMPLE_DMA_ADDR;
 
-// Addresses of the accelerator
-static constexpr uint64_t kAccelNumDataAddr = 0x20;
-static constexpr uint kNumData = 64;
+using DataType = uint16_t;
 
 int main() {
   using namespace cynq;  // NOLINT
 
-  const int input_size = kNumData * sizeof(float);
-  const int output_size = kNumData * sizeof(float);
+  const int input_a_cols = 400;
+  const int input_a_rows = 2;
+  const int input_b_cols = 4;
+  const int input_b_rows = input_a_cols;
+  const int output_cols = input_b_cols;
+  const int output_rows = input_a_rows;
+  const int word_size = sizeof(DataType);
+
+  const size_t input_size =
+      (input_a_cols * input_a_rows + input_b_cols * input_b_rows) * word_size;
+  const size_t output_size = output_cols * output_rows * word_size;
 
   // Create the platform
+  std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
       IHardware::Create(HardwareArchitecture::UltraScale, kBitstream, kXclBin);
 
@@ -50,48 +58,72 @@ int main() {
   std::shared_ptr<IDataMover> mover = platform->GetDataMover(kDmaAddress);
 
   // Create buffers for input and output
-  std::shared_ptr<IMemory> in_mem =
-      mover->GetBuffer(input_size, MemoryType::Dual);
-  std::shared_ptr<IMemory> out_mem =
-      mover->GetBuffer(output_size, MemoryType::Dual);
+  std::cout << "----- Creating memory -----" << std::endl;
+  std::shared_ptr<IMemory> in_mem = mover->GetBuffer(input_size);
+  std::shared_ptr<IMemory> out_mem = mover->GetBuffer(output_size);
 
   // Get the host pointers for input/outut
-  std::shared_ptr<float> in_data = in_mem->HostAddress<float>();
-  std::shared_ptr<float> out_data = out_mem->HostAddress<float>();
+  std::cout << "----- Loading input -----" << std::endl;
+  std::shared_ptr<DataType> in_data = in_mem->HostAddress<DataType>();
+  std::shared_ptr<DataType> out_data = out_mem->HostAddress<DataType>();
+  DataType* A = in_data.get();
+  DataType* B = A + (input_a_cols * input_a_rows);
+  DataType* C = out_data.get();
 
-  // Fill data on *in_data*...
+  // Fill the data
+  for (uint32_t row = 0; row < input_b_cols; ++row) {
+    for (uint32_t col = 0; col < input_a_cols; ++col) {
+      A[((row % input_a_rows) * input_a_cols) + (col % input_a_cols)] =
+          row * col;
+      B[((col % input_b_rows) * input_b_cols) + (row % input_b_cols)] =
+          row * col;
+      C[((row % output_rows) * output_cols) + (col % output_cols)] = 0;
+    }
+  }
 
-  // Start the accel in autorestart
-  accel->Start(StartMode::Continuous);
-
-  // Read the defaults:
-  uint32_t incols = 0;
-  uint32_t outcols = 0;
-
-  accel->Read(32, &incols, 1);
-  accel->Read(48, &outcols, 1);
-  std::cout << "Initial InCols: " << incols << std::endl;
-  std::cout << "Initial OutCols: " << outcols << std::endl;
-
-  // Configure the accel
-  incols = kNumData;
-  outcols = kNumData;
-  accel->Write(24, &incols, 1);
-  accel->Write(40, &outcols, 1);
-
-  accel->Read(32, &incols, 1);
-  accel->Read(48, &outcols, 1);
-  std::cout << "Configured InCols: " << incols << std::endl;
-  std::cout << "Configured OutCols: " << outcols << std::endl;
-
-  // Move the data
+  // Synchronise data buffer
+  std::cout << "----- Synchronise Input -----" << std::endl;
   in_mem->Sync(SyncType::HostToDevice);
-  mover->Upload(in_mem, in_mem->Size(), ExecutionType::Sync);
-  mover->Download(out_mem, out_mem->Size(), ExecutionType::Sync);
+
+  // Start the accel
+  accel->Start(StartMode::Continuous);
+  // Check the control register
+  auto devstatus = accel->GetStatus();
+  std::cout << "\tAccel Status: " << static_cast<int>(devstatus) << std::endl;
+
+  std::cout << "----- Configuring accelerator -----" << std::endl;
+  // Configure params
+  accel->Write(24, &input_a_cols, 1);
+  accel->Write(40, &output_cols, 1);
+  // Check params
+  int res_input_a_cols = 0;
+  int res_output_cols = 0;
+  accel->Read(32, &res_input_a_cols, 1);
+  accel->Read(48, &res_output_cols, 1);
+  std::cout << "Configured A columns: " << input_a_cols
+            << " Resulting: " << res_input_a_cols << std::endl;
+  std::cout << "Configured C columns: " << output_cols
+            << " Resulting: " << res_output_cols << std::endl;
+
+  std::cout << "----- Moving the data -----" << std::endl;
+  // Move the data
+  mover->Upload(in_mem, in_mem->Size(), 0, ExecutionType::Sync);
+  mover->Download(out_mem, out_mem->Size(), 0, ExecutionType::Sync);
 
   // Stop the accel
   accel->Stop();
 
+  std::cout << "----- Synchronising output -----" << std::endl;
+  out_mem->Sync(SyncType::DeviceToHost);
+
   // Read the output on *out_data*
+  std::cout << "Output: " << std::endl;
+  for (int i = 0; i < output_rows; ++i) {
+    for (int j = 0; j < output_cols; ++j) {
+      std::cout << C[i * output_cols + j] << " ";
+    }
+    std::cout << std::endl;
+  }
+
   return 0;
 }

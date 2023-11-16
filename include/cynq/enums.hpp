@@ -63,7 +63,7 @@ enum class ExecutionType {
  */
 enum class DeviceStatus {
   /** Uknown status for IAccelerator **/
-  Unknown,
+  Unknown = -1,
   /** Done status for IAccelerator **/
   Done,
   /** Idle status for IAccelerator **/
