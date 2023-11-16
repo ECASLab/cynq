@@ -92,20 +92,6 @@ std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
                          reinterpret_cast<void *>(meta));
 }
 
-Status XRTDataMover::Upload(const std::shared_ptr<IMemory> /*mem*/,
-                            const size_t /*size*/,
-                            const ExecutionType /*exetype*/) {
-  return Status{};
-}
-
-Status XRTDataMover::Download(const std::shared_ptr<IMemory> /*mem*/,
-                              const size_t /*size*/,
-                              const ExecutionType /*exetype*/) {
-  return Status{};
-}
-
-Status XRTDataMover::Sync() { return Status{}; }
-
 DeviceStatus XRTDataMover::GetStatus() { return DeviceStatus::Idle; }
 
 XRTDataMover::~XRTDataMover() {
@@ -113,5 +99,112 @@ XRTDataMover::~XRTDataMover() {
   auto params =
       dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
   PYNQ_closeDMA(&params->dma_);
+}
+
+/* TODO: All implementations below can be implemented cleverly. However, it
+   was out from the scope of this release. In next releases, we can have a
+   concept similar to work streams or queues */
+
+Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
+                            const size_t size, const size_t offset,
+                            const ExecutionType exetype) {
+  int ret = PYNQ_SUCCESS;
+  auto params =
+      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+
+  /* Get device pointer */
+  if (!mem) {
+    return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
+  }
+  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
+  if (!ptr) {
+    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
+  }
+
+  /* Verify the sizes and offsets */
+  if ((size + offset) >= mem->Size()) {
+    return Status{Status::INVALID_PARAMETER,
+                  "The offset and size exceeds the memory size"};
+  }
+
+  /* Issue transaction */
+  PYNQ_SHARED_MEMORY pmem;
+  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
+  pmem.pointer = nullptr;
+
+  ret =
+      PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_WRITE);
+
+  /* Check transaction */
+  if (PYNQ_SUCCESS != ret) {
+    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+  }
+
+  /* Synchronise if needed */
+  if (ExecutionType::Async == exetype) {
+    return Status{};
+  } else {
+    return this->Sync(SyncType::HostToDevice);
+  }
+}
+
+Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
+                              const size_t size, const size_t offset,
+                              const ExecutionType exetype) {
+  int ret = PYNQ_SUCCESS;
+  auto params =
+      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+
+  /* Get device pointer */
+  if (!mem) {
+    return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
+  }
+  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
+  if (!ptr) {
+    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
+  }
+
+  /* Verify the sizes and offsets */
+  if ((size + offset) >= mem->Size()) {
+    return Status{Status::INVALID_PARAMETER,
+                  "The offset and size exceeds the memory size"};
+  }
+
+  /* Issue transaction */
+  PYNQ_SHARED_MEMORY pmem;
+  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
+  pmem.pointer = nullptr;
+  ret = PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_READ);
+
+  /* Check transaction */
+  if (PYNQ_SUCCESS != ret) {
+    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+  }
+
+  /* Synchronise if needed */
+  if (ExecutionType::Async == exetype) {
+    return Status{};
+  } else {
+    return this->Sync(SyncType::DeviceToHost);
+  }
+}
+
+Status XRTDataMover::Sync(const SyncType type) {
+  int ret = PYNQ_SUCCESS;
+
+  auto params =
+      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+
+  if (SyncType::HostToDevice == type) {
+    ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_WRITE);
+  } else {
+    ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_READ);
+  }
+
+  if (PYNQ_SUCCESS != ret) {
+    return Status{Status::REGISTER_IO_ERROR, "Cannot synchronise"};
+  }
+
+  return Status{};
 }
 }  // namespace cynq

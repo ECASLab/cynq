@@ -94,13 +94,15 @@ class XRTDataMover : public IDataMover {
    * @param size Size in bytes of data being uploaded in the memory device by
    * making use of the buffer.
    *
+   * @param offset Offset in bytes where the device pointer should start
+   *
    * @param exetype The execution type to use for the upload, this is either
    * sync (synchronous) or async (asynchronous) execution.
    *
    * @return Status
    */
   Status Upload(const std::shared_ptr<IMemory> mem, const size_t size,
-                const ExecutionType exetype) override;
+                const size_t offset, const ExecutionType exetype) override;
   /**
    * @brief Download method
    *
@@ -109,20 +111,23 @@ class XRTDataMover : public IDataMover {
    * @param size Size in bytes of data being downloaded from the memory device
    * by making use of the buffer.
    *
+   * @param offset Offset in bytes where the device pointer should start
+   *
    * @param exetype The execution type to use for the download, this is either
    * sync (synchronous) or async (asynchronous) execution.
    *
    * @return Status
    */
   Status Download(const std::shared_ptr<IMemory> mem, const size_t size,
-                  const ExecutionType exetype) override;
+                  const size_t offset, const ExecutionType exetype) override;
   /**
    * @brief Sync method
    * Synchronizes data movements in case of asynchronous Upload/Download.
    *
+   * @param type sync type. Depending on the transaction, it will trigger sync
    * @return Status
    */
-  Status Sync() override;
+  Status Sync(const SyncType type) override;
   /**
    * @brief GetStatus method
    * Returns the status of the data mover in terms of transactions.

@@ -39,6 +39,8 @@ Status XRTMemory::Sync(const SyncType type) {
 
   /* Synchronise */
   meta->bo_->sync(dir);
+
+  return Status{};
 }
 
 size_t XRTMemory::Size() { return size_; }
