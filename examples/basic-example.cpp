@@ -23,25 +23,56 @@
 #error "Missing location macros for example"
 #endif
 
+// Given by the example
 static constexpr char kBitstream[] = EXAMPLE_BITSTREAM_LOCATION;
 static constexpr char kXclBin[] = EXAMPLE_DEFAULT_XCLBIN_LOCATION;
 
 // Given by the design
 static constexpr uint64_t kAccelAddress = EXAMPLE_ACCEL_ADDR;
 static constexpr uint64_t kDmaAddress = EXAMPLE_DMA_ADDR;
+static constexpr uint64_t kAddrWriteInputCols = 24;
+static constexpr uint64_t kAddrWriteOutputCols = 40;
+static constexpr uint64_t kAddrReadInputCols = 32;
+static constexpr uint64_t kAddrReadOutputCols = 48;
 
+// Data parameters
 using DataType = uint16_t;
+static constexpr int input_a_cols = 400;
+static constexpr int input_a_rows = 2;
+static constexpr int input_b_cols = 4;
+static constexpr int input_b_rows = input_a_cols;
+static constexpr int output_cols = input_b_cols;
+static constexpr int output_rows = input_a_rows;
+static constexpr int word_size = sizeof(DataType);
+
+// Fill data
+void FillData(DataType* A, DataType* B, DataType* C) {
+  for (uint32_t row = 0; row < input_b_cols; ++row) {
+    for (uint32_t col = 0; col < input_a_cols; ++col) {
+      A[((row % input_a_rows) * input_a_cols) + (col % input_a_cols)] =
+          row * col;
+      B[((col % input_b_rows) * input_b_cols) + (row % input_b_cols)] =
+          row * col;
+      C[((row % output_rows) * output_cols) + (col % output_cols)] = 0;
+    }
+  }
+}
+
+// Print results
+void PrintData(DataType* C) {
+  std::cout << "Output: " << std::endl;
+  for (int i = 0; i < output_rows; ++i) {
+    for (int j = 0; j < output_cols; ++j) {
+      std::cout << C[i * output_cols + j] << " ";
+    }
+    std::cout << std::endl;
+  }
+}
 
 int main() {
+  // NOTE: This is a basic example. Error checking has been removed to keep
+  // simplicity but it is always recommended
   using namespace cynq;  // NOLINT
-
-  const int input_a_cols = 400;
-  const int input_a_rows = 2;
-  const int input_b_cols = 4;
-  const int input_b_rows = input_a_cols;
-  const int output_cols = input_b_cols;
-  const int output_rows = input_a_rows;
-  const int word_size = sizeof(DataType);
 
   const size_t input_size =
       (input_a_cols * input_a_rows + input_b_cols * input_b_rows) * word_size;
@@ -64,22 +95,12 @@ int main() {
 
   // Get the host pointers for input/outut
   std::cout << "----- Loading input -----" << std::endl;
-  std::shared_ptr<DataType> in_data = in_mem->HostAddress<DataType>();
-  std::shared_ptr<DataType> out_data = out_mem->HostAddress<DataType>();
-  DataType* A = in_data.get();
+  DataType* A = in_mem->HostAddress<DataType>().get();
   DataType* B = A + (input_a_cols * input_a_rows);
-  DataType* C = out_data.get();
+  DataType* C = out_mem->HostAddress<DataType>().get();
 
   // Fill the data
-  for (uint32_t row = 0; row < input_b_cols; ++row) {
-    for (uint32_t col = 0; col < input_a_cols; ++col) {
-      A[((row % input_a_rows) * input_a_cols) + (col % input_a_cols)] =
-          row * col;
-      B[((col % input_b_rows) * input_b_cols) + (row % input_b_cols)] =
-          row * col;
-      C[((row % output_rows) * output_cols) + (col % output_cols)] = 0;
-    }
-  }
+  FillData(A, B, C);
 
   // Synchronise data buffer
   std::cout << "----- Synchronise Input -----" << std::endl;
@@ -93,17 +114,13 @@ int main() {
 
   std::cout << "----- Configuring accelerator -----" << std::endl;
   // Configure params
-  accel->Write(24, &input_a_cols, 1);
-  accel->Write(40, &output_cols, 1);
+  accel->Write(kAddrWriteInputCols, &input_a_cols, 1);
+  accel->Write(kAddrWriteOutputCols, &output_cols, 1);
   // Check params
   int res_input_a_cols = 0;
   int res_output_cols = 0;
-  accel->Read(32, &res_input_a_cols, 1);
-  accel->Read(48, &res_output_cols, 1);
-  std::cout << "Configured A columns: " << input_a_cols
-            << " Resulting: " << res_input_a_cols << std::endl;
-  std::cout << "Configured C columns: " << output_cols
-            << " Resulting: " << res_output_cols << std::endl;
+  accel->Read(kAddrReadInputCols, &res_input_a_cols, 1);
+  accel->Read(kAddrReadOutputCols, &res_output_cols, 1);
 
   std::cout << "----- Moving the data -----" << std::endl;
   // Move the data
@@ -117,13 +134,7 @@ int main() {
   out_mem->Sync(SyncType::DeviceToHost);
 
   // Read the output on *out_data*
-  std::cout << "Output: " << std::endl;
-  for (int i = 0; i < output_rows; ++i) {
-    for (int j = 0; j < output_cols; ++j) {
-      std::cout << C[i * output_cols + j] << " ";
-    }
-    std::cout << std::endl;
-  }
+  PrintData(C);
 
   return 0;
 }
