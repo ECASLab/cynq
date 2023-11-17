@@ -25,7 +25,8 @@ struct Status {
     /** Incompatible parameter that it is not supported
                               by a function */
     INCOMPATIBLE_PARAMETER,
-    NOT_IMPLEMENTED, /** Not implemented error */
+    CONFIGURATION_ERROR, /** Configuration error*/
+    NOT_IMPLEMENTED,     /** Not implemented error */
   };
 
   int code;        /** Code of the error */

@@ -10,11 +10,13 @@
 executable('example',
   ['main.cpp'],
   include_directories: [projectinc],
+  cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )
 
 executable('basic-example',
   ['basic-example.cpp'],
   include_directories: [projectinc],
+  cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )

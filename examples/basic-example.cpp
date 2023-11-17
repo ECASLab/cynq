@@ -17,8 +17,13 @@
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
 
-static constexpr char kBitstream[] = "./overlay.bit";
-static constexpr char kXclBin[] = "./default.xclbin";
+#if !defined(EXAMPLE_BITSTREAM_LOCATION) || \
+    !defined(EXAMPLE_DEFAULT_XCLBIN_LOCATION)
+#error "Missing location macros for example"
+#endif
+
+static constexpr char kBitstream[] = EXAMPLE_BITSTREAM_LOCATION;
+static constexpr char kXclBin[] = EXAMPLE_DEFAULT_XCLBIN_LOCATION;
 
 // Given by the design
 static constexpr uint64_t kAccelAddress = 0xa0000000;

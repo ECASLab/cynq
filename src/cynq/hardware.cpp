@@ -14,11 +14,11 @@
 
 namespace cynq {
 std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
-                                             const std::string& /*bitstream*/,
-                                             const std::string& /*xclbin*/) {
+                                             const std::string& bitstream,
+                                             const std::string& xclbin) {
   switch (hw) {
     case HardwareArchitecture::UltraScale:
-      return std::make_shared<UltraScale>();
+      return std::make_shared<UltraScale>(bitstream, xclbin);
     default:
       return nullptr;
   }

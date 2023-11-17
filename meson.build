@@ -7,7 +7,7 @@
 #
 
 
-project('cynq','cpp',version : '0.1.0',
+project('cynq',['c','cpp'],version : '0.1.0',
   default_options : ['warning_level=3',
                      'cpp_std=c++17',
                      'cpp_args=-Werror'])
@@ -23,7 +23,7 @@ add_global_arguments(
 build_tests = get_option('build-tests')
 
 # directories
-projectinc = include_directories('.', 'include')
+projectinc = [include_directories('.', 'include')]
 
 # cflags
 cpp_args = []
@@ -40,6 +40,7 @@ if developer_mode
   run_command(pre_commit, 'install', '--hook-type', 'commit-msg', check: false)
 endif
 
+subdir('third-party')
 subdir('src')
 subdir('examples')
 

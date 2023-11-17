@@ -10,7 +10,7 @@ sources = []
 
 subdir('cynq')
 
-libcynq = static_library('libcynq' ,
+libcynq = shared_library('libcynq' ,
   sources, 
   cpp_args : cpp_args,
   install : true,

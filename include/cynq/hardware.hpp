@@ -18,6 +18,19 @@
 
 namespace cynq {
 /**
+ * @brief Define an abstract representation of the hardware parameters
+ * with some prefilled fields
+ */
+struct HardwareParameters {
+  /** Bitstream file path */
+  std::string bitstream_file;
+  /** XCLbin file path */
+  std::string xclbin_file;
+  /** Virtual destructor required for the inheritance */
+  virtual ~HardwareParameters() = default;
+};
+
+/**
  * @brief Interface for standardising the API of Hardware Devices:
  * - no inheritors -
  */
