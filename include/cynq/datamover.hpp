@@ -14,6 +14,22 @@
 #include "cynq/status.hpp"
 
 namespace cynq {
+
+struct HardwareParameters;
+
+/**
+ * @brief Define an abstract representation of the data mover parameters
+ * with some prefilled fields
+ */
+struct DataMoverParameters {
+  /** HW Parameters */
+  std::shared_ptr<HardwareParameters> hw_params_;
+  /** Virtual destructor required for the inheritance */
+  virtual ~DataMoverParameters() = default;
+};
+
+struct HardwareParameters;
+
 /**
  * @brief Interface for standardising the API of DataMover for a specific
  * device:
@@ -55,8 +71,8 @@ class IDataMover {
    *
    * @return std::shared_ptr<IMemory>
    */
-  virtual std::shared_ptr<IMemory> GetBuffer(const size_t size,
-                                             const MemoryType type) = 0;
+  virtual std::shared_ptr<IMemory> GetBuffer(
+      const size_t size, const MemoryType type = MemoryType::Dual) = 0;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.
@@ -68,13 +84,15 @@ class IDataMover {
    * @param size Size in bytes of data being uploaded in the memory device by
    * making use of the buffer.
    *
+   * @param offset Offset in bytes where the device pointer should start
+   *
    * @param exetype The execution type to use for the upload, this is either
    * sync (synchronous) or async (asynchronous) execution.
    *
    * @return Status
    */
   virtual Status Upload(const std::shared_ptr<IMemory> mem, const size_t size,
-                        const ExecutionType exetype) = 0;
+                        const size_t offset, const ExecutionType exetype) = 0;
   /**
    * @brief Download method
    *
@@ -83,20 +101,23 @@ class IDataMover {
    * @param size Size in bytes of data being downloaded from the memory device
    * by making use of the buffer.
    *
+   * @param offset Offset in bytes where the device pointer should start
+   *
    * @param exetype The execution type to use for the download, this is either
    * sync (synchronous) or async (asynchronous) execution.
    *
    * @return Status
    */
   virtual Status Download(const std::shared_ptr<IMemory> mem, const size_t size,
-                          const ExecutionType exetype) = 0;
+                          const size_t offset, const ExecutionType exetype) = 0;
   /**
    * @brief Sync method
    * Synchronizes data movements in case of asynchronous Upload/Download.
    *
+   * @param type sync type. Depending on the transaction, it will trigger sync
    * @return Status
    */
-  virtual Status Sync() = 0;
+  virtual Status Sync(const SyncType type) = 0;
   /**
    * @brief GetStatus method
    * Returns the status of the data mover in terms of transactions.
@@ -119,6 +140,10 @@ class IDataMover {
    * A 64 bit unsigned integer representing the beginning address of the
    * IDataMover.
    *
+   * @param hwparams
+   * Hardware-specific parameters to configure the data mover and grab the
+   * correct memory blocks
+   *
    * @return std::shared_ptr<IDataMover>
    * This is a shared_ptr with reference counting, the type will depend
    * on the value of impl, the options are the following:
@@ -127,7 +152,8 @@ class IDataMover {
    * None -> nullptr
    *
    */
-  static std::shared_ptr<IDataMover> Create(IDataMover::Type impl,
-                                            const uint64_t addr);
+  static std::shared_ptr<IDataMover> Create(
+      IDataMover::Type impl, const uint64_t addr,
+      std::shared_ptr<HardwareParameters> hwparams);
 };
 }  // namespace cynq

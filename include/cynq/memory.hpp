@@ -106,6 +106,9 @@ class IMemory {
    * Pointer of the address that belongs to the device, used for mapping memory
    * to the device.
    *
+   * @param moverptr
+   * Pointer to platform specific properties
+   *
    * @return std::shared_ptr<IMemory>
    * This is a shared_ptr with reference counting, the type will depend
    * on the value of impl, the options are the following:
@@ -116,7 +119,8 @@ class IMemory {
    */
   static std::shared_ptr<IMemory> Create(IMemory::Type impl,
                                          const std::size_t size,
-                                         uint8_t* hostptr, uint8_t* devptr);
+                                         uint8_t* hostptr, uint8_t* devptr,
+                                         void* moverptr);
 
  protected:
   /**

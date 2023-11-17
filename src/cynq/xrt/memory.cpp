@@ -10,20 +10,89 @@
 
 #include <memory>
 
+#include <xrt/xrt/xrt_bo.h>
+
 #include "cynq/enums.hpp"
 #include "cynq/status.hpp"
+#include "cynq/xrt/datamover.hpp"
 #include "cynq/xrt/memory.hpp"
 
 namespace cynq {
-Status XRTMemory::Sync(const SyncType /*type*/) { return Status{}; }
+XRTMemory::XRTMemory(const std::size_t size, uint8_t *hostptr, uint8_t *devptr,
+                     void *moverptr)
+    : size_{size}, host_ptr_{hostptr}, dev_ptr_{devptr}, mover_ptr_{moverptr} {}
 
-size_t XRTMemory::Size() { return sizeof(uint64_t); }
+Status XRTMemory::Sync(const SyncType type) {
+  if (!mover_ptr_) {
+    return Status{Status::NOT_IMPLEMENTED, "Don't know how to synchronise"};
+  }
+
+  /* Determine the direction */
+  auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+  xclBOSyncDirection dir = type == SyncType::HostToDevice
+                               ? XCL_BO_SYNC_BO_TO_DEVICE
+                               : XCL_BO_SYNC_BO_FROM_DEVICE;
+
+  if (!meta->bo_) {
+    return Status{Status::MEMBER_ABSENT, "Cannot find a valid BO"};
+  }
+
+  /* Synchronise */
+  meta->bo_->sync(dir);
+
+  return Status{};
+}
+
+size_t XRTMemory::Size() { return size_; }
 
 std::shared_ptr<uint8_t> XRTMemory::GetHostAddress() {
-  return std::make_shared<uint8_t>();
+  /* Relevant: the returning shared pointer has no deleter since it is not
+   * transfer full */
+  if (!mover_ptr_) {
+    return std::shared_ptr<uint8_t>(host_ptr_, [](uint8_t *) {});
+  } else {
+    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+
+    if (meta->type_ == MemoryType::Device) {
+      return nullptr;
+    }
+
+    if (!meta->bo_) {
+      return nullptr;
+    }
+
+    return std::shared_ptr<uint8_t>(meta->bo_->map<uint8_t *>(),
+                                    [](uint8_t *) {});
+  }
 }
 
 std::shared_ptr<uint8_t> XRTMemory::GetDeviceAddress() {
-  return std::make_shared<uint8_t>();
+  /* Relevant: the returning shared pointer has no deleter since it is not
+   * transfer full */
+  if (!mover_ptr_) {
+    return std::shared_ptr<uint8_t>(dev_ptr_, [](uint8_t *) {});
+  } else {
+    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+
+    if (meta->type_ == MemoryType::Host) {
+      return nullptr;
+    }
+
+    if (!meta->bo_) {
+      return nullptr;
+    }
+
+    /* Construct the pointer */
+    uint64_t addr = meta->bo_->address();
+    uint8_t *ptr = reinterpret_cast<uint8_t *>(addr);
+    return std::shared_ptr<uint8_t>(ptr, [](uint8_t *) {});
+  }
+}
+
+XRTMemory::~XRTMemory() {
+  if (mover_ptr_) {
+    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+    delete meta;
+  }
 }
 }  // namespace cynq
