@@ -22,8 +22,8 @@
 
 namespace cynq {
 /**
- * @brief Specialisation of the parameters given by the UltraScale. This is
- * only available by the source file to encapsulate the dependencies involved.
+ * @brief Specialisation of the parameters given by the UltraScale. It
+ * is based on the PYNQ and XRT
  */
 struct UltraScaleParameters : public HardwareParameters {
   /** XRT Device linked to the FPGA */
