@@ -12,5 +12,7 @@ default_xclbin_location = fmt.format(meson.global_source_root(), files('default.
 
 cpp_args += [
   '-DEXAMPLE_BITSTREAM_LOCATION=' + matrix_bitstream_location,
-  '-DEXAMPLE_DEFAULT_XCLBIN_LOCATION=' + default_xclbin_location
+  '-DEXAMPLE_DEFAULT_XCLBIN_LOCATION=' + default_xclbin_location,
+  '-DEXAMPLE_ACCEL_ADDR=0xa0000000',
+  '-DEXAMPLE_DMA_ADDR=0xa0010000'
 ]

@@ -7,6 +7,9 @@
  *
  */
 #pragma once
+
+#include <memory>
+
 #include <cynq/accelerator.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
@@ -19,13 +22,25 @@ namespace cynq {
  */
 class XRTAccelerator : public IAccelerator {
  public:
-  XRTAccelerator() {}
+  /**
+   * @brief Delete the default constructor since address is needed
+   */
+  XRTAccelerator() = delete;
+  /**
+   * @brief Construct a new XRTAccelerator object
+   *
+   * It constructs an accessor to the accelerator in the PL design according
+   * to the AXI-lite memory mapping. This is widely compatible with AXI4-lite
+   * controlled HLS designs.
+   *
+   * @param addr 64-bit address in the physical memory space
+   */
+  explicit XRTAccelerator(const uint64_t addr);
   /**
    * @brief ~XRTAccelerator destructor method
    * Destroy the XRTAccelerator object
-   *
    */
-  virtual ~XRTAccelerator() = default;
+  virtual ~XRTAccelerator();
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
@@ -87,5 +102,13 @@ class XRTAccelerator : public IAccelerator {
    */
   Status ReadRegister(const uint64_t address, uint8_t *data,
                       const size_t size) override;
+
+ private:
+  /** Accelerator address */
+  uint64_t addr_;
+  /** Address space size */
+  uint64_t addr_space_size_;
+  /** Accelerator-specific configurations */
+  std::unique_ptr<AcceleratorParameters> accel_params_;
 };
 }  // namespace cynq

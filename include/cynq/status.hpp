@@ -26,6 +26,7 @@ struct Status {
                               by a function */
     INCOMPATIBLE_PARAMETER,
     CONFIGURATION_ERROR, /** Configuration error*/
+    REGISTER_IO_ERROR,   /** Register MMIO error */
     NOT_IMPLEMENTED,     /** Not implemented error */
   };
 
