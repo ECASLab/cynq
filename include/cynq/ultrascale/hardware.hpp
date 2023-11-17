@@ -81,18 +81,55 @@ class UltraScale : public IHardware {
    *
    */
   std::shared_ptr<IAccelerator> GetAccelerator(const uint64_t address) override;
-
+  /**
+   * @brief Queries the device looking for its characteristics.
+   *
+   * To be defined in future releases.
+   *
+   * @return Status
+   */
   Status DeviceQuery();
-
+  /**
+   * @brief Queries the kernels available in the design
+   *
+   * To be defined in future releases.
+   *
+   * @return Status
+   */
   Status KernelQuery();
 
  private:
+  /** Parameters used for internal hardware configuration */
   std::unique_ptr<HardwareParameters> parameters_;
-
+  /**
+   * @brief Loads the bitstream
+   *
+   * Implementation-depend method to write the bitstream on the FPGA.
+   * In this case, it uses the FPGA manager under the hood.
+   *
+   * @param bitstream_file path to the bitstream
+   * @return Status
+   */
   Status LoadBitstream(const std::string &bitstream_file);
-
+  /**
+   * @brief Configure the master and slave buses
+   *
+   * Configures the widths of the buses, enables them and configures
+   * accesses.
+   *
+   * @return Status
+   */
   Status ConfigureBuses();
-
+  /**
+   * @brief Loads the XCL Bin.
+   *
+   * In the case of the US+, it can be the default design if the bitstream
+   * is provided or a custom default design with overlays and kernels
+   *
+   * @param xclbin_file path to the xclbin file
+   * @param device_idx FPGA device index
+   * @return Status
+   */
   Status LoadXclBin(const std::string &xclbin_file, const int device_idx = 0);
 };
 }  // namespace cynq
