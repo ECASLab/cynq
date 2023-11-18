@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structcynq_1_1HardwareParameters.html" title="Define an abstract representation of the hardware parameters with some prefilled fields. " alt="" coords="5,5,187,32"/>
+<area shape="rect" id="node2" href="$structcynq_1_1UltraScaleParameters.html" title="Specialisation of the parameters given by the UltraScale. It is based on the PYNQ and XRT..." alt="" coords="235,5,421,32"/>
+</map>

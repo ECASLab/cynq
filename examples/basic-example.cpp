@@ -12,11 +12,16 @@
 #include <memory>
 #include <string>
 
-// cynq headers
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
+
+/**
+ * @example basic-example.cpp
+ * This is a sample use case for the CYNQ. It represents a
+ * matrix-multiplication from FAL
+ */
 
 #if !defined(EXAMPLE_BITSTREAM_LOCATION) || \
     !defined(EXAMPLE_DEFAULT_XCLBIN_LOCATION)

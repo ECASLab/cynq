@@ -129,9 +129,6 @@ class IDataMover {
    * @brief Create method
    * Factory method used for creating specific subclasses of IDataMover.
    *
-   * @example
-   * - no implementations -
-   *
    * @param impl
    * Used for establishin if the object is dependent on a runtime, use None if
    * this is not the case.

@@ -40,9 +40,22 @@ if developer_mode
   run_command(pre_commit, 'install', '--hook-type', 'commit-msg', check: false)
 endif
 
-subdir('third-party')
-subdir('src')
-subdir('examples')
+if not get_option('build-docs-only')
+  # Imports pkgconfig module
+  pkgconfig = import('pkgconfig')
+
+  subdir('third-party')
+  subdir('include/cynq')
+  subdir('src')
+  subdir('examples')
+
+  pkgconfig_install_dir = join_paths(get_option('libdir'), 'pkgconfig')
+  pkgconfig.generate(libcynq, requires: ['xrt'])
+endif
+
+if get_option('build-docs') or get_option('build-docs-only')
+  subdir('docs')
+endif
 
 # Testing suite
 if build_tests

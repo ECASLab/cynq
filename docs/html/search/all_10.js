@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['xclbin_5f',['xclbin_',['../structcynq_1_1UltraScaleParameters.html#affb0a2db730fdc22ca38749f18ccb3e1',1,'cynq::UltraScaleParameters']]],
+  ['xclbin_5ffile',['xclbin_file',['../structcynq_1_1HardwareParameters.html#a4da597018335c2d6d04359f01539b4e1',1,'cynq::HardwareParameters']]],
+  ['xrt',['XRT',['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6da8be0a941dc809f299c00fcc1787e04a0',1,'cynq::IAccelerator::XRT()'],['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a1b63f9ee7fea8143935a0ffc9649333e',1,'cynq::IDataMover::XRT()'],['../classcynq_1_1IHardware.html#aa34f15214af5df9acb1436734e0c7500ae451a00b789d124dccff366b46ee7f08',1,'cynq::IHardware::XRT()'],['../classcynq_1_1IMemory.html#add4032f8b90c3b6fb2eb48ddacd95b7fa6da6376df60753ff3cfad73f85a4c4c1',1,'cynq::IMemory::XRT()']]],
+  ['xrtaccelerator',['XRTAccelerator',['../classcynq_1_1XRTAccelerator.html',1,'cynq::XRTAccelerator'],['../classcynq_1_1XRTAccelerator.html#a223cba6729d08661cc52f42ebc8556fb',1,'cynq::XRTAccelerator::XRTAccelerator()=delete'],['../classcynq_1_1XRTAccelerator.html#aac20e97d24513e1efdc8a1cbce2e36b2',1,'cynq::XRTAccelerator::XRTAccelerator(const uint64_t addr)']]],
+  ['xrtacceleratorparameters',['XrtAcceleratorParameters',['../structcynq_1_1XrtAcceleratorParameters.html',1,'cynq']]],
+  ['xrtdatamover',['XRTDataMover',['../classcynq_1_1XRTDataMover.html',1,'cynq::XRTDataMover'],['../classcynq_1_1XRTMemory.html#a396ad56304d1cff148a5728b6dc0af89',1,'cynq::XRTMemory::XRTDataMover()'],['../classcynq_1_1XRTDataMover.html#a13f5c6366c3b69406ab15db760d37c95',1,'cynq::XRTDataMover::XRTDataMover(const uint64_t addr, std::shared_ptr&lt; HardwareParameters &gt; hwparams)'],['../classcynq_1_1XRTDataMover.html#a856ebfc4aa9e1a3d62d665843cf8640e',1,'cynq::XRTDataMover::XRTDataMover()=delete']]],
+  ['xrtdatamovermeta',['XRTDataMoverMeta',['../structcynq_1_1XRTDataMoverMeta.html',1,'cynq']]],
+  ['xrtdatamoverparameters',['XRTDataMoverParameters',['../structcynq_1_1XRTDataMoverParameters.html',1,'cynq']]],
+  ['xrtmemory',['XRTMemory',['../classcynq_1_1XRTMemory.html',1,'cynq::XRTMemory'],['../classcynq_1_1XRTMemory.html#a06af580d684d4d37f8b322bba00dfbf7',1,'cynq::XRTMemory::XRTMemory(const std::size_t size, uint8_t *hostptr, uint8_t *devptr, void *moverptr)'],['../classcynq_1_1XRTMemory.html#ad43bccecb20bc1e948f827cbb18cc60d',1,'cynq::XRTMemory::XRTMemory()=delete']]]
+];
