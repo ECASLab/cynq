@@ -93,9 +93,6 @@ class IHardware {
    * Factory method to create a hardware-specific subclasses for accelerators
    * and data movers.
    *
-   * @example
-   * - no implementations -
-   *
    * @param hw One of the values in the HardwareArchitecture enum class
    * present in the enums.hpp file that should correspond to the device being
    * used.

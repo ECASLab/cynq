@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structcynq_1_1DataMoverParameters.html" title="Define an abstract representation of the data mover parameters with some prefilled fields..." alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node2" href="$structcynq_1_1XRTDataMoverParameters.html" title="Define the specialisation of the data mover with the DMA engine and XRT. " alt="" coords="243,5,459,32"/>
+</map>

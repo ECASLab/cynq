@@ -80,9 +80,6 @@ class IAccelerator {
    * @brief Create method
    * Factory method used for creating specific subclasses of IAccelerator.
    *
-   * @example
-   * - no implementations -
-   *
    * @param impl
    * Used for establishing if the object is dependent on a runtime, use None if
    * this is not the case.

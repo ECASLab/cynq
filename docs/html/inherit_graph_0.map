@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structcynq_1_1AcceleratorParameters.html" title="Define an abstract representation of the accelerator parameters with some prefilled fields..." alt="" coords="5,5,196,32"/>
+<area shape="rect" id="node2" href="$structcynq_1_1XrtAcceleratorParameters.html" title="Specialisation of the parameters given by the UltraScale. This is only available by the source file t..." alt="" coords="244,5,452,32"/>
+</map>
