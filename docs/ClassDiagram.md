@@ -100,11 +100,16 @@ enum ExecutionType {
   Async
 }
 
+enum DataMoverType {
+  Stream,
+  MemoryMapped
+}
+
 
 class UltraScale {
   +Reset() -> Status
-  +GetDataMover(address) -> XRTDataMover *
-  +GetAccelerator(address) -> AmdAccelerator *
+  +GetDataMover(address, type : DataMoverType) -> IDataMover *
+  +GetAccelerator(address) -> EmbeddedAccelerator *
   +UltraScale(hw, bitsteam, xclbin)
 }
 
@@ -116,26 +121,26 @@ class XRTMemory {
   +XRTMemory(hostptr, devptr)
 }
 
-class XRTAccelerator {
+class MMIOAccelerator {
   Start(mode: StartMode) -> Status
   Stop() -> Status
   GetStatus() -> DeviceStatus
   #WriteRegister(address, data: uint8_t*, size: size_t) -> Status
   #ReadRegister(address, data: uint8_t*, size: size_t) -> Status
-  +AmdAccelerator(addr: uint64)
+  +MMIOAccelerator(addr: uint64)
 }
 
-class XRTDataMover {
+class DMADataMover {
   GetBuffer(size: size_t, type: MemoryType) -> XRTMemory *
   Upload(mem: IMemory, size: size_t, exetype: ExecutionType) -> Status
   Download(mem: IMemory, size: size_t, exetype: ExecutionType) -> Status
   Sync() -> Status
   GetStatus() -> DeviceStatus
-  XRTDataMover(addr)
+  DMADataMover(addr)
 }
 
 UltraScale ..> IHardware
 XRTMemory ..> IMemory
-XRTAccelerator ..> IAccelerator
-XRTDataMover ..> IDataMover
+MMIOAccelerator ..> IAccelerator
+DMADataMover ..> IDataMover
 @enduml
