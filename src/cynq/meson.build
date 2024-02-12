@@ -22,4 +22,6 @@ project_deps += xrt_dep
 projectinc += xrt_inc
 
 subdir('ultrascale')
+subdir('dma')
+subdir('mmio')
 subdir('xrt')

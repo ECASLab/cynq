@@ -44,8 +44,8 @@ class IAccelerator {
   enum Type {
     /** No runtime */
     None = 0,
-    /** Xilinx runtime */
-    XRT
+    /** MMIO runtime */
+    MMIO
   };
   /**
    * @brief Start method

@@ -8,17 +8,16 @@
  */
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include <xrt/xrt.h>
 #include <xrt/xrt/xrt_device.h>
 
+#include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
+#include <cynq/mmio/accelerator.hpp>
 #include <cynq/status.hpp>
-#include <cynq/xrt/accelerator.hpp>
-#include <cynq/xrt/datamover.hpp>
+#include <memory>
+#include <string>
 
 namespace cynq {
 /**

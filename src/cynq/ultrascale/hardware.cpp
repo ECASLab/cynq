@@ -7,22 +7,20 @@
  *
  */
 
-#include <cynq/ultrascale/hardware.hpp>
-
-#include <memory>
-#include <stdexcept>
-#include <string>
-
 #include <xrt/xrt.h>
 #include <xrt/xrt/xrt_bo.h>
 #include <xrt/xrt/xrt_device.h>
 
 #include <cynq/accelerator.hpp>
+#include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
+#include <cynq/mmio/accelerator.hpp>
 #include <cynq/status.hpp>
-#include <cynq/xrt/accelerator.hpp>
-#include <cynq/xrt/datamover.hpp>
+#include <cynq/ultrascale/hardware.hpp>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 extern "C" {
 #include <pynq_api.h> /* FIXME: to be removed in future releases */
@@ -164,12 +162,12 @@ Status UltraScale::LoadXclBin(const std::string &xclbin_file,
 Status UltraScale::Reset() { return Status{}; }
 
 std::shared_ptr<IDataMover> UltraScale::GetDataMover(const uint64_t address) {
-  return IDataMover::Create(IDataMover::XRT, address, this->parameters_);
+  return IDataMover::Create(IDataMover::DMA, address, this->parameters_);
 }
 
 std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
     const uint64_t address) {
-  return IAccelerator::Create(IAccelerator::XRT, address);
+  return IAccelerator::Create(IAccelerator::MMIO, address);
 }
 
 UltraScale::~UltraScale() {}

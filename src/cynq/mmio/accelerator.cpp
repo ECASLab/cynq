@@ -6,15 +6,13 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
+#include <cynq/accelerator.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/mmio/accelerator.hpp>
+#include <cynq/status.hpp>
 #include <memory>
 #include <stdexcept>
 #include <string>
-
-#include <cynq/xrt/accelerator.hpp>
-
-#include <cynq/accelerator.hpp>
-#include <cynq/enums.hpp>
-#include <cynq/status.hpp>
 
 extern "C" {
 #include <pynq_api.h> /* FIXME: to be removed in future releases */
@@ -33,7 +31,7 @@ namespace cynq {
  * @brief Specialisation of the parameters given by the UltraScale. This is
  * only available by the source file to encapsulate the dependencies involved.
  */
-struct XrtAcceleratorParameters : public AcceleratorParameters {
+struct MMIOAcceleratorParameters : public AcceleratorParameters {
   /** Accelerator address */
   uint64_t addr_;
   /** Address space size */
@@ -41,15 +39,15 @@ struct XrtAcceleratorParameters : public AcceleratorParameters {
   /** HLS Design */
   PYNQ_HLS hls_;
   /** Virtual destructor required for the inheritance */
-  virtual ~XrtAcceleratorParameters() = default;
+  virtual ~MMIOAcceleratorParameters() = default;
 };
 
-XRTAccelerator::XRTAccelerator(const uint64_t addr)
+MMIOAccelerator::MMIOAccelerator(const uint64_t addr)
     : addr_{addr},
       addr_space_size_{kAddrSpace},
-      accel_params_{std::make_unique<XrtAcceleratorParameters>()} {
+      accel_params_{std::make_unique<MMIOAcceleratorParameters>()} {
   /* The assumption is that at this point, it is ok */
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
 
   params->addr_ = this->addr_;
   params->addr_space_size_ = this->addr_space_size_;
@@ -62,19 +60,19 @@ XRTAccelerator::XRTAccelerator(const uint64_t addr)
   }
 }
 
-Status XRTAccelerator::Start(const StartMode mode) {
+Status MMIOAccelerator::Start(const StartMode mode) {
   constexpr uint64_t ctrl_reg_addr = 0x00;
   const uint8_t ctrl_reg_val = StartMode::Once == mode ? 0x01 : 0x81;
   return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
 }
 
-Status XRTAccelerator::Stop() {
+Status MMIOAccelerator::Stop() {
   constexpr uint64_t ctrl_reg_addr = 0x00;
   const uint8_t ctrl_reg_val = 0x0;
   return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
 }
 
-DeviceStatus XRTAccelerator::GetStatus() {
+DeviceStatus MMIOAccelerator::GetStatus() {
   constexpr uint64_t ctrl_reg_addr = 0x00;
   uint8_t ctrl_reg_val = 0x0;
 
@@ -98,9 +96,9 @@ DeviceStatus XRTAccelerator::GetStatus() {
   }
 }
 
-Status XRTAccelerator::WriteRegister(const uint64_t address,
-                                     const uint8_t *data, const size_t size) {
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
+Status MMIOAccelerator::WriteRegister(const uint64_t address,
+                                      const uint8_t *data, const size_t size) {
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
   auto ret = PYNQ_writeToHLS(&params->hls_, const_cast<uint8_t *>(data),
                              address, size);
   if (PYNQ_SUCCESS != ret) {
@@ -113,9 +111,9 @@ Status XRTAccelerator::WriteRegister(const uint64_t address,
   return Status{};
 }
 
-Status XRTAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
-                                    const size_t size) {
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
+Status MMIOAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
+                                     const size_t size) {
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
   auto ret = PYNQ_readFromHLS(&params->hls_, data, address, size);
   if (PYNQ_SUCCESS != ret) {
     std::string msg = "Cannot read on HLS register: ";
@@ -127,9 +125,9 @@ Status XRTAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
   return Status{};
 }
 
-XRTAccelerator::~XRTAccelerator() {
+MMIOAccelerator::~MMIOAccelerator() {
   /* The assumption is that at this point, it is ok */
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
   PYNQ_closeHLS(&params->hls_);
 }
 

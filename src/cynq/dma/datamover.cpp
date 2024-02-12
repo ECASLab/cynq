@@ -7,19 +7,16 @@
  *
  */
 
-#include <cynq/xrt/datamover.hpp>
-
-#include <memory>
-
 #include <xrt/xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
+#include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
-
 #include <cynq/ultrascale/hardware.hpp>
+#include <memory>
 
 extern "C" {
 #include <pynq_api.h> /* FIXME: to be removed in future releases */
@@ -30,21 +27,21 @@ namespace cynq {
  * @brief Define the specialisation of the data mover with the DMA engine
  * and XRT
  */
-struct XRTDataMoverParameters : public DataMoverParameters {
+struct DMADataMoverParameters : public DataMoverParameters {
   /** DMA accessor */
   PYNQ_AXI_DMA dma_;
   /** DMA address */
   uint64_t addr_;
   /** Virtual destructor required for the inheritance */
-  virtual ~XRTDataMoverParameters() = default;
+  virtual ~DMADataMoverParameters() = default;
 };
 
-XRTDataMover::XRTDataMover(const uint64_t addr,
+DMADataMover::DMADataMover(const uint64_t addr,
                            std::shared_ptr<HardwareParameters> hwparams)
-    : data_mover_params_{std::make_unique<XRTDataMoverParameters>()} {
+    : data_mover_params_{std::make_unique<DMADataMoverParameters>()} {
   /* The assumption is that at this point, it is ok */
   auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+      dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
   params->addr_ = addr;
   params->hw_params_ = hwparams;
@@ -53,7 +50,7 @@ XRTDataMover::XRTDataMover(const uint64_t addr,
   PYNQ_openDMA(&params->dma_, addr);
 }
 
-std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
+std::shared_ptr<IMemory> DMADataMover::GetBuffer(const size_t size,
                                                  const MemoryType type) {
   const xrt::memory_group group = (xrt::memory_group)(0);
 
@@ -84,7 +81,7 @@ std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
    * TRANSFER */
   auto buffer_object =
       std::make_shared<xrt::bo>(hw_params_->device_, size, flags, group);
-  XRTDataMoverMeta *meta = new XRTDataMoverMeta;
+  DMADataMoverMeta *meta = new DMADataMoverMeta;
   meta->bo_ = buffer_object;
   meta->type_ = type;
 
@@ -92,12 +89,12 @@ std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
                          reinterpret_cast<void *>(meta));
 }
 
-DeviceStatus XRTDataMover::GetStatus() { return DeviceStatus::Idle; }
+DeviceStatus DMADataMover::GetStatus() { return DeviceStatus::Idle; }
 
-XRTDataMover::~XRTDataMover() {
+DMADataMover::~DMADataMover() {
   /* The assumption is that at this point, it is ok */
   auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+      dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
   PYNQ_closeDMA(&params->dma_);
 }
 
@@ -105,12 +102,12 @@ XRTDataMover::~XRTDataMover() {
    was out from the scope of this release. In next releases, we can have a
    concept similar to work streams or queues */
 
-Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
+Status DMADataMover::Upload(const std::shared_ptr<IMemory> mem,
                             const size_t size, const size_t offset,
                             const ExecutionType exetype) {
   int ret = PYNQ_SUCCESS;
   auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+      dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
   /* Get device pointer */
   if (!mem) {
@@ -148,12 +145,12 @@ Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
   }
 }
 
-Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
+Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
                               const size_t size, const size_t offset,
                               const ExecutionType exetype) {
   int ret = PYNQ_SUCCESS;
   auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+      dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
   /* Get device pointer */
   if (!mem) {
@@ -189,11 +186,11 @@ Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
   }
 }
 
-Status XRTDataMover::Sync(const SyncType type) {
+Status DMADataMover::Sync(const SyncType type) {
   int ret = PYNQ_SUCCESS;
 
   auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
+      dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
   if (SyncType::HostToDevice == type) {
     ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_WRITE);

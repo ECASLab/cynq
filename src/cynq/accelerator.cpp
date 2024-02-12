@@ -7,17 +7,15 @@
  *
  */
 #include <cynq/accelerator.hpp>
-
+#include <cynq/mmio/accelerator.hpp>
 #include <memory>
-
-#include <cynq/xrt/accelerator.hpp>
 
 namespace cynq {
 std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
                                                    const uint64_t addr) {
   switch (impl) {
-    case IAccelerator::Type::XRT:
-      return std::make_shared<XRTAccelerator>(addr);
+    case IAccelerator::Type::MMIO:
+      return std::make_shared<MMIOAccelerator>(addr);
     default:
       return nullptr;
   }
