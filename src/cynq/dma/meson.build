@@ -7,5 +7,5 @@
 #
 
 sources += [
-  files('memory.cpp')
+  files('datamover.cpp'),
 ]

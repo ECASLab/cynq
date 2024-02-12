@@ -52,8 +52,8 @@ class IDataMover {
   enum Type {
     /** No runtime */
     None = 0,
-    /** Xilinx runtime */
-    XRT
+    /** DMA-based runtime */
+    DMA
   };
   /**
    * @brief GetBuffer method

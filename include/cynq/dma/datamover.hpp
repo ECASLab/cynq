@@ -7,8 +7,6 @@
  *
  */
 #pragma once
-#include <memory>
-
 #include <xrt/xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
@@ -16,12 +14,13 @@
 #include <cynq/hardware.hpp>
 #include <cynq/status.hpp>
 #include <cynq/xrt/memory.hpp>
+#include <memory>
 
 namespace cynq {
 /**
  * @brief Metadata inserted into each XRTMemory instance
  */
-struct XRTDataMoverMeta {
+struct DMADataMoverMeta {
   /** Buffer object */
   std::shared_ptr<xrt::bo> bo_;
   /** Memory type */
@@ -29,16 +28,16 @@ struct XRTDataMoverMeta {
 };
 
 /**
- * @brief XRTDataMover class
+ * @brief DMADataMover class
  * Provides the api from which to interact with the data buffers responsable for
  * memory operations making use of the Xilinx runtime (XRT) the types are the
  * following: BO (Buffer object) DMA (Direct memory allocation)
  *
  */
-class XRTDataMover : public IDataMover {
+class DMADataMover : public IDataMover {
  public:
   /**
-   * @brief Construct a new XRTDataMover object
+   * @brief Construct a new DMADataMover object
    *
    * This constructs a data mover that uses DMA to execute the transfers
    * between the host and the device. Moreover, it uses XRT buffer object as
@@ -46,7 +45,7 @@ class XRTDataMover : public IDataMover {
    * @param addr DMA address in the physical memory map
    * @param hwparams Hardware-specific params
    */
-  XRTDataMover(const uint64_t addr,
+  DMADataMover(const uint64_t addr,
                std::shared_ptr<HardwareParameters> hwparams);
 
   /**
@@ -55,13 +54,13 @@ class XRTDataMover : public IDataMover {
    * The default constructor is deleted since the address is mandatory for the
    * DMA transfer.
    */
-  XRTDataMover() = delete;
+  DMADataMover() = delete;
   /**
-   * @brief ~XRTDatamover destructor method
-   * Destroy the XRTDatamover object.
+   * @brief ~DMADataMover destructor method
+   * Destroy the DMADataMover object.
    *
    */
-  virtual ~XRTDataMover();
+  virtual ~DMADataMover();
   /**
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,

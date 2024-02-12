@@ -8,26 +8,25 @@
  */
 #pragma once
 
-#include <memory>
-
 #include <cynq/accelerator.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
+#include <memory>
 
 namespace cynq {
 /**
- * @brief XRTAccelerator class
+ * @brief MMIOAccelerator class
  * This class provides the api to operate the accelerator.
  *
  */
-class XRTAccelerator : public IAccelerator {
+class MMIOAccelerator : public IAccelerator {
  public:
   /**
    * @brief Delete the default constructor since address is needed
    */
-  XRTAccelerator() = delete;
+  MMIOAccelerator() = delete;
   /**
-   * @brief Construct a new XRTAccelerator object
+   * @brief Construct a new MMIOAccelerator object
    *
    * It constructs an accessor to the accelerator in the PL design according
    * to the AXI-lite memory mapping. This is widely compatible with AXI4-lite
@@ -35,12 +34,12 @@ class XRTAccelerator : public IAccelerator {
    *
    * @param addr 64-bit address in the physical memory space
    */
-  explicit XRTAccelerator(const uint64_t addr);
+  explicit MMIOAccelerator(const uint64_t addr);
   /**
-   * @brief ~XRTAccelerator destructor method
-   * Destroy the XRTAccelerator object
+   * @brief ~MMIOAccelerator destructor method
+   * Destroy the MMIOAccelerator object
    */
-  virtual ~XRTAccelerator();
+  virtual ~MMIOAccelerator();
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
