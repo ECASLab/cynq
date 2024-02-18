@@ -34,6 +34,7 @@
 #ifndef PYNQ_API_H_INCLUDED
 #define PYNQ_API_H_INCLUDED
 
+#include <stdint.h>
 #include <stdlib.h>
 
 #define PYNQ_SUCCESS 1
@@ -61,7 +62,7 @@ typedef struct bit_file_header_struct {
 
 typedef struct shared_memory_state_struct {
   void* pointer;
-  unsigned long physical_address;
+  uint64_t physical_address;
 } PYNQ_SHARED_MEMORY;
 
 typedef enum axi_dma_direction_enum {
