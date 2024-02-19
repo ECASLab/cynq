@@ -170,6 +170,11 @@ std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
   return IAccelerator::Create(IAccelerator::MMIO, address);
 }
 
+std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
+    const std::string & /* kernelname */) {
+  return nullptr;
+}
+
 UltraScale::~UltraScale() {}
 
 }  // namespace cynq
