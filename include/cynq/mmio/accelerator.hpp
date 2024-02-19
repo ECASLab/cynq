@@ -62,6 +62,29 @@ class MMIOAccelerator : public IAccelerator {
    * @return Status
    */
   Status Stop() override;
+
+  /**
+   * @brief Sync method
+   * Forces to wait until the accelerator execution is "done"
+   *
+   * @return Status
+   */
+  Status Sync() override;
+
+  /**
+   * @brief Get the memory bank ID (not implemented)
+   *
+   * It corresponds to the argument memory argument for affinity. It is useful
+   * for assigning memory banks to the DataMovers before requesting any memory.
+   *
+   * It is only used by Vitis and Alveo workflows
+   *
+   * @param pos memory bank position within the kernel
+   *
+   * @return 0
+   */
+  uint GetMemoryBank(const uint pos) override;
+
   /**
    * @brief GetStatus method
    * This returns the accelerator state by using the DeviceStatus. This reads
@@ -73,7 +96,7 @@ class MMIOAccelerator : public IAccelerator {
 
  protected:
   /**
-   * @brief WriteRegister method
+   * @brief Write Register method
    * Writes to the register of the accelerator.
    *
    * @param address a unsigned integer of 64 bits representing an address.
@@ -88,7 +111,7 @@ class MMIOAccelerator : public IAccelerator {
   Status WriteRegister(const uint64_t address, const uint8_t *data,
                        const size_t size) override;
   /**
-   * @brief ReadRegister method
+   * @brief Read Register method
    *
    * @param address a unsiged integer of 64 bits representing an address.
    *
@@ -101,6 +124,14 @@ class MMIOAccelerator : public IAccelerator {
    */
   Status ReadRegister(const uint64_t address, uint8_t *data,
                       const size_t size) override;
+
+  /**
+   * @brief Attach Register method (not implemented)
+   *
+   * @return Status: Status not implemented
+   */
+  Status AttachRegister(const uint64_t index, uint8_t *data,
+                        const size_t size) override;
 
  private:
   /** Accelerator address */
