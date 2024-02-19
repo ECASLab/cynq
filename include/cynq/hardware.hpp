@@ -67,6 +67,10 @@ class IHardware {
    * hardware logic from the data movement logic.
    *
    * @param address a unsigned integer of 64 bits representing an address.
+   * In the case of ZYNQ boards, it corresponds to the base address of the
+   * accelerator BAR (Bank Address Register). In the case of Alveo boards,
+   * it is preferrable, you must query the cynq::IAccelerator::GetMemoryBank
+   * for creating the DataMover for a specific memory bank
    *
    * @return std::shared_ptr<IDataMover>
    * Returns an IDataMover pointer with reference counting. It should be
@@ -75,11 +79,14 @@ class IHardware {
    */
   virtual std::shared_ptr<IDataMover> GetDataMover(const uint64_t address) = 0;
   /**
-   * @brief GetAcceleratorMover method
-   * IDataMover instance of IAccelerator inheritors separating the hardware
+   * @brief GetAccelerator method
+   * IAccelerator instance of IAccelerator inheritors separating the hardware
    * logic from the specific logic of the accelerator.
    *
    * @param address a unsigned integer of 64 bits representing an address.
+   * In the case of ZYNQ boards, it corresponds to the base address of the
+   * accelerator BAR (Bank Address Register). In the case of Alveo boards,
+   * it is preferrable to use the GetAccelerator(const std::string &) overload.
    *
    * @return std::shared_ptr<IAccelerator>
    * Returns an IAccelerator pointer with reference counting. It should be
@@ -88,6 +95,24 @@ class IHardware {
    */
   virtual std::shared_ptr<IAccelerator> GetAccelerator(
       const uint64_t address) = 0;
+
+  /**
+   * @brief GetAccelerator method
+   * IAccelerator instance of IAccelerator inheritors separating the hardware
+   * logic from the specific logic of the accelerator.
+   *
+   * @param kernelname string that contains the kernel name to launch. It is
+   * used by the Vitis and Alveo workflows. It is not implemented in Vivado
+   * workflows
+   *
+   * @return std::shared_ptr<IAccelerator>
+   * Returns an IAccelerator pointer with reference counting. It should be
+   * thread-safe.
+   *
+   */
+  virtual std::shared_ptr<IAccelerator> GetAccelerator(
+      const std::string &kernelname) = 0;
+
   /**
    * @brief Create method
    * Factory method to create a hardware-specific subclasses for accelerators
@@ -98,9 +123,11 @@ class IHardware {
    * used.
    *
    * @param bitstream string that represents the name of the file
-   * with the bitstream.
+   * with the bitstream. It is used for normal Vivado flow in ZYNQ boards.
+   * In Alveo, it is neglected.
    *
-   * @param xclbin string that represents the name of the xcl.bin file.
+   * @param xclbin string that represents the name of the xclbin file.
+   * Used for Vitis and Alveo workflows
    *
    * @return std::shared_ptr<IHardware>
    * Returns an IAccelerator pointer with reference counting. It should be
