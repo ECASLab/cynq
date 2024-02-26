@@ -22,7 +22,8 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
 }
 
 std::shared_ptr<IAccelerator> IAccelerator::Create(
-    IAccelerator::Type impl, const std::string& /* addr */) {
+    IAccelerator::Type impl, const std::string& /* addr */,
+    const std::shared_ptr<HardwareParameters> /* params */) {
   switch (impl) {
     default:
       return nullptr;

@@ -12,34 +12,37 @@
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
 #include <memory>
+#include <string>
 
 namespace cynq {
 /**
- * @brief MMIOAccelerator class
+ * @brief XRTAccelerator class
  * This class provides the api to operate the accelerator.
  *
  */
-class MMIOAccelerator : public IAccelerator {
+class XRTAccelerator : public IAccelerator {
  public:
   /**
    * @brief Delete the default constructor since address is needed
    */
-  MMIOAccelerator() = delete;
+  XRTAccelerator() = delete;
   /**
-   * @brief Construct a new MMIOAccelerator object
+   * @brief Construct a new XRTAccelerator object
    *
-   * It constructs an accessor to the accelerator in the PL design according
-   * to the AXI-lite memory mapping. This is widely compatible with AXI4-lite
-   * controlled HLS designs.
+   * It constructs an accessor to the a kernel accelerator in the PL design
+   * according to its kernel name.
    *
-   * @param addr 64-bit address in the physical memory space
+   * @param kernelname string containing the kernel name
+   * @param hwparams parameters corresponding to the platform linked to the
+   * kernel
    */
-  explicit MMIOAccelerator(const uint64_t addr);
+  XRTAccelerator(const std::string &kernelname,
+                 const std::shared_ptr<HardwareParameters> hwparams);
   /**
-   * @brief ~MMIOAccelerator destructor method
-   * Destroy the MMIOAccelerator object
+   * @brief ~XRTAccelerator destructor method
+   * Destroy the XRTAccelerator object
    */
-  virtual ~MMIOAccelerator();
+  virtual ~XRTAccelerator();
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
@@ -72,16 +75,16 @@ class MMIOAccelerator : public IAccelerator {
   Status Sync() override;
 
   /**
-   * @brief Get the memory bank ID (not implemented)
+   * @brief Get the memory bank ID
    *
    * It corresponds to the argument memory argument for affinity. It is useful
    * for assigning memory banks to the DataMovers before requesting any memory.
    *
    * It is only used by Vitis and Alveo workflows
    *
-   * @param pos memory bank position within the kernel
+   * @param pos memory bank position within the memory arguments in the kernel
    *
-   * @return 0
+   * @return integer number corresponding to the memory bank ID
    */
   int GetMemoryBank(const uint pos) override;
 
@@ -97,6 +100,7 @@ class MMIOAccelerator : public IAccelerator {
  protected:
   /**
    * @brief Write Register method
+   *
    * Writes to the register of the accelerator.
    *
    * @param address a unsigned integer of 64 bits representing an address.
@@ -106,12 +110,14 @@ class MMIOAccelerator : public IAccelerator {
    *
    * @param size size in bytes of the data to write.
    *
-   * @return Status
+   * @return Status: not implemented
    */
   Status WriteRegister(const uint64_t address, const uint8_t *data,
                        const size_t size) override;
   /**
    * @brief Read Register method
+   *
+   * Reads from the register of the accelerator
    *
    * @param address a unsiged integer of 64 bits representing an address.
    *
@@ -120,24 +126,22 @@ class MMIOAccelerator : public IAccelerator {
    *
    * @param size size in bytes of the data to read.
    *
-   * @return Status
+   * @return Status: not implemented
    */
   Status ReadRegister(const uint64_t address, uint8_t *data,
                       const size_t size) override;
 
   /**
-   * @brief Attach Register method (not implemented)
+   * @brief Attach Register method
    *
-   * @return Status: Status not implemented
+   * Attaches the register to exchange data with the kernel back and forth.
+   *
+   * @return Status
    */
   Status AttachRegister(const uint64_t index, uint8_t *data,
                         const size_t size) override;
 
  private:
-  /** Accelerator address */
-  uint64_t addr_;
-  /** Address space size */
-  uint64_t addr_space_size_;
   /** Accelerator-specific configurations */
   std::unique_ptr<AcceleratorParameters> accel_params_;
 };

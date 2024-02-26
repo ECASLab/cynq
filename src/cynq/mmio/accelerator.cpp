@@ -142,6 +142,6 @@ MMIOAccelerator::~MMIOAccelerator() {
   PYNQ_closeHLS(&params->hls_);
 }
 
-uint MMIOAccelerator::GetMemoryBank(const uint /* pos */) { return 0; }
+int MMIOAccelerator::GetMemoryBank(const uint /* pos */) { return 0; }
 
 }  // namespace cynq

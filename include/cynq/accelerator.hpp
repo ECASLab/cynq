@@ -15,6 +15,9 @@
 #include <cynq/status.hpp>
 
 namespace cynq {
+
+struct HardwareParameters;
+
 /**
  * @brief Define an abstract representation of the accelerator parameters
  * with some prefilled fields
@@ -122,6 +125,9 @@ class IAccelerator {
    * Use this factory only in case of being in a ZYNQ with Vitis workflow or
    * in the Alveo.
    *
+   * @param hwparams
+   * Hardware parameters required for creating the accelerator
+   *
    * @return std::shared_ptr<IAccelerator>
    * This is a shared_ptr with reference counting, the type will depend
    * on the value of impl, the options are the following:
@@ -129,8 +135,9 @@ class IAccelerator {
    * None -> nullptr
    *
    */
-  static std::shared_ptr<IAccelerator> Create(IAccelerator::Type impl,
-                                              const std::string &kernelname);
+  static std::shared_ptr<IAccelerator> Create(
+      IAccelerator::Type impl, const std::string &kernelname,
+      const std::shared_ptr<HardwareParameters> hwparams);
   /**
    * @brief Write method
    * Performs a write operation to the accelerator through a register.
@@ -193,7 +200,7 @@ class IAccelerator {
    *
    * @return the memory bank
    */
-  virtual uint GetMemoryBank(const uint pos) = 0;
+  virtual int GetMemoryBank(const uint pos) = 0;
 
   /**
    * @brief Attach an argument
