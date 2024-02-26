@@ -53,7 +53,9 @@ class IDataMover {
     /** No runtime */
     None = 0,
     /** DMA-based runtime */
-    DMA
+    DMA,
+    /** XRT-based runtime */
+    XRT
   };
   /**
    * @brief GetBuffer method

@@ -17,6 +17,8 @@ add_global_arguments(
   language : 'cpp'
 )
 
+cc = meson.get_compiler('cpp')
+
 #############################
 ## Dependencies definition ##
 #############################

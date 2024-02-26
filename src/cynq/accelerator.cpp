@@ -1,7 +1,7 @@
 /*
  * See LICENSE for more information about licensing
  *
- * Copyright 2023
+ * Copyright 2023-2024
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
@@ -16,6 +16,14 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
   switch (impl) {
     case IAccelerator::Type::MMIO:
       return std::make_shared<MMIOAccelerator>(addr);
+    default:
+      return nullptr;
+  }
+}
+
+std::shared_ptr<IAccelerator> IAccelerator::Create(
+    IAccelerator::Type impl, const std::string& /* addr */) {
+  switch (impl) {
     default:
       return nullptr;
   }
