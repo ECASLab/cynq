@@ -51,7 +51,8 @@ DMADataMover::DMADataMover(const uint64_t addr,
 }
 
 std::shared_ptr<IMemory> DMADataMover::GetBuffer(const size_t size,
-                                                 const MemoryType type) {
+                                                 const MemoryType type,
+                                                 const uint) {
   const xrt::memory_group group = (xrt::memory_group)(0);
 
   /* The assumption is that at this point, it is ok */
