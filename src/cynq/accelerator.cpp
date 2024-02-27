@@ -8,6 +8,7 @@
  */
 #include <cynq/accelerator.hpp>
 #include <cynq/mmio/accelerator.hpp>
+#include <cynq/xrt/accelerator.hpp>
 #include <memory>
 
 namespace cynq {
@@ -22,9 +23,11 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
 }
 
 std::shared_ptr<IAccelerator> IAccelerator::Create(
-    IAccelerator::Type impl, const std::string& /* addr */,
-    const std::shared_ptr<HardwareParameters> /* params */) {
+    IAccelerator::Type impl, const std::string& addr,
+    const std::shared_ptr<HardwareParameters> params) {
   switch (impl) {
+    case IAccelerator::Type::XRT:
+      return std::make_shared<XRTAccelerator>(addr, params);
     default:
       return nullptr;
   }
