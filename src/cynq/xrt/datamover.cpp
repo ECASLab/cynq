@@ -37,8 +37,8 @@ XRTDataMover::XRTDataMover(const uint64_t /* addr */,
 }
 
 std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
-                                                 const MemoryType type,
-                                                 const uint memory_bank) {
+                                                 const int memory_bank,
+                                                 const MemoryType type) {
   const xrt::memory_group group = (xrt::memory_group)(memory_bank);
 
   /* The assumption is that at this point, it is ok */

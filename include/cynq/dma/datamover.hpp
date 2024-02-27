@@ -82,9 +82,9 @@ class DMADataMover : public IDataMover {
    *
    * @return std::shared_ptr<IMemory>
    */
-  std::shared_ptr<IMemory> GetBuffer(const size_t size,
-                                     const MemoryType type = MemoryType::Dual,
-                                     const uint memory_bank = 0) override;
+  std::shared_ptr<IMemory> GetBuffer(
+      const size_t size, const int memory_bank = 0,
+      const MemoryType type = MemoryType::Dual) override;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.
