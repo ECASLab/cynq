@@ -101,7 +101,9 @@ Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
   }
 
   auto meta = (XRTDataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
-  meta->bo_->sync(XCL_BO_SYNC_BO_TO_DEVICE, size, offset);
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_TO_DEVICE, size, offset);
+  }
 
   return Status{};
 }
@@ -123,7 +125,9 @@ Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
   }
 
   auto meta = (XRTDataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
-  meta->bo_->sync(XCL_BO_SYNC_BO_FROM_DEVICE, size, offset);
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_FROM_DEVICE, size, offset);
+  }
 
   return Status{};
 }

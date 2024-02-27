@@ -8,14 +8,13 @@
  */
 
 #include <cstdint>
-#include <iostream>
-#include <memory>
-#include <string>
-
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
+#include <iostream>
+#include <memory>
+#include <string>
 
 /**
  * @example basic-example.cpp
@@ -107,10 +106,6 @@ int main() {
   // Fill the data
   FillData(A, B, C);
 
-  // Synchronise data buffer
-  std::cout << "----- Synchronise Input -----" << std::endl;
-  in_mem->Sync(SyncType::HostToDevice);
-
   // Start the accel
   accel->Start(StartMode::Continuous);
   // Check the control register
@@ -129,14 +124,11 @@ int main() {
 
   std::cout << "----- Moving the data -----" << std::endl;
   // Move the data
-  mover->Upload(in_mem, in_mem->Size(), 0, ExecutionType::Sync);
+  mover->Upload(in_mem, in_mem->Size(), 0, ExecutionType::Async);
   mover->Download(out_mem, out_mem->Size(), 0, ExecutionType::Sync);
 
   // Stop the accel
   accel->Stop();
-
-  std::cout << "----- Synchronising output -----" << std::endl;
-  out_mem->Sync(SyncType::DeviceToHost);
 
   // Read the output on *out_data*
   PrintData(C);
