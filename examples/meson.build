@@ -7,7 +7,7 @@
 #
 #
 
-executable('basic-example',
+executable('basic-example-kria',
   ['zynq-mpsoc/basic-example.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,

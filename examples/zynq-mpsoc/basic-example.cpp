@@ -22,18 +22,18 @@
  * matrix-multiplication from FAL
  */
 
-#if !defined(EXAMPLE_BITSTREAM_LOCATION) || \
-    !defined(EXAMPLE_DEFAULT_XCLBIN_LOCATION)
+#if !defined(EXAMPLE_KRIA_BITSTREAM_LOCATION) || \
+    !defined(EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION)
 #error "Missing location macros for example"
 #endif
 
 // Given by the example
-static constexpr char kBitstream[] = EXAMPLE_BITSTREAM_LOCATION;
-static constexpr char kXclBin[] = EXAMPLE_DEFAULT_XCLBIN_LOCATION;
+static constexpr char kBitstream[] = EXAMPLE_KRIA_BITSTREAM_LOCATION;
+static constexpr char kXclBin[] = EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION;
 
 // Given by the design
-static constexpr uint64_t kAccelAddress = EXAMPLE_ACCEL_ADDR;
-static constexpr uint64_t kDmaAddress = EXAMPLE_DMA_ADDR;
+static constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;
+static constexpr uint64_t kDmaAddress = EXAMPLE_KRIA_DMA_ADDR;
 static constexpr uint64_t kAddrWriteInputCols = 24;
 static constexpr uint64_t kAddrWriteOutputCols = 40;
 static constexpr uint64_t kAddrReadInputCols = 32;
