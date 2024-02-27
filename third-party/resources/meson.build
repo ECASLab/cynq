@@ -25,3 +25,9 @@ cpp_args += [
   '-DEXAMPLE_KRIA_ACCEL_ADDR=0xa0000000',
   '-DEXAMPLE_KRIA_DMA_ADDR=0xa0010000'
 ]
+
+vadd_xclbin_location = fmt.format(meson.global_source_root(), files('alveo-xclbin/vadd/vadd.xclbin')[0])
+
+cpp_args += [
+  '-DEXAMPLE_ALVEO_VADD_XCLBIN_LOCATION=' + vadd_xclbin_location,
+]

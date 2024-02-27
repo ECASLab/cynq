@@ -13,3 +13,10 @@ executable('basic-example-kria',
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )
+
+executable('vadd-example-alveo',
+  ['alveo/vadd-host.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
