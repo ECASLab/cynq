@@ -73,7 +73,7 @@ A[5] = 1;
 
 The `HostAddress<T>()` maps the memory into a pointer that is accessible to the host. `T` can be any type that can be reinterpretedly casted.
 
-7) Write/Read the IP Core / Accelerator registers. You can use the `Write()` and `Read()` methods.
+7) Write/Read the IP Core / Accelerator registers. You can use the `Write()` and `Read()` methods for AXI4-Lite interfaces.
 
 ```c++
 uint16_t input_a_cols;
@@ -91,6 +91,18 @@ Both `Read(addr, data*, elems)` and `Write(addr, data*, elems)` have the same ar
 * `addr`: offset address of the register
 * `data*`: data pointer to be read/written
 * `elems`: number of elements of type `data` to read/write
+
+Moreover, if you need to attach a memory block to an AXI4 Memory Mapped interface whose address is defined in ab AXI4-Lite interface, you can use the Attach(addr, buffer).
+
+```c++
+uint32_t addr = 0x40
+accel->Attach(addr, mem_bo);
+```
+
+`Attach(addr, data)` arguments:
+
+* `addr`: memory address offset in the AXI4-Lite control register bank.
+* `mem`: memory buffer to attach (std::shared_ptr<IMemory>)
 
 8) Start/Stop the accelerator by writing the control register
 
@@ -186,15 +198,29 @@ The `HostAddress<T>()` maps the memory into a pointer that is accessible to the 
 
 7) Write/Read the IP Core / Accelerator registers. You can use the `Attach()` method.
 
+If you require to attach a memory to an AXI4 Memory Mapped interface, you can instantiate the IMemory pointer through Attach(index, buffer).
+
 ```c++
-uint64_t bo_0_addr = (uint64_t)bo_0->DeviceAddress<uint32_t>().get();
-accel->Attach(0, &bo_0_addr);
+accel->Attach(0, bo_0);
 ```
 
 `Attach(index, data)` arguments:
 
 * `index`: argument position
-* `data*`: physical address to be attached
+* `mem`: memory buffer to attach
+
+If you require to attach an argument that is either a scalar or an array in AXI4-Lite interfaces, you can also use Attach(index, data*, n), where:
+
+* index: position of the argument in the kernel
+* data: scalar or array pointer
+* n: number of elements
+
+For example:
+
+```c++
+uint datasize = 4096;
+accel->Attach(3, &datasize);
+```
 
 8) Upload data
 

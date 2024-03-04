@@ -88,12 +88,9 @@ int main(int argc, char **argv) {
   std::cout << "----- Configuring accelerator -----" << std::endl;
   auto devstatus = accel->GetStatus();
   std::cout << "\tAccel Status: " << static_cast<int>(devstatus) << std::endl;
-  uint64_t bo_0_addr = (uint64_t)bo_0->DeviceAddress<uint32_t>().get();
-  uint64_t bo_1_addr = (uint64_t)bo_1->DeviceAddress<uint32_t>().get();
-  uint64_t bo_out_addr = (uint64_t)bo_out->DeviceAddress<uint32_t>().get();
-  accel->Attach(0, &bo_0_addr);
-  accel->Attach(1, &bo_1_addr);
-  accel->Attach(2, &bo_out_addr);
+  accel->Attach(0, bo_0);
+  accel->Attach(1, bo_1);
+  accel->Attach(2, bo_out);
   accel->Attach(3, &datasize);
 
   accel->Start(StartMode::Once);
