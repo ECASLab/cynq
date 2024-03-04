@@ -137,5 +137,26 @@ class IHardware {
   static std::shared_ptr<IHardware> Create(const HardwareArchitecture hw,
                                            const std::string &bitstream,
                                            const std::string &xclbin);
+
+  /**
+   * @brief Create method
+   * Factory method to create a hardware-specific subclasses for accelerators
+   * and data movers.
+   *
+   * @param hw One of the values in the HardwareArchitecture enum class
+   * present in the enums.hpp file that should correspond to the device being
+   * used.
+   *
+   * @param config string that represents the name of the file
+   * with the bitstream in the case of Ultrascale or xclbin for Vitis and
+   * Alveo workflows
+   *
+   * @return std::shared_ptr<IHardware>
+   * Returns an IAccelerator pointer with reference counting. It should be
+   * thread-safe.
+   *
+   */
+  static std::shared_ptr<IHardware> Create(const HardwareArchitecture hw,
+                                           const std::string &config);
 };
 }  // namespace cynq

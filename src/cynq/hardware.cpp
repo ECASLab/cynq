@@ -24,4 +24,17 @@ std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
       return nullptr;
   }
 }
+
+std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
+                                             const std::string& config) {
+  switch (hw) {
+    case HardwareArchitecture::UltraScale:
+      return std::make_shared<UltraScale>(config,
+                                          EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION);
+    case HardwareArchitecture::Alveo:
+      return std::make_shared<Alveo>("", config);
+    default:
+      return nullptr;
+  }
+}
 }  // namespace cynq

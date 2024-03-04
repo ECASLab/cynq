@@ -7,7 +7,7 @@ interface IHardware {
   +{abstract} GetAccelerator(address: uint64) -> IAccelerator *
   +{abstract} GetAccelerator(address: string) -> IAccelerator *
   +{static} Create(hw: HardwareArchitecture, bitstream: string, xclbin: string) -> IHardware*
-
+  +{static} Create(hw: HardwareArchitecture, config: string) -> IHardware*
 }
 
 interface IMemory {

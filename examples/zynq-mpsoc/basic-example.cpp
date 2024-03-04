@@ -29,7 +29,6 @@
 
 // Given by the example
 static constexpr char kBitstream[] = EXAMPLE_KRIA_BITSTREAM_LOCATION;
-static constexpr char kXclBin[] = EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION;
 
 // Given by the design
 static constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;
@@ -85,7 +84,7 @@ int main() {
   // Create the platform
   std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
-      IHardware::Create(HardwareArchitecture::UltraScale, kBitstream, kXclBin);
+      IHardware::Create(HardwareArchitecture::UltraScale, kBitstream);
 
   // Get an accelerator
   std::shared_ptr<IAccelerator> accel = platform->GetAccelerator(kAccelAddress);

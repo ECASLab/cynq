@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   // Create the platform
   std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
-      IHardware::Create(HardwareArchitecture::Alveo, "", xclbin_path);
+      IHardware::Create(HardwareArchitecture::Alveo, xclbin_path);
 
   // Get an accelerator
   std::shared_ptr<IAccelerator> accel = platform->GetAccelerator("vadd");
