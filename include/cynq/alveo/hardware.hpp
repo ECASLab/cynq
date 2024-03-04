@@ -6,9 +6,12 @@
  */
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include <xrt.h>
 #include <xrt/xrt_device.h>
 #include <xrt/xrt_uuid.h>
+#pragma GCC diagnostic pop
 
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>

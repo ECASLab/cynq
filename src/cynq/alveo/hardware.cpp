@@ -5,9 +5,12 @@
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
  */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include <xrt.h>
 #include <xrt/xrt_bo.h>
 #include <xrt/xrt_device.h>
+#pragma GCC diagnostic pop
 
 #include <cynq/accelerator.hpp>
 #include <cynq/alveo/hardware.hpp>
