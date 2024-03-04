@@ -30,7 +30,7 @@ class XRTAccelerator : public IAccelerator {
    * @brief Construct a new XRTAccelerator object
    *
    * It constructs an accessor to the a kernel accelerator in the PL design
-   * according to its kernel name.
+   * according to its kernel name. The kernel is built with exclusive access
    *
    * @param kernelname string containing the kernel name
    * @param hwparams parameters corresponding to the platform linked to the
@@ -112,7 +112,7 @@ class XRTAccelerator : public IAccelerator {
 
  protected:
   /**
-   * @brief Write Register method
+   * @brief Write Register method (it behaves differently from MMIO)
    *
    * Writes to the register of the accelerator.
    *
@@ -123,12 +123,12 @@ class XRTAccelerator : public IAccelerator {
    *
    * @param size size in bytes of the data to write.
    *
-   * @return Status: not implemented
+   * @return Status
    */
   Status WriteRegister(const uint64_t address, const uint8_t *data,
                        const size_t size) override;
   /**
-   * @brief Read Register method
+   * @brief Read Register method (it behaves differently from MMIO)
    *
    * Reads from the register of the accelerator
    *
@@ -139,7 +139,7 @@ class XRTAccelerator : public IAccelerator {
    *
    * @param size size in bytes of the data to read.
    *
-   * @return Status: not implemented
+   * @return Status
    */
   Status ReadRegister(const uint64_t address, uint8_t *data,
                       const size_t size) override;

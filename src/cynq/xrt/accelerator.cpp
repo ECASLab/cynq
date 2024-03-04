@@ -56,7 +56,8 @@ XRTAccelerator::XRTAccelerator(
   /* Create the XRT Kernel */
   params->hwparams_ = xrthwparams;
   params->kernel_ =
-      xrt::kernel(xrthwparams->device_, xrthwparams->uuid_, kernelname);
+      xrt::kernel(xrthwparams->device_, xrthwparams->uuid_, kernelname,
+                  xrt::kernel::cu_access_mode::exclusive);
   params->run_ = xrt::run(params->kernel_);
 
   if (!params->run_) {
