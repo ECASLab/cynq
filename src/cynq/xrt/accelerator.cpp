@@ -6,9 +6,12 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_kernel.h>
-#include <xrt/xrt/xrt_uuid.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#include <xrt.h>
+#include <xrt/xrt_kernel.h>
+#include <xrt/xrt_uuid.h>
+#pragma GCC diagnostic pop
 
 #include <cynq/accelerator.hpp>
 #include <cynq/alveo/hardware.hpp>

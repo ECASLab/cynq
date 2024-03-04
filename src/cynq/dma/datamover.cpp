@@ -7,7 +7,7 @@
  *
  */
 
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
 #include <cynq/dma/datamover.hpp>

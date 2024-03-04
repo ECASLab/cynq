@@ -8,8 +8,8 @@
  */
 #pragma once
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_device.h>
+#include <xrt.h>
+#include <xrt/xrt_device.h>
 
 #include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>

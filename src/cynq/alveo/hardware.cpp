@@ -5,9 +5,9 @@
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
  */
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_bo.h>
-#include <xrt/xrt/xrt_device.h>
+#include <xrt.h>
+#include <xrt/xrt_bo.h>
+#include <xrt/xrt_device.h>
 
 #include <cynq/accelerator.hpp>
 #include <cynq/alveo/hardware.hpp>

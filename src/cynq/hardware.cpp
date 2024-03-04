@@ -19,7 +19,7 @@ std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
     case HardwareArchitecture::UltraScale:
       return std::make_shared<UltraScale>(bitstream, xclbin);
     case HardwareArchitecture::Alveo:
-      return std::make_shared<UltraScale>(bitstream, xclbin);
+      return std::make_shared<Alveo>(bitstream, xclbin);
     default:
       return nullptr;
   }

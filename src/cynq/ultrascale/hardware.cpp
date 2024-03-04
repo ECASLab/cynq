@@ -7,9 +7,9 @@
  *
  */
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_bo.h>
-#include <xrt/xrt/xrt_device.h>
+#include <xrt.h>
+#include <xrt/xrt_bo.h>
+#include <xrt/xrt_device.h>
 
 #include <cynq/accelerator.hpp>
 #include <cynq/dma/datamover.hpp>
@@ -31,9 +31,9 @@ extern "C" {
     int e = val;                                              \
     if (e != PYNQ_SUCCESS) {                                  \
       std::string msg = "Error while checking MMIO in line "; \
-      msg += __func__;                                        \
+      msg += std::string(__func__);                           \
       msg += ": ";                                            \
-      msg += __LINE__;                                        \
+      msg += std::to_string(__LINE__);                        \
       return Status{Status::CONFIGURATION_ERROR, msg};        \
     }                                                         \
   }

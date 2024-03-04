@@ -6,9 +6,9 @@
  */
 #pragma once
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_device.h>
-#include <xrt/xrt/xrt_uuid.h>
+#include <xrt.h>
+#include <xrt/xrt_device.h>
+#include <xrt/xrt_uuid.h>
 
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>

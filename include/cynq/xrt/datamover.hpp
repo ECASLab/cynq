@@ -5,7 +5,7 @@
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
  */
 #pragma once
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>

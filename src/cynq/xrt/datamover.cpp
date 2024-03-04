@@ -6,7 +6,7 @@
  *
  */
 
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/alveo/hardware.hpp>
 #include <cynq/datamover.hpp>
