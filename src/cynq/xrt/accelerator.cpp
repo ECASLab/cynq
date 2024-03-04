@@ -16,6 +16,7 @@
 #include <cynq/accelerator.hpp>
 #include <cynq/alveo/hardware.hpp>
 #include <cynq/enums.hpp>
+#include <cynq/memory.hpp>
 #include <cynq/status.hpp>
 #include <cynq/xrt/accelerator.hpp>
 #include <memory>
@@ -171,6 +172,25 @@ Status XRTAccelerator::AttachRegister(const uint64_t index, uint8_t *data,
   }
   params->run_.set_arg((int)index, (const void *)data, size);  // NOLINT
   return Status{};
+}
+
+Status XRTAccelerator::Attach(const uint64_t index,
+                              std::shared_ptr<IMemory> mem) {
+  if (!mem) {
+    return Status{Status::INVALID_PARAMETER, "The pointer is null"};
+  }
+
+  auto ptr = mem->DeviceAddress<uint8_t>().get();
+  if (!ptr) {
+    return Status{
+        Status::INVALID_PARAMETER,
+        "The device pointer is null. Are you passing a device-valid memory?"};
+  }
+
+  uint64_t addr = reinterpret_cast<uint64_t>(ptr);
+
+  return this->AttachRegister(index, reinterpret_cast<uint8_t *>(&addr),
+                              sizeof(decltype(addr)));
 }
 
 XRTAccelerator::~XRTAccelerator() {}

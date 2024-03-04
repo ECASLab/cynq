@@ -37,6 +37,7 @@ interface IAccelerator {
   +Write<T>(address, data: T*, elems: size_t) -> Status
   +Read<T>(address, data: T*, elems: size_t) -> Status
   +Attach<T>(address, data: T*, elems: size_t) -> Status
+  +Attach(address, mem: std::shared_ptr<IMemory>, elems: size_t) -> Status
   {abstract} GetStatus() -> DeviceStatus
   +{static} Create(impl: IAcceleratorType, addr: uint64) -> IAccelerator*
   +{static} Create(impl: IAcceleratorType, addr: string) -> IAccelerator*

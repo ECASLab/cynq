@@ -14,6 +14,8 @@
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
 
+#include "cynq/memory.hpp"
+
 namespace cynq {
 
 struct HardwareParameters;
@@ -225,6 +227,19 @@ class IAccelerator {
     return this->AttachRegister(index, reinterpret_cast<uint8_t *>(data),
                                 elements * sizeof(T));
   }
+
+  /**
+   * @brief Attach a memory argument
+   * Performs an attachment of the argument and the respective pointer.
+   * The use of this overload for IMemory buffers is highly recommended.
+   *
+   * @param addr Argument address to set the memory address
+   *
+   * @param mem Memory buffer to attach to the argument
+   *
+   * @return Status
+   */
+  virtual Status Attach(const uint64_t addr, std::shared_ptr<IMemory> mem) = 0;
 
  protected:
   /**

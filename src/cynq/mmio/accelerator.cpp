@@ -136,6 +136,26 @@ Status MMIOAccelerator::AttachRegister(const uint64_t /* index */,
                 "The register attachment is not implemented"};
 }
 
+Status MMIOAccelerator::Attach(const uint64_t addr,
+                               std::shared_ptr<IMemory> mem) {
+  if (!mem) {
+    return Status{Status::INVALID_PARAMETER, "The pointer is null"};
+  }
+
+  auto ptr = mem->DeviceAddress<uint8_t>().get();
+  if (!ptr) {
+    return Status{
+        Status::INVALID_PARAMETER,
+        "The device pointer is null. Are you passing a device-valid memory?"};
+  }
+
+  uint64_t addrps = reinterpret_cast<uint64_t>(ptr);
+  uint32_t addrpl = addrps;
+
+  return this->WriteRegister(addr, reinterpret_cast<uint8_t *>(&addrpl),
+                             sizeof(decltype(addrpl)));
+}
+
 MMIOAccelerator::~MMIOAccelerator() {
   /* The assumption is that at this point, it is ok */
   auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());

@@ -94,6 +94,19 @@ class MMIOAccelerator : public IAccelerator {
    */
   DeviceStatus GetStatus() override;
 
+  /**
+   * @brief Attach a memory argument
+   * Performs an attachment of the argument and the respective pointer.
+   * The use of this overload for IMemory buffers is highly recommended.
+   *
+   * @param index Argument position of the argument to set
+   *
+   * @param mem Memory buffer to attach to the argument
+   *
+   * @return Status
+   */
+  Status Attach(const uint64_t index, std::shared_ptr<IMemory> mem) override;
+
  protected:
   /**
    * @brief Write Register method
