@@ -92,6 +92,7 @@ outbuf->Sync(SyncType::DeviceToHost);
 So far, we have tested CYNQ on:
 
 1. Xilinx KV26-based with Ubuntu 2022.04
+2. Xilinx Alveo U250 (it should be compatible with other similar Alveo cards) - Shell: xilinx_u250_gen3x16_xdma_4_1_202210_1
 
 ## Links & References:
 
@@ -106,8 +107,8 @@ Cite Us:
               AND Ávila-Torres, Diego
               AND Castro-Godínez, Jorge
             }},
-  title = {{CYNQ (v0.1)}},
-  year  = {2023},
+  title = {{CYNQ (v0.2)}},
+  year  = {2024},
   url   = {https://github.com/ECASLab/cynq},
 } 
 ```

@@ -2,6 +2,8 @@
 
 CYNQ is as straight-forward as PYNQ. The philosophy behind CYNQ is to be as simple as PYNQ.
 
+## Xilinx K26 SoM
+
 1) The first step to integrate CYNQ is to include the header:
 
 ```c++
@@ -105,19 +107,7 @@ To start the accelerator, you can use the `Start()` method, which receives eithe
 
 9) Transferring information requires the synchronisation of the memory buffers and the interaction with the data mover / DMA.
 
-To synchronise the buffers, it is possible to use `Sync()` method: 
-
-```c++
-in_mem->Sync(SyncType::HostToDevice);
-out_mem->Sync(SyncType::DeviceToHost);
-```
-
-that takes one of the following values:
-
-* `cynq::SyncType::DeviceToHost`: device to host synchronisation
-* `cynq::SyncType::HostToDevice`: host to device synchronisation
-
-Once the memory is synchronised, the data mover is used to upload the data to the AXI4-Stream or download from it.
+The data mover is used to upload the data to the AXI4-Stream or download from it.
 
 ```c++
 // Upload: requires the buffer to be sync in HostToDevice
@@ -131,9 +121,125 @@ Both methods takes: `(memory, size, offset, execution_type)`, where `size` is th
 * `cynq::ExecutionType::Sync`: synchronous mode
 * `cynq::ExecutionType::Async`: asynchronous mode
 
-If the `execution_type` is `cynq::ExecutionType::Async`, the synchronisation can be done with `Sync(sync_type)`:
-
-* `cynq::SyncType::DeviceToHost`: device to host synchronisation
-* `cynq::SyncType::HostToDevice`: host to device synchronisation
-
 10) The disposal is done automatically thanks to C++ RAII.
+
+## Alveo Cards or XRT-based platforms with Vitis workflow
+
+1) The first step to integrate CYNQ is to include the header:
+
+```c++
+#include <cynq/cynq.hpp>
+```
+
+2) Create a IHardware object that will generate the proper drivers for handling the accelerator, data mover and memory. It uses the `IHardware::Create(impl, bitstream, xclbin)` factory. For instance:
+
+```c++
+auto impl = cynq::HardwareArchitecture::Alveo;
+auto platform = 
+    cynq::IHardware::Create(impl, "", xclbin);
+```
+
+where:
+
+* `impl` is the HardwareArchitecture. At the moment, only `UltraScale` is supported for UltraScale MPSoC.
+* `xclbin` is the path to the .xclbin file. You can use the one in `third-party/resources/alveo-xclbin/vadd.xclbin`.
+
+3) Create the DMA instances to move the data. This is intended for designs that uses AXI4-Stream.
+
+```c++
+auto dma = platform->GetDataMover(0);
+```
+
+where `0` is a dummy value and it is currently unused in this implementation.
+
+4) Create the IP core instances to interact with them.
+
+```c++
+auto accel = platform->GetAccelerator("vadd");
+```
+
+where `"vadd"` is the kernel compiled with `v++`. It is based on the following kernel: https://github.com/Xilinx/Vitis_Accel_Examples/blob/2022.1/host_xrt/hello_world_xrt/src/vadd.cpp
+
+5) Get buffers to exchange data. These buffers are usually dual memory: they are mapped into host and device regions (physically contiguous).
+
+```c++
+std::size_t vec_size = sizeof(int) * kDataSize;
+auto type = MemoryType::Dual;
+auto bo_0 = mover->GetBuffer(vec_size, accel->GetMemoryBank(0), type);;
+```
+
+where the `GetBuffer()` method includes: `size` in bytes and `type` of the memory type:
+
+* `cynq::MemoryType::Dual`: allocates two memory regions, one accessible from host and another from device.
+* `cynq::MemoryType::Cacheable`: allocates a memory region which is cacheable.
+* `cynq::MemoryType::Host`: allocates a host-only memory.
+* `cynq::MemoryType::Device`: allocates a device-only memory.
+
+6) To access the data from the memory buffers, you can use the `HostAddress` method.
+
+```c++
+auto bo_0_map = bo_0->HostAddress<int>().get();
+bo_0_map[5] = 1;
+```
+
+The `HostAddress<T>()` maps the memory into a pointer that is accessible to the host. `T` can be any type that can be reinterpretedly casted.
+
+7) Write/Read the IP Core / Accelerator registers. You can use the `Attach()` method.
+
+```c++
+uint64_t bo_0_addr = (uint64_t)bo_0->DeviceAddress<uint32_t>().get();
+accel->Attach(0, &bo_0_addr);
+```
+
+`Attach(index, data)` arguments:
+
+* `index`: argument position
+* `data*`: physical address to be attached
+
+8) Upload data
+
+The data upload is done through the data mover:
+
+```c++
+mover->Upload(bo_0, bo_0->Size(), 0, ExecutionType::Async);
+```
+
+the `Upload(mem, size, offset, execution_type)` function is used to upload data from host to device where the arguments are:
+
+* mem: memory buffer of type `std::shared_ptr<IMemory>`
+* size: size in bytes
+* offset: starting point of the buffer
+* execution_type: synchronisation type
+  * `cynq::ExecutionType::Sync`: synchronous mode
+  * `cynq::ExecutionType::Async`: asynchronous mode
+
+9) Start/Stop the accelerator by writing the control register
+
+```c++
+accel->Start(StartMode::Once);
+accel->Sync();
+```
+
+To start the accelerator, you can use the `Start()` method, which receives either of the following values:
+
+* `cynq::StartMode::Once`: turns on the accelerator 
+* `cynq::StartMode::Continuous`: turns on the accelerator in autorestart mode (not supported in Alveo).
+
+10) Download data
+
+The data download is done through the data mover:
+
+```c++
+mover->Download(bo_0, bo_0->Size(), 0, ExecutionType::Sync);
+```
+
+the `Download(mem, size, offset, execution_type)` function is used to download data from host to device where the arguments are:
+
+* mem: memory buffer of type `std::shared_ptr<IMemory>`
+* size: size in bytes
+* offset: starting point of the buffer
+* execution_type: synchronisation type
+  * `cynq::ExecutionType::Sync`: synchronous mode
+  * `cynq::ExecutionType::Async`: asynchronous mode
+
+11) The disposal is done automatically thanks to C++ RAII.
