@@ -113,15 +113,15 @@ enum DataMoverType {
 
 class UltraScale {
   +Reset() -> Status
-  +GetDataMover(address, type : DataMoverType) -> IDataMover *
-  +GetAccelerator(address: uint64) -> EmbeddedAccelerator *
+  +GetDataMover(address, type : DataMoverType) -> DMADataMover *
+  +GetAccelerator(address: uint64) -> MMIOAccelerator *
   +UltraScale(hw, bitsteam, xclbin)
 }
 
 class Alveo {
   +Reset() -> Status
-  +GetDataMover(address, type : DataMoverType) -> IDataMover *
-  +GetAccelerator(address: string) -> EmbeddedAccelerator *
+  +GetDataMover(address, type : DataMoverType) -> XRTtDataMover *
+  +GetAccelerator(address: string) -> XRTAccelerator *
   +UltraScale(hw, bitsteam, xclbin)
 }
 
