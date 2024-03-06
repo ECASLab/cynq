@@ -13,6 +13,8 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 
 extern "C" {
 #include <pynq_api.h> /* FIXME: to be removed in future releases */
@@ -38,6 +40,14 @@ struct MMIOAcceleratorParameters : public AcceleratorParameters {
   uint64_t addr_space_size_;
   /** HLS Design */
   PYNQ_HLS hls_;
+  /**
+   * Map with the arguments attached to it with synchronisation purposes. The
+   * first argument is the address, the pair argument is a composition of the
+   * pointer to write on/from (requires 32-bit alignment), the register
+   * access kind and the size (aligned to 32-bit)
+   */
+  std::unordered_map<uint64_t, std::tuple<uint8_t *, RegisterAccess, size_t>>
+      accel_attachments_;
   /** Virtual destructor required for the inheritance */
   virtual ~MMIOAcceleratorParameters() = default;
 };
@@ -61,19 +71,29 @@ MMIOAccelerator::MMIOAccelerator(const uint64_t addr)
 }
 
 Status MMIOAccelerator::Start(const StartMode mode) {
+  Status ret{};
   constexpr uint64_t ctrl_reg_addr = 0x00;
   const uint8_t ctrl_reg_val = StartMode::Once == mode ? 0x01 : 0x81;
+  ret = this->SyncRegisters(SyncType::HostToDevice);
+  if (ret.code) return ret;
   return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
 }
 
 Status MMIOAccelerator::Stop() {
+  Status ret{};
   constexpr uint64_t ctrl_reg_addr = 0x00;
   const uint8_t ctrl_reg_val = 0x0;
+  ret = this->SyncRegisters(SyncType::DeviceToHost);
+  if (ret.code) return ret;
   return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
 }
 
 Status MMIOAccelerator::Sync() {
-  return Status{Status::NOT_IMPLEMENTED, "Not implemented"};
+  Status ret{};
+  while (DeviceStatus::Running == this->GetStatus()) {
+  }
+  ret = this->SyncRegisters(SyncType::DeviceToHost);
+  return ret;
 }
 
 DeviceStatus MMIOAccelerator::GetStatus() {
@@ -129,12 +149,58 @@ Status MMIOAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
   return Status{};
 }
 
-Status MMIOAccelerator::AttachRegister(const uint64_t /* index */,
-                                       uint8_t * /* data */,
-                                       const RegisterAccess /* access */,
-                                       const size_t /* size */) {
-  return Status{Status::NOT_IMPLEMENTED,
-                "The register attachment is not implemented"};
+Status MMIOAccelerator::SyncRegisters(const SyncType type) {
+  Status status{};
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
+
+  auto it = params->accel_attachments_.begin();
+  auto endit = params->accel_attachments_.end();
+
+  for (; it != endit; it++) {
+    /* Get the key-val from the attachments */
+    uint64_t reg_addr = it->first;
+    auto reg_props = it->second;
+
+    /* Decompose the props */
+    uint8_t *ptr = std::get<0>(reg_props);
+    RegisterAccess access = std::get<1>(reg_props);
+    size_t size = std::get<2>(reg_props);
+
+    if (SyncType::HostToDevice == type) {
+      /* Handle the upload (write time) */
+      if (access == RegisterAccess::RO) continue;
+      status = this->WriteRegister(reg_addr, ptr, size);
+    } else {
+      /* Handle the download (read time) */
+      if (access == RegisterAccess::WO) continue;
+      status = this->ReadRegister(reg_addr, ptr, size);
+    }
+
+    if (Status::OK != status.code) break;
+  }
+
+  return status;
+}
+
+Status MMIOAccelerator::AttachRegister(const uint64_t index, uint8_t *data,
+                                       const RegisterAccess access,
+                                       const size_t size) {
+  auto params = dynamic_cast<MMIOAcceleratorParameters *>(accel_params_.get());
+
+  /* Delete the attachment */
+  if (!data) {
+    params->accel_attachments_.erase(index);
+    return Status{};
+  }
+
+  /* Check alignment */
+  if ((size & 0b11) != 0) {
+    return Status{Status::INVALID_PARAMETER,
+                  "The element size must be 4 bytes aligned"};
+  }
+
+  params->accel_attachments_[index] = {data, access, size};
+  return Status{};
 }
 
 Status MMIOAccelerator::Attach(const uint64_t addr,

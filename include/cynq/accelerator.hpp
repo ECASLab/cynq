@@ -206,15 +206,17 @@ class IAccelerator {
 
   /**
    * @brief Attach an argument
-   * Performs an attachment of the argument and the respective pointer
+   * Performs an attachment of the argument and the respective pointer. If the
+   * index/address to attach receives a nullptr, it gets detached.
    *
    * @tparam T
    * Datatype used as the individual unit of information being written to the
    * device.
    *
-   * @param index Argument position of the argument to set
+   * @param index Argument position/address (Ultrascale) of the argument to set
    *
    * @param data Raw pointer of type T used by the register to access the data.
+   * The ownership is borrowed and its existence must be guaranteed.
    *
    * @param access Access type of the register (read-only, write-only,
    * read-write). Defaults to Write-Only (autodetected and unused in Alveo or

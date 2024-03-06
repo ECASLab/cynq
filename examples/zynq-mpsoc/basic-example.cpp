@@ -29,6 +29,9 @@
 
 // Given by the example
 static constexpr char kBitstream[] = EXAMPLE_KRIA_BITSTREAM_LOCATION;
+// If you want to universalise the API w.r.t. the Vitis/Alveo flow
+// set this to true
+static constexpr bool kUseAttach = true;
 
 // Given by the design
 static constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;
@@ -105,21 +108,31 @@ int main() {
   // Fill the data
   FillData(A, B, C);
 
+  std::cout << "----- Configuring accelerator -----" << std::endl;
+  int reg_input_a_cols = input_a_cols;
+  int reg_output_cols = output_cols;
+
+  if constexpr (kUseAttach) {
+    accel->Attach(kAddrWriteInputCols, &reg_input_a_cols, RegisterAccess::WO);
+    accel->Attach(kAddrWriteOutputCols, &reg_output_cols, RegisterAccess::WO);
+    accel->Attach(kAddrReadInputCols, &reg_input_a_cols, RegisterAccess::RO);
+    accel->Attach(kAddrReadOutputCols, &reg_output_cols, RegisterAccess::RO);
+  } else {
+    accel->Write(kAddrWriteInputCols, &input_a_cols, 1);
+    accel->Write(kAddrWriteOutputCols, &output_cols, 1);
+  }
+
+  std::cout << "----- Starting the accelerator -----" << std::endl;
   // Start the accel
   accel->Start(StartMode::Continuous);
   // Check the control register
   auto devstatus = accel->GetStatus();
   std::cout << "\tAccel Status: " << static_cast<int>(devstatus) << std::endl;
 
-  std::cout << "----- Configuring accelerator -----" << std::endl;
-  // Configure params
-  accel->Write(kAddrWriteInputCols, &input_a_cols, 1);
-  accel->Write(kAddrWriteOutputCols, &output_cols, 1);
-  // Check params
-  int res_input_a_cols = 0;
-  int res_output_cols = 0;
-  accel->Read(kAddrReadInputCols, &res_input_a_cols, 1);
-  accel->Read(kAddrReadOutputCols, &res_output_cols, 1);
+  if constexpr (!kUseAttach) {
+    accel->Read(kAddrReadInputCols, &reg_input_a_cols, 1);
+    accel->Read(kAddrReadOutputCols, &reg_output_cols, 1);
+  }
 
   std::cout << "----- Moving the data -----" << std::endl;
   // Move the data
@@ -128,6 +141,9 @@ int main() {
 
   // Stop the accel
   accel->Stop();
+
+  std::cout << "A Columns: " << reg_input_a_cols
+            << " C Columns: " << reg_output_cols << std::endl;
 
   // Read the output on *out_data*
   PrintData(C);
