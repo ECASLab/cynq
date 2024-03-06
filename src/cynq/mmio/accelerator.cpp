@@ -131,6 +131,7 @@ Status MMIOAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
 
 Status MMIOAccelerator::AttachRegister(const uint64_t /* index */,
                                        uint8_t * /* data */,
+                                       const RegisterAccess /* access */,
                                        const size_t /* size */) {
   return Status{Status::NOT_IMPLEMENTED,
                 "The register attachment is not implemented"};

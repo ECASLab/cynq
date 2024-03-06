@@ -139,11 +139,21 @@ class MMIOAccelerator : public IAccelerator {
                       const size_t size) override;
 
   /**
-   * @brief Attach Register method (not implemented)
+   * @brief Implementation of the Attach Register method
    *
-   * @return Status: Status not implemented
+   * @param index index of the argument to set
+   *
+   * @param data a pointer to an unsigned 8 bits variable which holds the
+   * data to read from the register.
+   *
+   * @param access Access type of the register
+   *
+   * @param size size in bytes of the data to read.
+   *
+   * @return Status
    */
   Status AttachRegister(const uint64_t index, uint8_t *data,
+                        const RegisterAccess access,
                         const size_t size) override;
 
  private:

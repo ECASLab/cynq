@@ -165,6 +165,7 @@ Status XRTAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
 }
 
 Status XRTAccelerator::AttachRegister(const uint64_t index, uint8_t *data,
+                                      const RegisterAccess /* access */,
                                       const size_t size) {
   auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
   if (index > 255 || !data || size == 0) {
@@ -191,7 +192,7 @@ Status XRTAccelerator::Attach(const uint64_t index,
   uint64_t addr = reinterpret_cast<uint64_t>(ptr);
 
   return this->AttachRegister(index, reinterpret_cast<uint8_t *>(&addr),
-                              sizeof(decltype(addr)));
+                              RegisterAccess::Auto, sizeof(decltype(addr)));
 }
 
 XRTAccelerator::~XRTAccelerator() {}
