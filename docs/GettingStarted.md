@@ -104,6 +104,31 @@ accel->Attach(addr, mem_bo);
 * `addr`: memory address offset in the AXI4-Lite control register bank.
 * `mem`: memory buffer to attach (`std::shared_ptr<IMemory>`)
 
+**New!**: You can use attach also for parameters instead of using `Write()`/`Read()`:
+
+For read-only (from the accelerator BAR):
+
+```c++
+accel->Attach(0x20, &input_a_cols, RegisterAccess::RO, 1);
+```
+
+or for write-only (also from the accelerator BAR):
+
+```c++
+accel->Attach(0x28, &input_a_cols, RegisterAccess::RO, 1);
+```
+
+The `Attach(addr, data, type, elems)` arguments are:
+
+* `addr`: memory address offset in the AXI4-Lite control register bank.
+* `data`: pointer to host memory where the register's values are held.
+* `type`: type of transfer (see cynq::RegisterAccess)
+* `elems`: number of elements of type of data (the memory must be 32-bit aligned).
+
+Important:
+
+The registers are written only when the `IAccelerator::Start` is invoked. This does not apply to `StartMode::Continuous` since the writes only happen every invocation of the `IAccelerator::Start` method. The registers are read back when invoking  IAccelerator::Stop` or `IAccelerator::Sync`.
+
 8) Start/Stop the accelerator by writing the control register
 
 ```c++
