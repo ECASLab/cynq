@@ -3,10 +3,11 @@
 @startuml
 interface IHardware {
   +{abstract} Reset() -> Status
-  +{abstract} GetDataMover(address) -> IDataMover *
-  +{abstract} GetAccelerator(address) -> IAccelerator *
+  +{abstract} GetDataMover(address = 0) -> IDataMover *
+  +{abstract} GetAccelerator(address: uint64) -> IAccelerator *
+  +{abstract} GetAccelerator(address: string) -> IAccelerator *
   +{static} Create(hw: HardwareArchitecture, bitstream: string, xclbin: string) -> IHardware*
-
+  +{static} Create(hw: HardwareArchitecture, config: string) -> IHardware*
 }
 
 interface IMemory {
@@ -30,12 +31,16 @@ IMemoryType ..o IMemory
 interface IAccelerator {
   {abstract} Start(mode: StartMode) -> Status
   {abstract} Stop() -> Status
+  {abstract} Sync() -> Status
   {abstract} #WriteRegister(address, data: uint8_t*, size: size_t) -> Status
   {abstract} #ReadRegister(address, data: uint8_t*, size: size_t) -> Status
   +Write<T>(address, data: T*, elems: size_t) -> Status
   +Read<T>(address, data: T*, elems: size_t) -> Status
+  +Attach<T>(address, data: T*, elems: size_t) -> Status
+  +Attach(address, mem: std::shared_ptr<IMemory>, elems: size_t) -> Status
   {abstract} GetStatus() -> DeviceStatus
   +{static} Create(impl: IAcceleratorType, addr: uint64) -> IAccelerator*
+  +{static} Create(impl: IAcceleratorType, addr: string) -> IAccelerator*
 }
 
 enum IAcceleratorType {
@@ -108,10 +113,18 @@ enum DataMoverType {
 
 class UltraScale {
   +Reset() -> Status
-  +GetDataMover(address, type : DataMoverType) -> IDataMover *
-  +GetAccelerator(address) -> EmbeddedAccelerator *
+  +GetDataMover(address, type : DataMoverType) -> DMADataMover *
+  +GetAccelerator(address: uint64) -> MMIOAccelerator *
   +UltraScale(hw, bitsteam, xclbin)
 }
+
+class Alveo {
+  +Reset() -> Status
+  +GetDataMover(address, type : DataMoverType) -> XRTtDataMover *
+  +GetAccelerator(address: string) -> XRTAccelerator *
+  +UltraScale(hw, bitsteam, xclbin)
+}
+
 
 class XRTMemory {
   #GetHostAddress() -> uint8_t *
@@ -124,10 +137,21 @@ class XRTMemory {
 class MMIOAccelerator {
   Start(mode: StartMode) -> Status
   Stop() -> Status
+  Sync() -> Status
   GetStatus() -> DeviceStatus
   #WriteRegister(address, data: uint8_t*, size: size_t) -> Status
   #ReadRegister(address, data: uint8_t*, size: size_t) -> Status
   +MMIOAccelerator(addr: uint64)
+}
+
+
+class XRTAccelerator {
+  Start(mode: StartMode) -> Status
+  Stop() -> Status
+  Sync() -> Status
+  GetStatus() -> DeviceStatus
+  #SetArgument(position, data: T*) -> Status
+  +XRTAccelerator(name: string)
 }
 
 class DMADataMover {
@@ -139,8 +163,20 @@ class DMADataMover {
   DMADataMover(addr)
 }
 
+class XRTDataMover {
+  GetBuffer(size: size_t, type: MemoryType) -> XRTMemory *
+  Upload(mem: IMemory, size: size_t, exetype: ExecutionType) -> Status
+  Download(mem: IMemory, size: size_t, exetype: ExecutionType) -> Status
+  Sync() -> Status
+  GetStatus() -> DeviceStatus
+  XrtDataMover(mem_bank)
+}
+
 UltraScale ..> IHardware
+Alveo ..> IHardware
 XRTMemory ..> IMemory
 MMIOAccelerator ..> IAccelerator
+XRTAccelerator ..> IAccelerator
 DMADataMover ..> IDataMover
+XRTDataMover ..> IDataMover
 @enduml

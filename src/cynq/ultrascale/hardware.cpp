@@ -7,9 +7,12 @@
  *
  */
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_bo.h>
-#include <xrt/xrt/xrt_device.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#include <xrt.h>
+#include <xrt/xrt_bo.h>
+#include <xrt/xrt_device.h>
+#pragma GCC diagnostic pop
 
 #include <cynq/accelerator.hpp>
 #include <cynq/dma/datamover.hpp>
@@ -31,9 +34,9 @@ extern "C" {
     int e = val;                                              \
     if (e != PYNQ_SUCCESS) {                                  \
       std::string msg = "Error while checking MMIO in line "; \
-      msg += __func__;                                        \
+      msg += std::string(__func__);                           \
       msg += ": ";                                            \
-      msg += __LINE__;                                        \
+      msg += std::to_string(__LINE__);                        \
       return Status{Status::CONFIGURATION_ERROR, msg};        \
     }                                                         \
   }
@@ -168,6 +171,11 @@ std::shared_ptr<IDataMover> UltraScale::GetDataMover(const uint64_t address) {
 std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
     const uint64_t address) {
   return IAccelerator::Create(IAccelerator::MMIO, address);
+}
+
+std::shared_ptr<IAccelerator> UltraScale::GetAccelerator(
+    const std::string & /* kernelname */) {
+  return nullptr;
 }
 
 UltraScale::~UltraScale() {}

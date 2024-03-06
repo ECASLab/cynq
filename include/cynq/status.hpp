@@ -25,11 +25,13 @@ struct Status {
     /** Incompatible parameter that it is not supported
                               by a function */
     INCOMPATIBLE_PARAMETER,
-    CONFIGURATION_ERROR, /** Configuration error*/
-    REGISTER_IO_ERROR,   /** Register MMIO error */
-    NOT_IMPLEMENTED,     /** Not implemented error */
-    MEMBER_ABSENT,       /** Missing member */
-    RESOURCE_BUSY,       /** Busy */
+    CONFIGURATION_ERROR,  /** Configuration error*/
+    REGISTER_IO_ERROR,    /** Register MMIO error */
+    NOT_IMPLEMENTED,      /** Not implemented error */
+    MEMBER_ABSENT,        /** Missing member */
+    RESOURCE_BUSY,        /** Busy */
+    EXECUTION_FAILED,     /** Cannot execute the IP */
+    REGISTER_NOT_ALIGNED, /** Issues with alignment when writing a reg */
   };
 
   int code;        /** Code of the error */

@@ -45,6 +45,7 @@ outbuf = allocate(shape=(output_elements,), dtype=np.uint16)
 # Run
 dma.sendchannel.transfer(inbuf)
 accel.write(accel.register_map.CTRL.address, 0x81)
+accel.write(accel.register_map.n_elements.address, input_elements)
 dma.recvchannel.transfer(outbuf)
 dma.recvchannel.wait()
 
@@ -53,7 +54,7 @@ del input_hw
 del output_hw
 ```
 
-With CYNQ:
+With CYNQ for Xilinx Ultrascale+:
 
 ```c++
 #include <cynq/cynq.hpp>
@@ -62,7 +63,7 @@ using namespace cynq;
 
 // Configure the FPGA
 auto kArch = HardwareArchitecture::UltraScale;
-auto platform = IHardware::Create(kArch, "design.bit", "default.xclbin");
+auto platform = IHardware::Create(kArch, "design.bit");
 
 // Extract the accelerator (IP Core) and DMA
 // Addresses are given by the design
@@ -72,17 +73,57 @@ auto accel = platform->GetAccelerator(accel_addr);
 auto dma = platform->GetDataMover(dma_addr);
 
 // Allocate buffers and get the pointers
-auto inbuf = mover->GetBuffer(input_size);
-auto outbuf = mover->GetBuffer(output_size);
+auto inbuf = mover->GetBuffer(input_size, accel->GetMemoryBank(0));
+auto outbuf = mover->GetBuffer(output_size, accel->GetMemoryBank(1));
 uint16_t* input_ptr = inbuf->HostAddress<uint16_t>().get();
 uint16_t* output_ptr = outbuf->HostAddress<uint16_t>().get();
 
+// Configure data - Bus: AXI4 Stream is handled by DMA
+const uint32_t num_elements = 4096;
+const uint64_t addr_num_elements = 0x20;
+accel->Write(addr_num_elements, num_elements);
+
 // Run
+mover->Upload(in_mem, infbuf->Size(), 0, ExecutionType::Async);
 accel->Start(StartMode::Continuous);
-inbuf->Sync(SyncType::HostToDevice);
-mover->Upload(in_mem, infbuf->Size(), 0, ExecutionType::Sync);
 mover->Download(out_mem, outbuf->Size(), 0, ExecutionType::Sync);
-outbuf->Sync(SyncType::DeviceToHost);
+accel->Stop();
+
+// Dispose? We use RAII
+```
+
+With CYNQ for Alveo
+
+```c++
+#include <cynq/cynq.hpp>
+
+using namespace cynq;
+
+// Configure the FPGA
+auto kArch = HardwareArchitecture::Alveo;
+auto platform = IHardware::Create(kArch, "design.xclbin");
+
+// Extract the accelerator (IP Core) and DMA
+// Addresses are given by the design
+auto accel = platform->GetAccelerator("vadd");
+auto dma = platform->GetDataMover(0);
+
+// Allocate buffers and get the pointers
+auto inbuf = mover->GetBuffer(input_size, accel->GetMemoryBank(0));
+auto outbuf = mover->GetBuffer(output_size, accel->GetMemoryBank(1));
+uint16_t* input_ptr = inbuf->HostAddress<uint16_t>().get();
+uint16_t* output_ptr = outbuf->HostAddress<uint16_t>().get();
+
+// Configure the accel - memory mapped
+const uint32_t num_elements = 4096;
+accel->Attach(0, bo_0);
+accel->Attach(1, bo_1);
+accel->Attach(2, &num_elements);
+
+// Run
+mover->Upload(in_mem, infbuf->Size(), 0, ExecutionType::Async);
+accel->Start(StartMode::Once);
+mover->Download(out_mem, outbuf->Size(), 0, ExecutionType::Sync);
 
 // Dispose? We use RAII
 ```
@@ -92,6 +133,7 @@ outbuf->Sync(SyncType::DeviceToHost);
 So far, we have tested CYNQ on:
 
 1. Xilinx KV26-based with Ubuntu 2022.04
+2. Xilinx Alveo U250 (it should be compatible with other similar Alveo cards) - Shell: xilinx_u250_gen3x16_xdma_4_1_202210_1
 
 ## Links & References:
 
@@ -106,8 +148,8 @@ Cite Us:
               AND Ávila-Torres, Diego
               AND Castro-Godínez, Jorge
             }},
-  title = {{CYNQ (v0.1)}},
-  year  = {2023},
+  title = {{CYNQ (v0.2)}},
+  year  = {2024},
   url   = {https://github.com/ECASLab/cynq},
 } 
 ```

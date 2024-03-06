@@ -16,7 +16,9 @@ namespace cynq {
  */
 enum class HardwareArchitecture {
   /** For ultra scale xilinx devices */
-  UltraScale
+  UltraScale,
+  /** For Alveo cards */
+  Alveo
 };
 
 /**

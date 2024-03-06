@@ -12,6 +12,7 @@
 #include <cynq/enums.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
+#include <cynq/xrt/datamover.hpp>
 #include <memory>
 
 namespace cynq {
@@ -68,6 +69,7 @@ class XRTMemory : public IMemory {
 
   /** Define the friend relacionship between the mover and the memory */
   friend class DMADataMover;
+  friend class XRTDataMover;
 
  protected:
   /**

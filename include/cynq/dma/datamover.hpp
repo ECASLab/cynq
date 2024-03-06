@@ -7,7 +7,7 @@
  *
  */
 #pragma once
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
@@ -78,10 +78,13 @@ class DMADataMover : public IDataMover {
    * Host (Memory from the host)
    * Device (Memory from the device to be mapped)
    *
+   * @param memory_bank Currently unused
+   *
    * @return std::shared_ptr<IMemory>
    */
   std::shared_ptr<IMemory> GetBuffer(
-      const size_t size, const MemoryType type = MemoryType::Dual) override;
+      const size_t size, const int memory_bank = 0,
+      const MemoryType type = MemoryType::Dual) override;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.

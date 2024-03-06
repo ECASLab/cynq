@@ -19,3 +19,10 @@ The current maintainers are:
 
 * Luis G. Leon Vega <luis.leon@ieee.org>
 * Diego Avila Torres <diego.avila@uned.cr>
+
+## Acknowledgements
+
+Thanks to
+
+* AMD HACC programme (ETH Zürich cluster) since it made possible to add the Alveo card support.
+* RidgeRun LLC for facilitating access to a Xilinx Kria KV260 since it made possible to add K26 support.

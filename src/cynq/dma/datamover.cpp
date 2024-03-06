@@ -7,7 +7,7 @@
  *
  */
 
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
 #include <cynq/dma/datamover.hpp>
@@ -50,7 +50,7 @@ DMADataMover::DMADataMover(const uint64_t addr,
   PYNQ_openDMA(&params->dma_, addr);
 }
 
-std::shared_ptr<IMemory> DMADataMover::GetBuffer(const size_t size,
+std::shared_ptr<IMemory> DMADataMover::GetBuffer(const size_t size, const int,
                                                  const MemoryType type) {
   const xrt::memory_group group = (xrt::memory_group)(0);
 
@@ -109,19 +109,27 @@ Status DMADataMover::Upload(const std::shared_ptr<IMemory> mem,
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
-  /* Get device pointer */
   if (!mem) {
     return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
-  }
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
   }
 
   /* Verify the sizes and offsets */
   if ((size + offset) > mem->Size()) {
     return Status{Status::INVALID_PARAMETER,
                   "The offset and size exceeds the memory size"};
+  }
+
+  /* Get the actual memory and the meta */
+  auto xrtmem = dynamic_cast<XRTMemory *>(mem.get());
+  auto meta = (DMADataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_TO_DEVICE, size, offset);
+  }
+
+  /* Get device pointer */
+  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
+  if (!ptr) {
+    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
   }
 
   /* Issue transaction */
@@ -152,19 +160,27 @@ Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
-  /* Get device pointer */
   if (!mem) {
     return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
-  }
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
   }
 
   /* Verify the sizes and offsets */
   if ((size + offset) > mem->Size()) {
     return Status{Status::INVALID_PARAMETER,
                   "The offset and size exceeds the memory size"};
+  }
+
+  /* Get the actual memory and the meta */
+  auto xrtmem = dynamic_cast<XRTMemory *>(mem.get());
+  auto meta = (DMADataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_FROM_DEVICE, size, offset);
+  }
+
+  /* Get device pointer */
+  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
+  if (!ptr) {
+    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
   }
 
   /* Issue transaction */

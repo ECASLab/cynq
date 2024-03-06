@@ -8,7 +8,7 @@
  */
 #include "cynq/memory.hpp"
 
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <memory>
 

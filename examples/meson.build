@@ -7,15 +7,15 @@
 #
 #
 
-executable('example',
-  ['main.cpp'],
+executable('basic-example-kria',
+  ['zynq-mpsoc/basic-example.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )
 
-executable('basic-example',
-  ['basic-example.cpp'],
+executable('vadd-example-alveo',
+  ['alveo/vadd-host.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]

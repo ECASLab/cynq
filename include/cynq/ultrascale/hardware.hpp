@@ -8,8 +8,11 @@
  */
 #pragma once
 
-#include <xrt/xrt.h>
-#include <xrt/xrt/xrt_device.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#include <xrt.h>
+#include <xrt/xrt_device.h>
+#pragma GCC diagnostic pop
 
 #include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
@@ -39,8 +42,8 @@ struct UltraScaleParameters : public HardwareParameters {
  * Provides an interface to access IP Cores in Xilinx FPGAs, the compatible
  * devices are the following: ZCU102, ZCU106, K26.
  *
- * This class DO NOT have the support for XCLBIN kernels YET.
- *
+ * This class DO NOT have the support for XCLBIN kernels YET and it takes into
+ * account the Vivado workflow only
  */
 class UltraScale : public IHardware {
  public:
@@ -53,7 +56,8 @@ class UltraScale : public IHardware {
    * file is mandatory.
    *
    * @param bitstream_file full path to the bitstream object (.bit file)
-   * @param xclbin_file full path to the xclbin object.
+   * @param xclbin_file full path to the xclbin object (use the default one
+   * in the third-party/resources).
    */
   UltraScale(const std::string &bitstream_file, const std::string &xclbin_file);
   /**
@@ -84,6 +88,19 @@ class UltraScale : public IHardware {
    *
    */
   std::shared_ptr<IDataMover> GetDataMover(const uint64_t address) override;
+  /**
+   * @brief GetAccelerator method (overload - not implemented)
+   * Do not use this method since it is not implemented and it will lead
+   * to a nullptr
+   *
+   * @param kernelname kernel name for XRT kernel (not used)
+   *
+   * @return std::shared_ptr<IAccelerator> nullptr
+   *
+   */
+  std::shared_ptr<IAccelerator> GetAccelerator(
+      const std::string &kernelname) override;
+
   /**
    * @brief GetAccelerator method
    * Instance of IAccelerator inheritors separating the hardware
