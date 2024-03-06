@@ -233,7 +233,8 @@ class IAccelerator {
    * Performs an attachment of the argument and the respective pointer.
    * The use of this overload for IMemory buffers is highly recommended.
    *
-   * @param addr Argument address to set the memory address
+   * @param addr Argument address to set the memory address. In the case of
+   * Alveo or Vitis-based workflows, it is the argument index.
    *
    * @param mem Memory buffer to attach to the argument
    *
@@ -246,9 +247,9 @@ class IAccelerator {
    * @brief Opaque Write Register method
    * Writes to the register of the accelerator.
    *
-   * @param address a unsigned integer of 64 bits representing an address.
+   * @param address an unsigned integer of 64 bits representing an address.
    *
-   * @param data a pointer to a unsigned 8 bits variable which holds the
+   * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to write to the register.
    *
    * @param size size in bytes of the data to write.
@@ -260,9 +261,9 @@ class IAccelerator {
   /**
    * @brief Opaque Read Register method
    *
-   * @param address a unsiged integer of 64 bits representing an address.
+   * @param address an unsigned integer of 64 bits representing an address.
    *
-   * @param data a pointer to a unsigned 8 bits variable which holds the
+   * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to read from the register.
    *
    * @param size size in bytes of the data to read.
@@ -277,7 +278,7 @@ class IAccelerator {
    *
    * @param index index of the argument to set
    *
-   * @param data a pointer to a unsigned 8 bits variable which holds the
+   * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to read from the register.
    *
    * @param size size in bytes of the data to read.

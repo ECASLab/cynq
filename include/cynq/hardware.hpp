@@ -69,8 +69,7 @@ class IHardware {
    * @param address a unsigned integer of 64 bits representing an address.
    * In the case of ZYNQ boards, it corresponds to the base address of the
    * accelerator BAR (Bank Address Register). In the case of Alveo boards,
-   * it is preferrable, you must query the cynq::IAccelerator::GetMemoryBank
-   * for creating the DataMover for a specific memory bank
+   * it is unused.
    *
    * @return std::shared_ptr<IDataMover>
    * Returns an IDataMover pointer with reference counting. It should be

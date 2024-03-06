@@ -1,7 +1,7 @@
 /*
  * See LICENSE for more information about licensing
  *
- * Copyright 2023
+ * Copyright 2023-2024
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
@@ -82,7 +82,8 @@ class XRTAccelerator : public IAccelerator {
    *
    * It is only used by Vitis and Alveo workflows
    *
-   * @param pos memory bank position within the memory arguments in the kernel
+   * @param pos AXI Memory Mapped argument position within the kernel (argument
+   * number)
    *
    * @return integer number corresponding to the memory bank ID
    */
@@ -116,9 +117,9 @@ class XRTAccelerator : public IAccelerator {
    *
    * Writes to the register of the accelerator.
    *
-   * @param address a unsigned integer of 64 bits representing an address.
+   * @param address an unsigned integer of 64 bits representing an address.
    *
-   * @param data a pointer to a unsigned 8 bits variable which holds the
+   * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to write to the register.
    *
    * @param size size in bytes of the data to write.
@@ -132,9 +133,9 @@ class XRTAccelerator : public IAccelerator {
    *
    * Reads from the register of the accelerator
    *
-   * @param address a unsiged integer of 64 bits representing an address.
+   * @param address an unsigned integer of 64 bits representing an address.
    *
-   * @param data a pointer to a unsigned 8 bits variable which holds the
+   * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to read from the register.
    *
    * @param size size in bytes of the data to read.

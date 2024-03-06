@@ -27,9 +27,8 @@ struct XRTDataMoverMeta {
 
 /**
  * @brief XRTDataMover class
- * Provides the api from which to interact with the data buffers responsable for
- * memory operations making use of the Xilinx runtime (XRT) the types are the
- * following: BO (Buffer object) XRT (Direct memory allocation)
+ * Provides the API to interact with the data buffers responsible for
+ * memory operations making use of the Xilinx Runtime (XRT).
  *
  */
 class XRTDataMover : public IDataMover {
@@ -63,18 +62,19 @@ class XRTDataMover : public IDataMover {
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,
    * it allocates memory in a contiguous or memory region
-   * (non-pageable) or non contiguous memory region depending on the Memory
-   * typed past to the method. The memory can be mirrored with pageable memory
+   * (non-pageable) or non contiguous memory region depending on the Memory.
+   * The memory can be mirrored with pageable memory
    * for its use in the host (or CPU).
    *
    * @param size Size in bytes of the buffer.
    *
    * @param type One of the values in the MemoryType enum class which can be one
    * of the following:
-   * Dual (DIMM memory)
-   * Cacheable (cache)
-   * Host (Memory from the host)
-   * Device (Memory from the device to be mapped)
+   *
+   * - Dual (DIMM memory)
+   * - Cacheable (cache)
+   * - Host (Memory from the host)
+   * - Device (Memory from the device to be mapped)
    *
    * @param memory_bank Memory bank corresponding to the memory to be
    * allocated. Use the IAccelerator::GetMemoryBank(pos) to query the

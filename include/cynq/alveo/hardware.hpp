@@ -52,7 +52,7 @@ class Alveo : public IHardware {
   /**
    * @brief Construct a new Alveo object
    *
-   * Configure the FPGA with a xclbin object. The bitstream is unused and this
+   * Configure the FPGA with an xclbin object. The bitstream is unused and this
    * only takes into account the xclbin file.
    *
    * As future work, the XCLBIN will be embedded into the binary to avoid
@@ -67,7 +67,7 @@ class Alveo : public IHardware {
    */
   Alveo() = delete;
   /**
-   * @brief ~Alveo destructor method
+   * @brief Alveo destructor method
    * Destroy the Alveo object.
    */
   virtual ~Alveo();
@@ -88,16 +88,17 @@ class Alveo : public IHardware {
    * by querying the cynq::IAccelerator::GetMemoryBank.
    *
    * @return std::shared_ptr<IDataMover>
-   * Returns an IDataMover pointer with reference counting. It should be
-   * thread-safe.
+   * Returns an IDataMover pointer with reference counting. It is not
+   * MT-safe.
    *
    */
   std::shared_ptr<IDataMover> GetDataMover(const uint64_t address) override;
   /**
-   * @brief GetAccelerator method (overload - not implemented)
+   * @brief GetAccelerator method
+   *
    * Finds and wraps the XRT Kernel into an IAccelerator object to make the
    * API uniform across platforms. There are still differences between the
-   * Alveo cards and Ultrascale that will be address in the future.
+   * Alveo cards and Ultrascale that will be addressed in the future.
    *
    * @param kernelname kernel name for XRT kernel
    *
@@ -109,6 +110,7 @@ class Alveo : public IHardware {
 
   /**
    * @brief GetAccelerator method (overload - not implemented)
+   *
    * Do not use this method since it is not implemented and it will lead
    * to a nullptr
    *
@@ -125,9 +127,6 @@ class Alveo : public IHardware {
 
   /**
    * @brief Loads the XCL Bin.
-   *
-   * In the case of the US+, it can be the default design if the bitstream
-   * is provided or a custom default design with overlays and kernels
    *
    * @param xclbin_file path to the xclbin file
    * @param device_idx FPGA device index
