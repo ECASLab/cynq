@@ -99,8 +99,8 @@ int main(int argc, char** argv) {
   std::copy(img, img + img_size, in_ptr);
 
   std::cout << "----- Configuring accelerator -----" << std::endl;
-  accel->Write(24, &width, 1);
-  accel->Write(16, &height, 1);
+  accel->Write(kWidthAddress, &width, 1);
+  accel->Write(kHeightAddress, &height, 1);
 
   accel->Start(StartMode::Continuous);
 #ifndef PROFILE_MODE
