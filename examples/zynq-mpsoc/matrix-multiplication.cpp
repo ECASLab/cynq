@@ -17,18 +17,18 @@
 #include <string>
 
 /**
- * @example basic-example.cpp
+ * @example matrix-multiplication.cpp
  * This is a sample use case for the CYNQ. It represents a
  * matrix-multiplication from FAL
  */
 
-#if !defined(EXAMPLE_KRIA_BITSTREAM_LOCATION) || \
+#if !defined(EXAMPLE_MULTIPLICATION_BITSTREAM_LOCATION) || \
     !defined(EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION)
 #error "Missing location macros for example"
 #endif
 
 // Given by the example
-static constexpr char kBitstream[] = EXAMPLE_KRIA_BITSTREAM_LOCATION;
+static constexpr char kBitstream[] = EXAMPLE_MULTIPLICATION_BITSTREAM_LOCATION;
 // If you want to universalise the API w.r.t. the Vitis/Alveo flow
 // set this to true
 static constexpr bool kUseAttach = true;

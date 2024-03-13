@@ -1100,9 +1100,10 @@ static int issueDMATransfer(PYNQ_AXI_DMA *state, PYNQ_SHARED_MEMORY *sm_state,
   int mmio_offset = direction == AXI_DMA_WRITE ? state->write_channel_offset
                                                : state->read_channel_offset;
 
-  unsigned int physical_address =
-      ((unsigned int)sm_state->physical_address) + (unsigned int)data_offset;
-  unsigned int xfer_length = (unsigned int)length;
+  uint64_t physical_address = sm_state->physical_address + (unsigned long)data_offset;
+  uint32_t physical_address_lsb = (unsigned int)(physical_address & 0xFFFFFFFF);
+  uint32_t physical_address_msb = (unsigned int)((physical_address >> 32) & 0xFFFFFFFF);
+  uint32_t xfer_length = (unsigned int)length;
 
   if (!isDMAChannelRunning(state, direction)) {
     fprintf(stderr, "Error writing to DMA as engine is not running\n");
@@ -1116,10 +1117,13 @@ static int issueDMATransfer(PYNQ_AXI_DMA *state, PYNQ_SHARED_MEMORY *sm_state,
     return PYNQ_ERROR;
   }
 
-  PYNQ_writeMMIO(&(state->mmio_window), &physical_address, mmio_offset + 0x18,
-                 sizeof(unsigned int));
+  PYNQ_writeMMIO(&(state->mmio_window), &physical_address_lsb, mmio_offset + 0x18,
+                 sizeof(uint32_t));
+  PYNQ_writeMMIO(&(state->mmio_window), &physical_address_msb, mmio_offset + 0x1c,
+                 sizeof(uint32_t));
   PYNQ_writeMMIO(&(state->mmio_window), &xfer_length, mmio_offset + 0x28,
-                 sizeof(unsigned int));
+                 sizeof(uint32_t));
+  
   state->first_transfer[direction] = 0;
   return PYNQ_SUCCESS;
 }
@@ -1171,6 +1175,7 @@ static int isDMAChannelIdle(PYNQ_AXI_DMA *state, AXI_DMA_DIRECTION direction) {
   unsigned int read_byte;
   PYNQ_readMMIO(&(state->mmio_window), &read_byte, offset + 4,
                 sizeof(unsigned int));
+
   return (read_byte & 0x02) == 0x02;
 }
 

@@ -134,7 +134,7 @@ Status DMADataMover::Upload(const std::shared_ptr<IMemory> mem,
 
   /* Issue transaction */
   PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
+  pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
   pmem.pointer = nullptr;
 
   ret =
@@ -185,7 +185,7 @@ Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
 
   /* Issue transaction */
   PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
+  pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
   pmem.pointer = nullptr;
   ret = PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_READ);
 
