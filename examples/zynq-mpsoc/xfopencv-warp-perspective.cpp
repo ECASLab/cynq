@@ -126,29 +126,18 @@ int main(int argc, char** argv) {
   mover->Upload(in_mem, img_size, 0, ExecutionType::Async);
 
   std::cout << "INFO: Trigger Download " << img_size << " bytes" << std::endl;
-  mover->Download(out_mem, img_size, 0, ExecutionType::Async);
-
-  std::cout << "INFO: Sync Upload" << std::endl;
-  mover->Sync(SyncType::HostToDevice);
-
-  std::cout << "INFO: Sync Download" << std::endl;
-  mover->Sync(SyncType::DeviceToHost);
-
-  std::cout << "----- Synchronising output -----" << std::endl;
-  // Stop the accel
-  std::cout << "INFO: Stopping Accel" << std::endl;
-  accel->Stop();
-
-  // Sync the output
-  out_mem->Sync(SyncType::DeviceToHost);
+  mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
 #else
   START_PROFILE(kernel_execution, cynq_profiler, 1000)
   mover->Upload(in_mem, img_size, 0, ExecutionType::Async);
-  mover->Download(out_mem, img_size, 0, ExecutionType::Async);
-  mover->Sync(SyncType::DeviceToHost);
+  mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
   END_PROFILE(kernel_execution)
   std::cout << cynq_profiler << std::endl;
 #endif
+
+  // Stop the accel
+  std::cout << "INFO: Stopping Accel" << std::endl;
+  accel->Stop();
 
   // Save the result
   std::cout << "----- Saving resulting image -----" << std::endl;
