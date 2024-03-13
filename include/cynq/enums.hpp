@@ -16,7 +16,9 @@ namespace cynq {
  */
 enum class HardwareArchitecture {
   /** For ultra scale xilinx devices */
-  UltraScale
+  UltraScale,
+  /** For Alveo cards */
+  Alveo
 };
 
 /**
@@ -88,5 +90,20 @@ enum class MemoryType {
   Host,
   /** GetBuffer receives device as memory type. */
   Device
+};
+
+/**
+ * @brief RegisterAccess
+ * Enumerator of the types of registers in terms of the access
+ */
+enum class RegisterAccess {
+  /** Read-only access */
+  RO,
+  /** Write-only access */
+  WO,
+  /** Read-write access */
+  RW,
+  /** Auto-detection: for Alveo/Vitis */
+  Auto,
 };
 }  // namespace cynq

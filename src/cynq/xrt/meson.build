@@ -7,7 +7,7 @@
 #
 
 sources += [
-  files('accelerator.cpp'),
   files('datamover.cpp'),
-  files('memory.cpp')
+  files('memory.cpp'),
+  files('accelerator.cpp')
 ]

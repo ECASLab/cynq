@@ -7,16 +7,17 @@
  *
  */
 #include <cynq/datamover.hpp>
-
-#include <memory>
-
+#include <cynq/dma/datamover.hpp>
 #include <cynq/xrt/datamover.hpp>
+#include <memory>
 
 namespace cynq {
 std::shared_ptr<IDataMover> IDataMover::Create(
     IDataMover::Type impl, const uint64_t addr,
     std::shared_ptr<HardwareParameters> hwparams) {
   switch (impl) {
+    case IDataMover::Type::DMA:
+      return std::make_shared<DMADataMover>(addr, hwparams);
     case IDataMover::Type::XRT:
       return std::make_shared<XRTDataMover>(addr, hwparams);
     default:

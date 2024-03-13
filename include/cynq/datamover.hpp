@@ -52,7 +52,9 @@ class IDataMover {
   enum Type {
     /** No runtime */
     None = 0,
-    /** Xilinx runtime */
+    /** DMA-based runtime */
+    DMA,
+    /** XRT-based runtime */
     XRT
   };
   /**
@@ -69,10 +71,14 @@ class IDataMover {
    * one of the following: Dual (DIMM memory) Cacheable (cache) Host (Memory
    * from the host) Device (Memory from the device to be mapped)
    *
+   * @param memory_bank Memory bank corresponding to the memory to be
+   * allocated. It is used for XRT-based data allocators.
+   *
    * @return std::shared_ptr<IMemory>
    */
   virtual std::shared_ptr<IMemory> GetBuffer(
-      const size_t size, const MemoryType type = MemoryType::Dual) = 0;
+      const size_t size, const int memory_bank = 0,
+      const MemoryType type = MemoryType::Dual) = 0;
   /**
    * @brief Upload method
    * This method moves the data from the host to the device using a DMA engine.

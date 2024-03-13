@@ -1,21 +1,18 @@
 /*
  * See LICENSE for more information about licensing
  *
- * Copyright 2023
+ * Copyright 2024
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
- *         Diego Arturo Avila Torres <diego.avila@uned.cr>
- *
  */
 #pragma once
-#include <memory>
-
-#include <xrt/xrt/xrt_bo.h>
+#include <xrt/xrt_bo.h>
 
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/status.hpp>
 #include <cynq/xrt/memory.hpp>
+#include <memory>
 
 namespace cynq {
 /**
@@ -30,9 +27,8 @@ struct XRTDataMoverMeta {
 
 /**
  * @brief XRTDataMover class
- * Provides the api from which to interact with the data buffers responsable for
- * memory operations making use of the Xilinx runtime (XRT) the types are the
- * following: BO (Buffer object) DMA (Direct memory allocation)
+ * Provides the API to interact with the data buffers responsible for
+ * memory operations making use of the Xilinx Runtime (XRT).
  *
  */
 class XRTDataMover : public IDataMover {
@@ -40,10 +36,10 @@ class XRTDataMover : public IDataMover {
   /**
    * @brief Construct a new XRTDataMover object
    *
-   * This constructs a data mover that uses DMA to execute the transfers
+   * This constructs a data mover that uses XRT to execute the transfers
    * between the host and the device. Moreover, it uses XRT buffer object as
    * memory buffers.
-   * @param addr DMA address in the physical memory map
+   * @param addr XRT address in the physical memory map
    * @param hwparams Hardware-specific params
    */
   XRTDataMover(const uint64_t addr,
@@ -53,12 +49,12 @@ class XRTDataMover : public IDataMover {
    * @brief Default constructor
    *
    * The default constructor is deleted since the address is mandatory for the
-   * DMA transfer.
+   * XRT transfer.
    */
   XRTDataMover() = delete;
   /**
-   * @brief ~XRTDatamover destructor method
-   * Destroy the XRTDatamover object.
+   * @brief ~XRTDataMover destructor method
+   * Destroy the XRTDataMover object.
    *
    */
   virtual ~XRTDataMover();
@@ -66,28 +62,35 @@ class XRTDataMover : public IDataMover {
    * @brief GetBuffer method
    * This method allocates a memory buffer. Depending on the MemoryType,
    * it allocates memory in a contiguous or memory region
-   * (non-pageable) or non contiguous memory region depending on the Memory
-   * typed past to the method. The memory can be mirrored with pageable memory
+   * (non-pageable) or non contiguous memory region depending on the Memory.
+   * The memory can be mirrored with pageable memory
    * for its use in the host (or CPU).
    *
    * @param size Size in bytes of the buffer.
    *
    * @param type One of the values in the MemoryType enum class which can be one
    * of the following:
-   * Dual (DIMM memory)
-   * Cacheable (cache)
-   * Host (Memory from the host)
-   * Device (Memory from the device to be mapped)
+   *
+   * - Dual (DIMM memory)
+   * - Cacheable (cache)
+   * - Host (Memory from the host)
+   * - Device (Memory from the device to be mapped)
+   *
+   * @param memory_bank Memory bank corresponding to the memory to be
+   * allocated. Use the IAccelerator::GetMemoryBank(pos) to query the
+   * corresponding memory bank
    *
    * @return std::shared_ptr<IMemory>
    */
   std::shared_ptr<IMemory> GetBuffer(
-      const size_t size, const MemoryType type = MemoryType::Dual) override;
+      const size_t size, const int memory_bank = 0,
+      const MemoryType type = MemoryType::Dual) override;
   /**
    * @brief Upload method
-   * This method moves the data from the host to the device using a DMA engine.
-   * This triggers the AXI Memory Map and AXI Stream Transactions under the
-   * hood.
+   *
+   * This method moves the data from the host to the device using a XRT engine.
+   * In the case of XRT-based allocators. It invokes the IMemory::Sync if
+   * execution type is ExecutionType::Sync
    *
    * @param mem XRTMemory instance to upload.
    *
@@ -106,6 +109,11 @@ class XRTDataMover : public IDataMover {
   /**
    * @brief Download method
    *
+   * This method moves the data from the device to the host using a XRT engine.
+   * In the case of XRT-based allocators. It invokes the IMemory::Sync if
+   * execution type is ExecutionType::Sync
+   *
+   *
    * @param mem IMemory instance to download.
    *
    * @param size Size in bytes of data being downloaded from the memory device
@@ -122,6 +130,7 @@ class XRTDataMover : public IDataMover {
                   const size_t offset, const ExecutionType exetype) override;
   /**
    * @brief Sync method
+   *
    * Synchronizes data movements in case of asynchronous Upload/Download.
    *
    * @param type sync type. Depending on the transaction, it will trigger sync

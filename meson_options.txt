@@ -11,3 +11,4 @@ option('build-tests', type: 'boolean', value: false, description: 'Enable test c
 option('build-docs', type: 'boolean', value: false, description: 'Enable docs compilation')
 option('build-docs-only', type: 'boolean', value: false, description: 'Enable docs-only compilation')
 option('developer-mode', type : 'boolean', value : true, yield : true, description: 'Enable developer mode')
+option('profiling-mode', type : 'boolean', value : true, yield : true, description: 'Enable profiling mode')

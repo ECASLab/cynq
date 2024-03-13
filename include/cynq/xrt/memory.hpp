@@ -8,12 +8,12 @@
  */
 #pragma once
 
-#include <memory>
-
+#include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
 #include <cynq/xrt/datamover.hpp>
+#include <memory>
 
 namespace cynq {
 /**
@@ -68,6 +68,7 @@ class XRTMemory : public IMemory {
   size_t Size() override;
 
   /** Define the friend relacionship between the mover and the memory */
+  friend class DMADataMover;
   friend class XRTDataMover;
 
  protected:

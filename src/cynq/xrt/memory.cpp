@@ -8,13 +8,13 @@
  */
 #include "cynq/memory.hpp"
 
+#include <xrt/xrt_bo.h>
+
 #include <memory>
 
-#include <xrt/xrt/xrt_bo.h>
-
+#include "cynq/dma/datamover.hpp"
 #include "cynq/enums.hpp"
 #include "cynq/status.hpp"
-#include "cynq/xrt/datamover.hpp"
 #include "cynq/xrt/memory.hpp"
 
 namespace cynq {
@@ -28,7 +28,7 @@ Status XRTMemory::Sync(const SyncType type) {
   }
 
   /* Determine the direction */
-  auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+  auto meta = reinterpret_cast<DMADataMoverMeta *>(mover_ptr_);
   xclBOSyncDirection dir = type == SyncType::HostToDevice
                                ? XCL_BO_SYNC_BO_TO_DEVICE
                                : XCL_BO_SYNC_BO_FROM_DEVICE;
@@ -51,7 +51,7 @@ std::shared_ptr<uint8_t> XRTMemory::GetHostAddress() {
   if (!mover_ptr_) {
     return std::shared_ptr<uint8_t>(host_ptr_, [](uint8_t *) {});
   } else {
-    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+    auto meta = reinterpret_cast<DMADataMoverMeta *>(mover_ptr_);
 
     if (meta->type_ == MemoryType::Device) {
       return nullptr;
@@ -72,7 +72,7 @@ std::shared_ptr<uint8_t> XRTMemory::GetDeviceAddress() {
   if (!mover_ptr_) {
     return std::shared_ptr<uint8_t>(dev_ptr_, [](uint8_t *) {});
   } else {
-    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+    auto meta = reinterpret_cast<DMADataMoverMeta *>(mover_ptr_);
 
     if (meta->type_ == MemoryType::Host) {
       return nullptr;
@@ -91,7 +91,7 @@ std::shared_ptr<uint8_t> XRTMemory::GetDeviceAddress() {
 
 XRTMemory::~XRTMemory() {
   if (mover_ptr_) {
-    auto meta = reinterpret_cast<XRTDataMoverMeta *>(mover_ptr_);
+    auto meta = reinterpret_cast<DMADataMoverMeta *>(mover_ptr_);
     delete meta;
   }
 }

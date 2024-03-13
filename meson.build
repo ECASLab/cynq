@@ -7,7 +7,7 @@
 #
 
 
-project('cynq',['c','cpp'],version : '0.1.0',
+project('cynq',['c','cpp'],version : '0.2.0',
   default_options : ['warning_level=3',
                      'cpp_std=c++17',
                      'cpp_args=-Werror'])
@@ -16,6 +16,8 @@ add_global_arguments(
   '-Wno-ignored-qualifiers',
   language : 'cpp'
 )
+
+cc = meson.get_compiler('cpp')
 
 #############################
 ## Dependencies definition ##
@@ -34,10 +36,14 @@ project_deps = []
 
 # Install pre-commit hooks
 developer_mode = get_option('developer-mode')
+profiling_mode = get_option('profiling-mode')
 if developer_mode
   pre_commit = find_program('pre-commit', required: true, native: true)
   run_command(pre_commit, 'install', check: false)
   run_command(pre_commit, 'install', '--hook-type', 'commit-msg', check: false)
+endif
+if profiling_mode
+  cpp_args += ['-DPROFILE_MODE']
 endif
 
 if not get_option('build-docs-only')

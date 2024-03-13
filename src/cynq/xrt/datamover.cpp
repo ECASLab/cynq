@@ -1,65 +1,49 @@
 /*
  * See LICENSE for more information about licensing
  *
- * Copyright 2023
+ * Copyright 2024
  * Author: Luis G. Leon-Vega <luis.leon@ieee.org>
- *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
 
-#include <cynq/xrt/datamover.hpp>
+#include <xrt/xrt_bo.h>
 
-#include <memory>
-
-#include <xrt/xrt/xrt_bo.h>
-
+#include <cynq/alveo/hardware.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
 #include <cynq/memory.hpp>
 #include <cynq/status.hpp>
-
-#include <cynq/ultrascale/hardware.hpp>
-
-extern "C" {
-#include <pynq_api.h> /* FIXME: to be removed in future releases */
-}
+#include <cynq/xrt/datamover.hpp>
+#include <memory>
 
 namespace cynq {
 /**
- * @brief Define the specialisation of the data mover with the DMA engine
+ * @brief Define the specialisation of the data mover with the XRT engine
  * and XRT
  */
 struct XRTDataMoverParameters : public DataMoverParameters {
-  /** DMA accessor */
-  PYNQ_AXI_DMA dma_;
-  /** DMA address */
-  uint64_t addr_;
   /** Virtual destructor required for the inheritance */
   virtual ~XRTDataMoverParameters() = default;
 };
 
-XRTDataMover::XRTDataMover(const uint64_t addr,
+XRTDataMover::XRTDataMover(const uint64_t /* addr */,
                            std::shared_ptr<HardwareParameters> hwparams)
     : data_mover_params_{std::make_unique<XRTDataMoverParameters>()} {
   /* The assumption is that at this point, it is ok */
   auto params =
       dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
-
-  params->addr_ = addr;
   params->hw_params_ = hwparams;
-
-  /* Create the DMA accessor */
-  PYNQ_openDMA(&params->dma_, addr);
 }
 
 std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
+                                                 const int memory_bank,
                                                  const MemoryType type) {
-  const xrt::memory_group group = (xrt::memory_group)(0);
+  const xrt::memory_group group = (xrt::memory_group)(memory_bank);
 
   /* The assumption is that at this point, it is ok */
-  auto hw_params_ = dynamic_cast<UltraScaleParameters *>(
-      data_mover_params_->hw_params_.get());
+  auto hw_params_ =
+      dynamic_cast<AlveoParameters *>(data_mover_params_->hw_params_.get());
   if (!hw_params_) {
     throw std::runtime_error("Hardware params are incompatible");
   }
@@ -94,12 +78,7 @@ std::shared_ptr<IMemory> XRTDataMover::GetBuffer(const size_t size,
 
 DeviceStatus XRTDataMover::GetStatus() { return DeviceStatus::Idle; }
 
-XRTDataMover::~XRTDataMover() {
-  /* The assumption is that at this point, it is ok */
-  auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
-  PYNQ_closeDMA(&params->dma_);
-}
+XRTDataMover::~XRTDataMover() {}
 
 /* TODO: All implementations below can be implemented cleverly. However, it
    was out from the scope of this release. In next releases, we can have a
@@ -107,19 +86,13 @@ XRTDataMover::~XRTDataMover() {
 
 Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
                             const size_t size, const size_t offset,
-                            const ExecutionType exetype) {
-  int ret = PYNQ_SUCCESS;
-  auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
-
+                            const ExecutionType /* exetype */) {
   /* Get device pointer */
   if (!mem) {
     return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
   }
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
-  }
+
+  auto xrtmem = dynamic_cast<XRTMemory *>(mem.get());
 
   /* Verify the sizes and offsets */
   if ((size + offset) > mem->Size()) {
@@ -127,42 +100,23 @@ Status XRTDataMover::Upload(const std::shared_ptr<IMemory> mem,
                   "The offset and size exceeds the memory size"};
   }
 
-  /* Issue transaction */
-  PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
-  pmem.pointer = nullptr;
-
-  ret =
-      PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_WRITE);
-
-  /* Check transaction */
-  if (PYNQ_SUCCESS != ret) {
-    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+  auto meta = (XRTDataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_TO_DEVICE, size, offset);
   }
 
-  /* Synchronise if needed */
-  if (ExecutionType::Async == exetype) {
-    return Status{};
-  } else {
-    return this->Sync(SyncType::HostToDevice);
-  }
+  return Status{};
 }
 
 Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
                               const size_t size, const size_t offset,
-                              const ExecutionType exetype) {
-  int ret = PYNQ_SUCCESS;
-  auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
-
+                              const ExecutionType /* exetype */) {
   /* Get device pointer */
   if (!mem) {
     return Status{Status::INVALID_PARAMETER, "Memory pointer is null"};
   }
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
-  }
+
+  auto xrtmem = dynamic_cast<XRTMemory *>(mem.get());
 
   /* Verify the sizes and offsets */
   if ((size + offset) > mem->Size()) {
@@ -170,41 +124,18 @@ Status XRTDataMover::Download(const std::shared_ptr<IMemory> mem,
                   "The offset and size exceeds the memory size"};
   }
 
-  /* Issue transaction */
-  PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (unsigned long)(ptr.get());  // NOLINT
-  pmem.pointer = nullptr;
-  ret = PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_READ);
-
-  /* Check transaction */
-  if (PYNQ_SUCCESS != ret) {
-    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+  auto meta = (XRTDataMoverMeta *)(xrtmem->mover_ptr_);  // NOLINT
+  if (meta) {
+    meta->bo_->sync(XCL_BO_SYNC_BO_FROM_DEVICE, size, offset);
   }
 
-  /* Synchronise if needed */
-  if (ExecutionType::Async == exetype) {
-    return Status{};
-  } else {
-    return this->Sync(SyncType::DeviceToHost);
-  }
+  return Status{};
 }
 
-Status XRTDataMover::Sync(const SyncType type) {
-  int ret = PYNQ_SUCCESS;
-
-  auto params =
-      dynamic_cast<XRTDataMoverParameters *>(data_mover_params_.get());
-
-  if (SyncType::HostToDevice == type) {
-    ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_WRITE);
-  } else {
-    ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_READ);
-  }
-
-  if (PYNQ_SUCCESS != ret) {
-    return Status{Status::REGISTER_IO_ERROR, "Cannot synchronise"};
-  }
-
+Status XRTDataMover::Sync(const SyncType /* type */) {
+  /* TODO: not implemented. We must find a way to synchronise in another
+     fashion. An idea is to launch std::async jobs and wait until its
+     synchronisation */
   return Status{};
 }
 }  // namespace cynq

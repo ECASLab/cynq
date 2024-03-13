@@ -6,93 +6,103 @@
  *         Diego Arturo Avila Torres <diego.avila@uned.cr>
  *
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#include <xrt.h>
+#include <xrt/xrt_kernel.h>
+#include <xrt/xrt_uuid.h>
+#pragma GCC diagnostic pop
+
+#include <cynq/accelerator.hpp>
+#include <cynq/alveo/hardware.hpp>
+#include <cynq/enums.hpp>
+#include <cynq/memory.hpp>
+#include <cynq/status.hpp>
+#include <cynq/xrt/accelerator.hpp>
 #include <memory>
 #include <stdexcept>
 #include <string>
 
-#include <cynq/xrt/accelerator.hpp>
-
-#include <cynq/accelerator.hpp>
-#include <cynq/enums.hpp>
-#include <cynq/status.hpp>
-
-extern "C" {
-#include <pynq_api.h> /* FIXME: to be removed in future releases */
-}
-
-/*
- * FIXME: This implementation is fully based on the PYNQ C API from the
- * community. This must be updated once the PYNQ C port as been done
- * in a decent manner.
- */
-
-static constexpr uint64_t kAddrSpace = 65536;
-
 namespace cynq {
 /**
- * @brief Specialisation of the parameters given by the UltraScale. This is
+ * @brief Specialisation of the parameters given by the XRT. This is
  * only available by the source file to encapsulate the dependencies involved.
  */
-struct XrtAcceleratorParameters : public AcceleratorParameters {
-  /** Accelerator address */
-  uint64_t addr_;
-  /** Address space size */
-  uint64_t addr_space_size_;
-  /** HLS Design */
-  PYNQ_HLS hls_;
+struct XRTAcceleratorParameters : public AcceleratorParameters {
+  /** Kernel object */
+  xrt::kernel kernel_;
+  /** Hardware parameters */
+  std::weak_ptr<HardwareParameters> hwparams_;
+  /** Kernel run wrapper */
+  xrt::run run_;
   /** Virtual destructor required for the inheritance */
-  virtual ~XrtAcceleratorParameters() = default;
+  virtual ~XRTAcceleratorParameters() = default;
 };
 
-XRTAccelerator::XRTAccelerator(const uint64_t addr)
-    : addr_{addr},
-      addr_space_size_{kAddrSpace},
-      accel_params_{std::make_unique<XrtAcceleratorParameters>()} {
+XRTAccelerator::XRTAccelerator(
+    const std::string &kernelname,
+    const std::shared_ptr<HardwareParameters> hwparams)
+    : accel_params_{std::make_unique<XRTAcceleratorParameters>()} {
   /* The assumption is that at this point, it is ok */
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
 
-  params->addr_ = this->addr_;
-  params->addr_space_size_ = this->addr_space_size_;
+  /* Cast the params to be compatible with Alveo
+     This needs to be changed later */
+  auto xrthwparams = std::dynamic_pointer_cast<AlveoParameters>(hwparams);
+  if (!xrthwparams) {
+    throw Status{Status::INCOMPATIBLE_PARAMETER,
+                 "The parameters do not match to the Alveo Parameters"};
+  }
+  /* Create the XRT Kernel */
+  params->hwparams_ = xrthwparams;
+  params->kernel_ =
+      xrt::kernel(xrthwparams->device_, xrthwparams->uuid_, kernelname,
+                  xrt::kernel::cu_access_mode::exclusive);
+  params->run_ = xrt::run(params->kernel_);
 
-  if (PYNQ_SUCCESS !=
-      PYNQ_openHLS(&params->hls_, this->addr_, this->addr_space_size_)) {
-    std::string msg = "Cannot open the design in addr: ";
-    msg += std::to_string(this->addr_);
-    throw std::runtime_error(msg);
+  if (!params->run_) {
+    throw Status{Status::CONFIGURATION_ERROR,
+                 "Cannot create the xrt::run instance"};
   }
 }
 
 Status XRTAccelerator::Start(const StartMode mode) {
-  constexpr uint64_t ctrl_reg_addr = 0x00;
-  const uint8_t ctrl_reg_val = StartMode::Once == mode ? 0x01 : 0x81;
-  return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
+  if (StartMode::Continuous == mode) {
+    return Status{Status::NOT_IMPLEMENTED, "Not implemented"};
+  } else {
+    auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+    params->run_.start();
+  }
+  return Status{};
 }
 
 Status XRTAccelerator::Stop() {
-  constexpr uint64_t ctrl_reg_addr = 0x00;
-  const uint8_t ctrl_reg_val = 0x0;
-  return this->WriteRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+  params->run_.stop();
+  return Status{};
+}
+
+Status XRTAccelerator::Sync() {
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+  ert_cmd_state ert = params->run_.wait();
+  if (ert != ERT_CMD_STATE_COMPLETED) {
+    return Status{Status::EXECUTION_FAILED, "Error: " + std::to_string(ert)};
+  }
+  return Status{};
 }
 
 DeviceStatus XRTAccelerator::GetStatus() {
-  constexpr uint64_t ctrl_reg_addr = 0x00;
-  uint8_t ctrl_reg_val = 0x0;
-
-  Status st = this->ReadRegister(ctrl_reg_addr, &ctrl_reg_val, sizeof(uint8_t));
-  if (Status::OK != st.code) {
-    return DeviceStatus::Error;
-  }
-
-  switch (ctrl_reg_val) {
-    case 0x01:
-    case 0x03:
-    case 0x81:
-    case 0x83:
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+  ert_cmd_state ert = params->run_.state();
+  switch (ert) {
+    case ERT_CMD_STATE_RUNNING:
       return DeviceStatus::Running;
-    case 0x04:
-      return DeviceStatus::Idle;
-    case 0x06:
+    case ERT_CMD_STATE_COMPLETED:
       return DeviceStatus::Done;
+    case ERT_CMD_STATE_NEW:
+      [[fallthrough]];
+    case ERT_CMD_STATE_QUEUED:
+      return DeviceStatus::Idle;
     default:
       return DeviceStatus::Unknown;
   }
@@ -100,37 +110,96 @@ DeviceStatus XRTAccelerator::GetStatus() {
 
 Status XRTAccelerator::WriteRegister(const uint64_t address,
                                      const uint8_t *data, const size_t size) {
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
-  auto ret = PYNQ_writeToHLS(&params->hls_, const_cast<uint8_t *>(data),
-                             address, size);
-  if (PYNQ_SUCCESS != ret) {
-    std::string msg = "Cannot write on HLS register: ";
-    msg += std::to_string(address);
-    msg += " the payload with size: ";
-    msg += std::to_string(size);
-    return Status{Status::REGISTER_IO_ERROR, msg};
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+
+  /* Check alignment */
+  if (size % 4 != 0) {
+    return Status{Status::REGISTER_NOT_ALIGNED,
+                  "The size must be aligned to 32 bits"};
+  }
+
+  /* Write the register */
+  try {
+    const size_t sizeu32 = size >> 2;
+    const uint32_t *datau32 = reinterpret_cast<const uint32_t *>(data);
+
+    /* Get the offset of the reg */
+    uint32_t offset = params->kernel_.offset(address);
+
+    for (uint i = 0; i < sizeu32; ++i) {
+      params->kernel_.write_register(offset, datau32[i]);
+    }
+  } catch (std::exception &e) {
+    return Status{Status::REGISTER_IO_ERROR,
+                  std::string("Cannot write to the register - ") + e.what()};
   }
   return Status{};
 }
 
 Status XRTAccelerator::ReadRegister(const uint64_t address, uint8_t *data,
                                     const size_t size) {
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
-  auto ret = PYNQ_readFromHLS(&params->hls_, data, address, size);
-  if (PYNQ_SUCCESS != ret) {
-    std::string msg = "Cannot read on HLS register: ";
-    msg += std::to_string(address);
-    msg += " the payload with size: ";
-    msg += std::to_string(size);
-    return Status{Status::REGISTER_IO_ERROR, msg};
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+
+  /* Check alignment */
+  if (size % 4 != 0) {
+    return Status{Status::REGISTER_NOT_ALIGNED,
+                  "The size must be aligned to 32 bits"};
+  }
+
+  /* Write the register */
+  try {
+    const size_t sizeu32 = size >> 2;
+    uint32_t *datau32 = reinterpret_cast<uint32_t *>(data);
+
+    /* Get the offset of the reg */
+    uint32_t offset = params->kernel_.offset(address);
+
+    for (uint i = 0; i < sizeu32; ++i) {
+      datau32[i] = params->kernel_.read_register(offset);
+    }
+  } catch (std::exception &e) {
+    return Status{Status::REGISTER_IO_ERROR,
+                  std::string("Cannot read from the register - ") + e.what()};
   }
   return Status{};
 }
 
-XRTAccelerator::~XRTAccelerator() {
-  /* The assumption is that at this point, it is ok */
-  auto params = dynamic_cast<XrtAcceleratorParameters *>(accel_params_.get());
-  PYNQ_closeHLS(&params->hls_);
+Status XRTAccelerator::AttachRegister(const uint64_t index, uint8_t *data,
+                                      const RegisterAccess /* access */,
+                                      const size_t size) {
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+  if (index > 255 || !data || size == 0) {
+    return Status{Status::INVALID_PARAMETER,
+                  "index and size must be greater than 0. data must be valid"};
+  }
+  params->run_.set_arg((int)index, (const void *)data, size);  // NOLINT
+  return Status{};
+}
+
+Status XRTAccelerator::Attach(const uint64_t index,
+                              std::shared_ptr<IMemory> mem) {
+  if (!mem) {
+    return Status{Status::INVALID_PARAMETER, "The pointer is null"};
+  }
+
+  auto ptr = mem->DeviceAddress<uint8_t>().get();
+  if (!ptr) {
+    return Status{
+        Status::INVALID_PARAMETER,
+        "The device pointer is null. Are you passing a device-valid memory?"};
+  }
+
+  uint64_t addr = reinterpret_cast<uint64_t>(ptr);
+
+  return this->AttachRegister(index, reinterpret_cast<uint8_t *>(&addr),
+                              RegisterAccess::Auto, sizeof(decltype(addr)));
+}
+
+XRTAccelerator::~XRTAccelerator() {}
+
+int XRTAccelerator::GetMemoryBank(const uint pos) {
+  auto params = dynamic_cast<XRTAcceleratorParameters *>(accel_params_.get());
+  return params->kernel_.group_id(pos);
 }
 
 }  // namespace cynq
