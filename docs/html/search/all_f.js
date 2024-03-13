@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['write',['Write',['../classcynq_1_1IAccelerator.html#a307ed966bd1f4488e3f9c5f67c0e40f3',1,'cynq::IAccelerator']]],
-  ['writeregister',['WriteRegister',['../classcynq_1_1IAccelerator.html#a2345b427daaef05033e9f66202210bf2',1,'cynq::IAccelerator::WriteRegister()'],['../classcynq_1_1XRTAccelerator.html#a5523f65637502496574afd594bd5b938',1,'cynq::XRTAccelerator::WriteRegister()']]]
+  ['ultrascale_71',['UltraScale',['../classcynq_1_1UltraScale.html',1,'cynq::UltraScale'],['../classcynq_1_1UltraScale.html#a998fa059d0601c5b883f1b21f2658871',1,'cynq::UltraScale::UltraScale(const std::string &amp;bitstream_file, const std::string &amp;xclbin_file)'],['../classcynq_1_1UltraScale.html#a384b72f33f59feb42df37f2e7b02561c',1,'cynq::UltraScale::UltraScale()=delete']]],
+  ['ultrascaleparameters_72',['UltraScaleParameters',['../structcynq_1_1UltraScaleParameters.html',1,'cynq']]],
+  ['upload_73',['Upload',['../classcynq_1_1IDataMover.html#a4b4edd65dab0f80bfce10964c14f4ebd',1,'cynq::IDataMover::Upload()'],['../classcynq_1_1DMADataMover.html#ab78f58416e2fcaf78b9c637edb23d357',1,'cynq::DMADataMover::Upload()'],['../classcynq_1_1XRTDataMover.html#ac06d357e8d8f13618f6326afe3e23636',1,'cynq::XRTDataMover::Upload()']]],
+  ['uuid_5f_74',['uuid_',['../structcynq_1_1AlveoParameters.html#a7ad619b3c6de31af8a876746a7a5ed1b',1,'cynq::AlveoParameters']]]
 ];

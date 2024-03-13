@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['installation',['Installation',['../md__media_lleon95_data_Personal_cynq_docs_Installation.html',1,'']]]
+  ['getting_20started_221',['Getting Started',['../md__home_ubuntu_lleon_cynq_alveo_docs_GettingStarted.html',1,'']]]
 ];

@@ -15,7 +15,7 @@
 #include <string>
 
 /**
- * @example vadd-host.cpp
+ * @example alveo/vadd-host.cpp
  * This is a sample of how the hello world xrt example looks like
  * in CYNQ. It performs two vector additions.
  */

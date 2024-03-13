@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['member_5fabsent',['MEMBER_ABSENT',['../structcynq_1_1Status.html#a37a41280e0f5f26784730a859ec7bc98a04fd2bd5f8f17c1c8127f28f4a2c83cd',1,'cynq::Status']]],
-  ['msg',['msg',['../structcynq_1_1Status.html#a419bb14a6cb9d365917200c9744eee83',1,'cynq::Status']]]
+  ['kernel_5f_48',['kernel_',['../structcynq_1_1XRTAcceleratorParameters.html#a714bbcc74ed58887cc6e499353957e31',1,'cynq::XRTAcceleratorParameters']]],
+  ['kernelquery_49',['KernelQuery',['../classcynq_1_1UltraScale.html#a15ab3f7340590499eec472ce22a97b17',1,'cynq::UltraScale']]]
 ];

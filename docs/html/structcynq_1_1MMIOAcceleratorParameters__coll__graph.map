@@ -1,0 +1,5 @@
+<map id="cynq::MMIOAcceleratorParameters" name="cynq::MMIOAcceleratorParameters">
+<area shape="rect" id="node1" title="Specialisation of the parameters given by the UltraScale. This is only available by the source file t..." alt="" coords="397,43,644,69"/>
+<area shape="rect" id="node2" href="$structcynq_1_1AcceleratorParameters.html" title="Define an abstract representation of the accelerator parameters with some prefilled fields." alt="" coords="5,5,215,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="8,57,212,127"/>
+</map>

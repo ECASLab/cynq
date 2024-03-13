@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getting_20started',['Getting Started',['../md__media_lleon95_data_Personal_cynq_docs_GettingStarted.html',1,'']]]
+  ['foundations_220',['Foundations',['../md__home_ubuntu_lleon_cynq_alveo_docs_Foundations.html',1,'']]]
 ];

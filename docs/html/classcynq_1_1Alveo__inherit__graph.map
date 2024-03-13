@@ -1,0 +1,4 @@
+<map id="cynq::Alveo" name="cynq::Alveo">
+<area shape="rect" id="node1" title="Alveo class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are the ..." alt="" coords="20,80,119,107"/>
+<area shape="rect" id="node2" href="$classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices:" alt="" coords="5,5,133,32"/>
+</map>

@@ -25,7 +25,7 @@
 // clang-format on
 
 /**
- * @example xfopencv-filter2d.cpp
+ * @example zynq-mpsoc/xfopencv-filter2d.cpp
  * This is a sample use case for the CYNQ. It represents a
  * filter 2D from the XfOpenCV Library (now part of Vitis Library)
  */

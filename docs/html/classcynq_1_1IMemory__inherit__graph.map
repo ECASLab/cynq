@@ -1,3 +1,4 @@
 <map id="cynq::IMemory" name="cynq::IMemory">
-<area shape="rect" id="node2" href="$classcynq_1_1XRTMemory.html" title="XRTMemory class Provides the api for configuring the data buffers, this class is based on the Buffer ..." alt="" coords="5,80,137,107"/>
+<area shape="rect" id="node1" title="Interface for standardising the API of Memory devices: XRTMemory." alt="" coords="16,5,135,32"/>
+<area shape="rect" id="node2" href="$classcynq_1_1XRTMemory.html" title="XRTMemory class Provides the api for configuring the data buffers, this class is based on the Buffer ..." alt="" coords="5,80,145,107"/>
 </map>

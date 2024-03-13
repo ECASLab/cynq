@@ -1,17 +1,13 @@
 var searchData=
 [
-  ['_7eacceleratorparameters',['~AcceleratorParameters',['../structcynq_1_1AcceleratorParameters.html#af0cccd1c1d691292bb33ed9e476b7edc',1,'cynq::AcceleratorParameters']]],
-  ['_7edatamoverparameters',['~DataMoverParameters',['../structcynq_1_1DataMoverParameters.html#ab32a95eebb5e34b188406003cf13f296',1,'cynq::DataMoverParameters']]],
-  ['_7ehardwareparameters',['~HardwareParameters',['../structcynq_1_1HardwareParameters.html#ab88d879905d7cbe9a3bf3fed8ff1a04d',1,'cynq::HardwareParameters']]],
-  ['_7eiaccelerator',['~IAccelerator',['../classcynq_1_1IAccelerator.html#a48a1cffcd45a81f55ac18e0f108b2941',1,'cynq::IAccelerator']]],
-  ['_7eidatamover',['~IDataMover',['../classcynq_1_1IDataMover.html#ac12de65b05dd9e2c0fdfcacec17a4a8f',1,'cynq::IDataMover']]],
-  ['_7eihardware',['~IHardware',['../classcynq_1_1IHardware.html#aa752c0a2d2effe32203e84f3802ec201',1,'cynq::IHardware']]],
-  ['_7eimemory',['~IMemory',['../classcynq_1_1IMemory.html#a15d660f6982fdfa3f875cb66fbeb0a5c',1,'cynq::IMemory']]],
-  ['_7eultrascale',['~UltraScale',['../classcynq_1_1UltraScale.html#a973fe9446d775eee7d6ae987cd30ce3f',1,'cynq::UltraScale']]],
-  ['_7eultrascaleparameters',['~UltraScaleParameters',['../structcynq_1_1UltraScaleParameters.html#ae4315d476b8beb917be8543f1839fafa',1,'cynq::UltraScaleParameters']]],
-  ['_7exrtaccelerator',['~XRTAccelerator',['../classcynq_1_1XRTAccelerator.html#a159711c105780262d867433bc998ed8d',1,'cynq::XRTAccelerator']]],
-  ['_7exrtacceleratorparameters',['~XrtAcceleratorParameters',['../structcynq_1_1XrtAcceleratorParameters.html#abeb4c5e93ac14056b16bb63a697b41dd',1,'cynq::XrtAcceleratorParameters']]],
-  ['_7exrtdatamover',['~XRTDataMover',['../classcynq_1_1XRTDataMover.html#a944c143f7ccfa28817a112a903f617d2',1,'cynq::XRTDataMover']]],
-  ['_7exrtdatamoverparameters',['~XRTDataMoverParameters',['../structcynq_1_1XRTDataMoverParameters.html#a298104618cf130afc2ff9135d860c0ac',1,'cynq::XRTDataMoverParameters']]],
-  ['_7exrtmemory',['~XRTMemory',['../classcynq_1_1XRTMemory.html#a5e9279bd77018f1b71bd69be1b9ed5dd',1,'cynq::XRTMemory']]]
+  ['xclbin_5f_77',['xclbin_',['../structcynq_1_1AlveoParameters.html#a1bc44037b50483b3f42ab299c2448fba',1,'cynq::AlveoParameters::xclbin_()'],['../structcynq_1_1UltraScaleParameters.html#affb0a2db730fdc22ca38749f18ccb3e1',1,'cynq::UltraScaleParameters::xclbin_()']]],
+  ['xclbin_5ffile_78',['xclbin_file',['../structcynq_1_1HardwareParameters.html#a4da597018335c2d6d04359f01539b4e1',1,'cynq::HardwareParameters']]],
+  ['xclbin_5ffile_5f_79',['xclbin_file_',['../structcynq_1_1AlveoParameters.html#af38ca075ddf3d5cf5440ebb17070e72e',1,'cynq::AlveoParameters']]],
+  ['xrt_80',['XRT',['../classcynq_1_1IMemory.html#add4032f8b90c3b6fb2eb48ddacd95b7fa6da6376df60753ff3cfad73f85a4c4c1',1,'cynq::IMemory::XRT()'],['../classcynq_1_1IHardware.html#aa34f15214af5df9acb1436734e0c7500ae451a00b789d124dccff366b46ee7f08',1,'cynq::IHardware::XRT()'],['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6da8be0a941dc809f299c00fcc1787e04a0',1,'cynq::IAccelerator::XRT()'],['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a1b63f9ee7fea8143935a0ffc9649333e',1,'cynq::IDataMover::XRT()']]],
+  ['xrtaccelerator_81',['XRTAccelerator',['../classcynq_1_1XRTAccelerator.html',1,'cynq::XRTAccelerator'],['../classcynq_1_1XRTAccelerator.html#ab4b7f52151e7b3c87019736327076621',1,'cynq::XRTAccelerator::XRTAccelerator(const std::string &amp;kernelname, const std::shared_ptr&lt; HardwareParameters &gt; hwparams)'],['../classcynq_1_1XRTAccelerator.html#a223cba6729d08661cc52f42ebc8556fb',1,'cynq::XRTAccelerator::XRTAccelerator()=delete']]],
+  ['xrtacceleratorparameters_82',['XRTAcceleratorParameters',['../structcynq_1_1XRTAcceleratorParameters.html',1,'cynq']]],
+  ['xrtdatamover_83',['XRTDataMover',['../classcynq_1_1XRTDataMover.html',1,'cynq::XRTDataMover'],['../classcynq_1_1XRTDataMover.html#a13f5c6366c3b69406ab15db760d37c95',1,'cynq::XRTDataMover::XRTDataMover(const uint64_t addr, std::shared_ptr&lt; HardwareParameters &gt; hwparams)'],['../classcynq_1_1XRTDataMover.html#a856ebfc4aa9e1a3d62d665843cf8640e',1,'cynq::XRTDataMover::XRTDataMover()=delete']]],
+  ['xrtdatamovermeta_84',['XRTDataMoverMeta',['../structcynq_1_1XRTDataMoverMeta.html',1,'cynq']]],
+  ['xrtdatamoverparameters_85',['XRTDataMoverParameters',['../structcynq_1_1XRTDataMoverParameters.html',1,'cynq']]],
+  ['xrtmemory_86',['XRTMemory',['../classcynq_1_1XRTMemory.html',1,'cynq::XRTMemory'],['../classcynq_1_1XRTMemory.html#a06af580d684d4d37f8b322bba00dfbf7',1,'cynq::XRTMemory::XRTMemory(const std::size_t size, uint8_t *hostptr, uint8_t *devptr, void *moverptr)'],['../classcynq_1_1XRTMemory.html#ad43bccecb20bc1e948f827cbb18cc60d',1,'cynq::XRTMemory::XRTMemory()=delete']]]
 ];

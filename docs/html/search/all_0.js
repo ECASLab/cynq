@@ -1,7 +1,12 @@
 var searchData=
 [
-  ['acceleratorparameters',['AcceleratorParameters',['../structcynq_1_1AcceleratorParameters.html',1,'cynq']]],
-  ['addr_5f',['addr_',['../structcynq_1_1XrtAcceleratorParameters.html#ab16f7cf5fbddee86139d79505fc6823f',1,'cynq::XrtAcceleratorParameters::addr_()'],['../structcynq_1_1XRTDataMoverParameters.html#a9ceec39b49ef60e46f929920b32db3c4',1,'cynq::XRTDataMoverParameters::addr_()']]],
-  ['addr_5fspace_5fsize_5f',['addr_space_size_',['../structcynq_1_1XrtAcceleratorParameters.html#a426509d5cc90c6a27a853541c28832d8',1,'cynq::XrtAcceleratorParameters']]],
-  ['about',['About',['../md__media_lleon95_data_Personal_cynq_docs_About.html',1,'']]]
+  ['about_0',['About',['../md__home_ubuntu_lleon_cynq_alveo_docs_About.html',1,'']]],
+  ['accel_5fattachments_5f_1',['accel_attachments_',['../structcynq_1_1MMIOAcceleratorParameters.html#af85bb495e32c844866205148cc458fd5',1,'cynq::MMIOAcceleratorParameters']]],
+  ['acceleratorparameters_2',['AcceleratorParameters',['../structcynq_1_1AcceleratorParameters.html',1,'cynq']]],
+  ['addr_5f_3',['addr_',['../structcynq_1_1DMADataMoverParameters.html#a46269f2e90d431a2e100fe1b9f9a9b6b',1,'cynq::DMADataMoverParameters::addr_()'],['../structcynq_1_1MMIOAcceleratorParameters.html#a5ccf7650788db8aa3e49484ce6f9b9cb',1,'cynq::MMIOAcceleratorParameters::addr_()']]],
+  ['addr_5fspace_5fsize_5f_4',['addr_space_size_',['../structcynq_1_1MMIOAcceleratorParameters.html#aaba87ee47f1de0e0b6e8ed63cc02959e',1,'cynq::MMIOAcceleratorParameters']]],
+  ['alveo_5',['Alveo',['../classcynq_1_1Alveo.html#a527b92c6b1fd0259e612e797aae1d55d',1,'cynq::Alveo::Alveo(const std::string &amp;bitstream_file, const std::string &amp;xclbin_file)'],['../classcynq_1_1Alveo.html#a5aa5020489123d8f6182390da4d4181f',1,'cynq::Alveo::Alveo()=delete'],['../classcynq_1_1Alveo.html',1,'cynq::Alveo']]],
+  ['alveoparameters_6',['AlveoParameters',['../structcynq_1_1AlveoParameters.html',1,'cynq']]],
+  ['attach_7',['Attach',['../classcynq_1_1IAccelerator.html#ae6fb660720f9f54e25b2a99fb5430412',1,'cynq::IAccelerator::Attach(const uint64_t index, T *data, const RegisterAccess access=RegisterAccess::WO, const size_t elements=1)'],['../classcynq_1_1IAccelerator.html#aa8fc98b91750edbc4c32577517edac42',1,'cynq::IAccelerator::Attach(const uint64_t index, T *data, const size_t elements, const RegisterAccess access=RegisterAccess::WO)'],['../classcynq_1_1IAccelerator.html#ae7972e6c4bd1f591c5b2ec92f5d785c3',1,'cynq::IAccelerator::Attach(const uint64_t addr, std::shared_ptr&lt; IMemory &gt; mem)=0'],['../classcynq_1_1MMIOAccelerator.html#ace30b107bddf19172e221a691f0c6049',1,'cynq::MMIOAccelerator::Attach()'],['../classcynq_1_1XRTAccelerator.html#a10cea58bfd373d3c2b17c70b8b486947',1,'cynq::XRTAccelerator::Attach()']]],
+  ['attachregister_8',['AttachRegister',['../classcynq_1_1IAccelerator.html#a49bea1df3dd82f4309b1c01162a1876d',1,'cynq::IAccelerator::AttachRegister()'],['../classcynq_1_1MMIOAccelerator.html#ac945633724e5ef51b6b0eca3b5747310',1,'cynq::MMIOAccelerator::AttachRegister()'],['../classcynq_1_1XRTAccelerator.html#ac29638201242d90e7f9e2f8175080545',1,'cynq::XRTAccelerator::AttachRegister()']]]
 ];

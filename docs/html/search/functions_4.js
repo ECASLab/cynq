@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kernelquery',['KernelQuery',['../classcynq_1_1UltraScale.html#a15ab3f7340590499eec472ce22a97b17',1,'cynq::UltraScale']]]
+  ['hostaddress_145',['HostAddress',['../classcynq_1_1IMemory.html#aea8ef51b4c376b58e3e143dd270d92ac',1,'cynq::IMemory']]]
 ];

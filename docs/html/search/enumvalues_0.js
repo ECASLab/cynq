@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['file_5ferror',['FILE_ERROR',['../structcynq_1_1Status.html#a37a41280e0f5f26784730a859ec7bc98a2b012eaee2a4788bcfda34afd05ef297',1,'cynq::Status']]]
+  ['dma_202',['DMA',['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a65d77967c0c70884728d03cf883252d9',1,'cynq::IDataMover']]]
 ];

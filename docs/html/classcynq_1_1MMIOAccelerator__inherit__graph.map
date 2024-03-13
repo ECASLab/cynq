@@ -1,0 +1,4 @@
+<map id="cynq::MMIOAccelerator" name="cynq::MMIOAccelerator">
+<area shape="rect" id="node1" title="MMIOAccelerator class This class provides the api to operate the accelerator." alt="" coords="5,80,179,107"/>
+<area shape="rect" id="node2" href="$classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator." alt="" coords="23,5,161,32"/>
+</map>
