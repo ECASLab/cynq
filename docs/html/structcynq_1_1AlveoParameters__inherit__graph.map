@@ -1,0 +1,4 @@
+<map id="cynq::AlveoParameters" name="cynq::AlveoParameters">
+<area shape="rect" id="node1" title="Specialisation of the parameters given by the Alveo. It is based on the XRT stack." alt="" coords="19,80,191,107"/>
+<area shape="rect" id="node2" href="$structcynq_1_1HardwareParameters.html" title="Define an abstract representation of the hardware parameters with some prefilled fields." alt="" coords="5,5,204,32"/>
+</map>

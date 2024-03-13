@@ -26,7 +26,7 @@
 // clang-format on
 
 /**
- * @example xfopencv-warp-perspective.cpp
+ * @example zynq-mpsoc/xfopencv-warp-perspective.cpp
  * This is a sample use case for the CYNQ. It represents a
  * warp perspective from the XfOpenCV Library (now part of Vitis Library)
  */

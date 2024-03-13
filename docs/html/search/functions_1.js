@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['deviceaddress',['DeviceAddress',['../classcynq_1_1IMemory.html#a6dc8b6724c7528ea743a2898d6c5ec11',1,'cynq::IMemory']]],
-  ['devicequery',['DeviceQuery',['../classcynq_1_1UltraScale.html#a861d33cbf2d86d52e309bc0738b68e5e',1,'cynq::UltraScale']]],
-  ['download',['Download',['../classcynq_1_1IDataMover.html#afd87fb9395f3d07c6d2ef4ae4bc19b32',1,'cynq::IDataMover::Download()'],['../classcynq_1_1XRTDataMover.html#a63dca68f7bddc5c4ac03a7513c28b2f7',1,'cynq::XRTDataMover::Download()']]]
+  ['create_133',['Create',['../classcynq_1_1IAccelerator.html#a84bbc0afe4f8e8147790f7c6a8e74c06',1,'cynq::IAccelerator::Create(IAccelerator::Type impl, const uint64_t addr)'],['../classcynq_1_1IAccelerator.html#afed1ed492ac7e1ec1219f655555d07ae',1,'cynq::IAccelerator::Create(IAccelerator::Type impl, const std::string &amp;kernelname, const std::shared_ptr&lt; HardwareParameters &gt; hwparams)'],['../classcynq_1_1IDataMover.html#a54f4f43130fe8e391eaecfc44df36665',1,'cynq::IDataMover::Create()'],['../classcynq_1_1IHardware.html#ab3cc41fbed5a6da306d8ae51153a3065',1,'cynq::IHardware::Create(const HardwareArchitecture hw, const std::string &amp;bitstream, const std::string &amp;xclbin)'],['../classcynq_1_1IHardware.html#ab17c43387e287e50f7958d4fb6b8aa5a',1,'cynq::IHardware::Create(const HardwareArchitecture hw, const std::string &amp;config)'],['../classcynq_1_1IMemory.html#a72d8234980a09a5d258aecf9eed31be0',1,'cynq::IMemory::Create()']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['xrt',['XRT',['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6da8be0a941dc809f299c00fcc1787e04a0',1,'cynq::IAccelerator::XRT()'],['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a1b63f9ee7fea8143935a0ffc9649333e',1,'cynq::IDataMover::XRT()'],['../classcynq_1_1IHardware.html#aa34f15214af5df9acb1436734e0c7500ae451a00b789d124dccff366b46ee7f08',1,'cynq::IHardware::XRT()'],['../classcynq_1_1IMemory.html#add4032f8b90c3b6fb2eb48ddacd95b7fa6da6376df60753ff3cfad73f85a4c4c1',1,'cynq::IMemory::XRT()']]]
+  ['none_209',['None',['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6dacc4ba19f629441f35b484b09b16b2332',1,'cynq::IAccelerator::None()'],['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a8302850dfa953ea5e9ee3663e9966394',1,'cynq::IDataMover::None()'],['../classcynq_1_1IHardware.html#aa34f15214af5df9acb1436734e0c7500adac2bc8f9a5faf2862f54d491d7fbf58',1,'cynq::IHardware::None()'],['../classcynq_1_1IMemory.html#add4032f8b90c3b6fb2eb48ddacd95b7fa7f99b4fcc3f3b95dac96ee4d1aec3e8c',1,'cynq::IMemory::None()']]],
+  ['not_5fimplemented_210',['NOT_IMPLEMENTED',['../structcynq_1_1Status.html#a37a41280e0f5f26784730a859ec7bc98a027401df899853a96eb4af7dd0b31162',1,'cynq::Status']]]
 ];

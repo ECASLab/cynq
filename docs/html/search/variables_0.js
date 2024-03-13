@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['addr_5f',['addr_',['../structcynq_1_1XrtAcceleratorParameters.html#ab16f7cf5fbddee86139d79505fc6823f',1,'cynq::XrtAcceleratorParameters::addr_()'],['../structcynq_1_1XRTDataMoverParameters.html#a9ceec39b49ef60e46f929920b32db3c4',1,'cynq::XRTDataMoverParameters::addr_()']]],
-  ['addr_5fspace_5fsize_5f',['addr_space_size_',['../structcynq_1_1XrtAcceleratorParameters.html#a426509d5cc90c6a27a853541c28832d8',1,'cynq::XrtAcceleratorParameters']]]
+  ['accel_5fattachments_5f_183',['accel_attachments_',['../structcynq_1_1MMIOAcceleratorParameters.html#af85bb495e32c844866205148cc458fd5',1,'cynq::MMIOAcceleratorParameters']]],
+  ['addr_5f_184',['addr_',['../structcynq_1_1DMADataMoverParameters.html#a46269f2e90d431a2e100fe1b9f9a9b6b',1,'cynq::DMADataMoverParameters::addr_()'],['../structcynq_1_1MMIOAcceleratorParameters.html#a5ccf7650788db8aa3e49484ce6f9b9cb',1,'cynq::MMIOAcceleratorParameters::addr_()']]],
+  ['addr_5fspace_5fsize_5f_185',['addr_space_size_',['../structcynq_1_1MMIOAcceleratorParameters.html#aaba87ee47f1de0e0b6e8ed63cc02959e',1,'cynq::MMIOAcceleratorParameters']]]
 ];

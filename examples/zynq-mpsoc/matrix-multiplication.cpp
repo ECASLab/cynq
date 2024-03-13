@@ -17,7 +17,7 @@
 #include <string>
 
 /**
- * @example matrix-multiplication.cpp
+ * @example zynq-mpsoc/matrix-multiplication.cpp
  * This is a sample use case for the CYNQ. It represents a
  * matrix-multiplication from FAL
  */
