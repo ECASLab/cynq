@@ -35,7 +35,7 @@ cpp_args += [
   '-DEXAMPLE_KRIA_DMA_ADDR=0xa0010000',
 ]
 
-# Examples for Alveo U255 - xdma 2022.1
+# Examples for Alveo U250 - xilinx_u250_gen3x16_xdma_4_1_202210_1
 vadd_xclbin_location = fmt.format(meson.global_source_root(), files('alveo-xclbin/vadd/vadd.xclbin')[0])
 cpp_args += [
   '-DEXAMPLE_ALVEO_VADD_XCLBIN_LOCATION=' + vadd_xclbin_location,
