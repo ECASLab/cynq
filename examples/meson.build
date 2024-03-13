@@ -7,8 +7,8 @@
 #
 #
 
-executable('basic-example-kria',
-  ['zynq-mpsoc/basic-example.cpp'],
+executable('matrix-multiplication-kria',
+  ['zynq-mpsoc/matrix-multiplication.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
