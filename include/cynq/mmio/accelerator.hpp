@@ -42,9 +42,12 @@ class MMIOAccelerator : public IAccelerator {
   virtual ~MMIOAccelerator();
   /**
    * @brief Start method
+   *
    * This method starts the accelerator in either once or continuous mode (with
    * the autorestart). Under the hood, this writes the control register to turn
    * on the accelerator with/without the autorestart bit.
+   *
+   * It also synchronises the registers, writing them if attached.
    *
    * @param mode One of the values in the StartMode enum class
    * present in the enums.hpp file.
@@ -55,9 +58,12 @@ class MMIOAccelerator : public IAccelerator {
 
   /**
    * @brief Stop method
+   *
    * This asynchronously turns off the accelerator by removing the autorestart
    * and start bits from the control registers. Please, note that the
    * accelerator will turn off once it finishes its current task.
+   *
+   * It also synchronises the registers, reading them if attached.
    *
    * @return Status
    */
@@ -65,7 +71,11 @@ class MMIOAccelerator : public IAccelerator {
 
   /**
    * @brief Sync method
-   * Forces to wait until the accelerator execution is "done"
+   *
+   * Forces to wait until the accelerator execution is different from
+   * "DeviceStatus::Running"
+   *
+   * It also synchronises the registers, reading them if attached.
    *
    * @return Status
    */
@@ -96,6 +106,7 @@ class MMIOAccelerator : public IAccelerator {
 
   /**
    * @brief Attach a memory argument
+   *
    * Performs an attachment of the argument and the respective pointer.
    * The use of this overload for IMemory buffers is highly recommended.
    *
@@ -139,11 +150,21 @@ class MMIOAccelerator : public IAccelerator {
                       const size_t size) override;
 
   /**
-   * @brief Attach Register method (not implemented)
+   * @brief Implementation of the Attach Register method
    *
-   * @return Status: Status not implemented
+   * @param index index of the argument to set
+   *
+   * @param data a pointer to an unsigned 8 bits variable which holds the
+   * data to read from the register.
+   *
+   * @param access Access type of the register
+   *
+   * @param size size in bytes of the data to read.
+   *
+   * @return Status
    */
   Status AttachRegister(const uint64_t index, uint8_t *data,
+                        const RegisterAccess access,
                         const size_t size) override;
 
  private:
@@ -153,5 +174,7 @@ class MMIOAccelerator : public IAccelerator {
   uint64_t addr_space_size_;
   /** Accelerator-specific configurations */
   std::unique_ptr<AcceleratorParameters> accel_params_;
+  /** Synchronises the registers attached */
+  Status SyncRegisters(const SyncType type);
 };
 }  // namespace cynq

@@ -146,13 +146,21 @@ class XRTAccelerator : public IAccelerator {
                       const size_t size) override;
 
   /**
-   * @brief Attach Register method
+   * @brief Implementation of the Attach Register method
    *
-   * Attaches the register to exchange data with the kernel back and forth.
+   * @param index index of the argument to set
+   *
+   * @param data a pointer to an unsigned 8 bits variable which holds the
+   * data to read from the register.
+   *
+   * @param access Access type of the register (unused)
+   *
+   * @param size size in bytes of the data to read.
    *
    * @return Status
    */
   Status AttachRegister(const uint64_t index, uint8_t *data,
+                        const RegisterAccess access,
                         const size_t size) override;
 
  private:

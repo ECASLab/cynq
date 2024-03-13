@@ -79,9 +79,9 @@ uint16_t* input_ptr = inbuf->HostAddress<uint16_t>().get();
 uint16_t* output_ptr = outbuf->HostAddress<uint16_t>().get();
 
 // Configure data - Bus: AXI4 Stream is handled by DMA
-const uint32_t num_elements = 4096;
+uint32_t num_elements = 4096;
 const uint64_t addr_num_elements = 0x20;
-accel->Write(addr_num_elements, num_elements);
+accel->Attach(addr_num_elements, &num_elements, RegisterAccess::RO);
 
 // Run
 mover->Upload(in_mem, infbuf->Size(), 0, ExecutionType::Async);
@@ -118,7 +118,7 @@ uint16_t* output_ptr = outbuf->HostAddress<uint16_t>().get();
 const uint32_t num_elements = 4096;
 accel->Attach(0, bo_0);
 accel->Attach(1, bo_1);
-accel->Attach(2, &num_elements);
+accel->Attach(2, &num_elements, RegisterAccess::RO);
 
 // Run
 mover->Upload(in_mem, infbuf->Size(), 0, ExecutionType::Async);

@@ -206,26 +206,46 @@ class IAccelerator {
 
   /**
    * @brief Attach an argument
-   * Performs an attachment of the argument and the respective pointer
+   * Performs an attachment of the argument and the respective pointer. If the
+   * index/address to attach receives a nullptr, it gets detached.
    *
    * @tparam T
    * Datatype used as the individual unit of information being written to the
    * device.
    *
-   * @param index Argument position of the argument to set
+   * @param index Argument position/address (Ultrascale) of the argument to set
    *
-   * @param data
-   * Raw pointer of type T used by the register to access the data.
+   * @param data Raw pointer of type T used by the register to access the data.
+   * The ownership is borrowed and its existence must be guaranteed.
    *
-   * @param elements
-   * Number of elements being written to the device. Defaults to one
+   * @param access Access type of the register (read-only, write-only,
+   * read-write). Defaults to Write-Only (autodetected and unused in Alveo or
+   * Vitis-based).
+   *
+   * @param elements Number of elements being written to the device. Defaults to
+   * one
    *
    * @return Status
    */
   template <typename T>
-  Status Attach(const uint64_t index, T *data, const size_t elements = 1) {
+  Status Attach(const uint64_t index, T *data,
+                const RegisterAccess access = RegisterAccess::WO,
+                const size_t elements = 1) {
     return this->AttachRegister(index, reinterpret_cast<uint8_t *>(data),
-                                elements * sizeof(T));
+                                access, elements * sizeof(T));
+  }
+
+  /**
+   * @brief Overload of the Attach<T>()
+   *
+   * See Attach()
+   *
+   */
+  template <typename T>
+  Status Attach(const uint64_t index, T *data, const size_t elements,
+                const RegisterAccess access = RegisterAccess::WO) {
+    return this->AttachRegister(index, reinterpret_cast<uint8_t *>(data),
+                                access, elements * sizeof(T));
   }
 
   /**
@@ -281,11 +301,15 @@ class IAccelerator {
    * @param data a pointer to an unsigned 8 bits variable which holds the
    * data to read from the register.
    *
+   * @param access Access type of the register (read-only, write-only,
+   * read-write).
+   *
    * @param size size in bytes of the data to read.
    *
    * @return Status
    */
   virtual Status AttachRegister(const uint64_t index, uint8_t *data,
+                                const RegisterAccess access,
                                 const size_t size) = 0;
 };
 }  // namespace cynq
