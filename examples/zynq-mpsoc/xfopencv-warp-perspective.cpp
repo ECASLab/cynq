@@ -105,15 +105,12 @@ int main(int argc, char** argv) {
   uint8_t* in_ptr = in_mem->HostAddress<uint8_t>().get();
   uint8_t* out_ptr = out_mem->HostAddress<uint8_t>().get();
   std::copy(img, img + img_size, in_ptr);
-  in_mem->Sync(SyncType::HostToDevice);
 
   std::cout << "----- Configuring accelerator -----" << std::endl;
   accel->Write(XWARP_ACCEL_AXILITES_ADDR_WIDTH_V_DATA, &width, 1);
   accel->Write(XWARP_ACCEL_AXILITES_ADDR_HEIGHT_V_DATA, &height, 1);
-  uint32_t mem_1_addr = (uint64_t)buf_mem_1->DeviceAddress<uint8_t>().get();
-  uint32_t mem_2_addr = (uint64_t)buf_mem_2->DeviceAddress<uint8_t>().get();
-  accel->Write(XWARP_ACCEL_AXILITES_ADDR_MEM1_DATA, &mem_1_addr, 1);
-  accel->Write(XWARP_ACCEL_AXILITES_ADDR_MEM2_DATA, &mem_2_addr, 1);
+  accel->Attach(XWARP_ACCEL_AXILITES_ADDR_MEM1_DATA, buf_mem_1);
+  accel->Attach(XWARP_ACCEL_AXILITES_ADDR_MEM2_DATA, buf_mem_2);
 
   accel->Start(StartMode::Continuous);
 
