@@ -1,3 +1,4 @@
 <map id="cynq::XRTDataMover" name="cynq::XRTDataMover">
-<area shape="rect" id="node2" href="$classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover. " alt="" coords="17,5,143,32"/>
+<area shape="rect" id="node1" title="XRTDataMover class Provides the API to interact with the data buffers responsible for memory operatio..." alt="" coords="5,80,164,107"/>
+<area shape="rect" id="node2" href="$classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover." alt="" coords="16,5,153,32"/>
 </map>

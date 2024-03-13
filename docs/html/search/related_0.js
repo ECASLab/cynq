@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xrtdatamover',['XRTDataMover',['../classcynq_1_1XRTMemory.html#a396ad56304d1cff148a5728b6dc0af89',1,'cynq::XRTMemory']]]
+  ['dmadatamover_215',['DMADataMover',['../classcynq_1_1XRTMemory.html#a7bf89c9b801e37362d70300a50e4cc42',1,'cynq::XRTMemory']]]
 ];

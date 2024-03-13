@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover. " alt="" coords="5,5,132,32"/>
-<area shape="rect" id="node2" href="$classcynq_1_1XRTDataMover.html" title="XRTDataMover class Provides the api from which to interact with the data buffers responsable for memo..." alt="" coords="180,5,329,32"/>
+<area shape="rect" id="node1" href="$classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator." alt="" coords="5,31,144,57"/>
+<area shape="rect" id="node2" href="$classcynq_1_1MMIOAccelerator.html" title="MMIOAccelerator class This class provides the api to operate the accelerator." alt="" coords="192,5,365,32"/>
+<area shape="rect" id="node3" href="$classcynq_1_1XRTAccelerator.html" title="XRTAccelerator class This class provides the api to operate the accelerator." alt="" coords="199,56,358,83"/>
 </map>

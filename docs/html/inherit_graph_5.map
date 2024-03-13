@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices: " alt="" coords="5,5,124,32"/>
-<area shape="rect" id="node2" href="$classcynq_1_1UltraScale.html" title="UltraScale class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are..." alt="" coords="172,5,291,32"/>
+<area shape="rect" id="node1" href="$classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover." alt="" coords="5,31,143,57"/>
+<area shape="rect" id="node2" href="$classcynq_1_1DMADataMover.html" title="DMADataMover class Provides the api from which to interact with the data buffers responsable for memo..." alt="" coords="191,5,355,32"/>
+<area shape="rect" id="node3" href="$classcynq_1_1XRTDataMover.html" title="XRTDataMover class Provides the API to interact with the data buffers responsible for memory operatio..." alt="" coords="193,56,352,83"/>
 </map>

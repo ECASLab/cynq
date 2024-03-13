@@ -1,3 +1,5 @@
 <map id="cynq::IHardware" name="cynq::IHardware">
-<area shape="rect" id="node2" href="$classcynq_1_1UltraScale.html" title="UltraScale class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are..." alt="" coords="5,80,124,107"/>
+<area shape="rect" id="node1" title="Interface for standardising the API of Hardware Devices:" alt="" coords="59,5,187,32"/>
+<area shape="rect" id="node2" href="$classcynq_1_1Alveo.html" title="Alveo class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are the ..." alt="" coords="5,80,104,107"/>
+<area shape="rect" id="node3" href="$classcynq_1_1UltraScale.html" title="UltraScale class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are..." alt="" coords="128,80,256,107"/>
 </map>
