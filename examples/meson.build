@@ -7,12 +7,34 @@
 #
 #
 
+# ---------------------------------------------
+# Kria examples
+# ---------------------------------------------
+
 executable('matrix-multiplication-kria',
   ['zynq-mpsoc/matrix-multiplication.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )
+
+executable('xfopencv-filter2d-kria',
+  ['zynq-mpsoc/xfopencv-filter2d.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
+executable('xfopencv-warp-perspective-kria',
+  ['zynq-mpsoc/xfopencv-warp-perspective.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
+# ---------------------------------------------
+# Alveo examples
+# ---------------------------------------------
 
 executable('vadd-example-alveo',
   ['alveo/vadd-host.cpp'],
