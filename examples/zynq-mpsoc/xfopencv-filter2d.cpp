@@ -21,6 +21,7 @@
 
 #include <third-party/stb/stb_image.h>
 #include <third-party/stb/stb_image_write.h>
+#include <third-party/resources/kria-bitstreams/xfopencv-filter2d/driver.h>
 #include <third-party/timer.hpp>
 // clang-format on
 
@@ -40,8 +41,8 @@ static constexpr char kBitstream[] = XFOPENCV_FILTER2D_BITSTREAM_LOCATION;
 // Given by the design
 static constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;
 static constexpr uint64_t kDmaAddress = EXAMPLE_KRIA_DMA_ADDR;
-static constexpr uint64_t kWidthAddress = 0x10;
-static constexpr uint64_t kHeightAddress = 0x18;
+static constexpr uint64_t kWidthAddress = XKRNL_FILTER2D_CONTROL_ADDR_WIDTH_DATA;
+static constexpr uint64_t kHeightAddress = XKRNL_FILTER2D_CONTROL_ADDR_HEIGHT_DATA;
 
 int main(int argc, char** argv) {
   // NOTE: This is a basic example. Error checking has been removed to keep
@@ -101,8 +102,10 @@ int main(int argc, char** argv) {
   std::cout << "----- Configuring accelerator -----" << std::endl;
   accel->Write(kWidthAddress, &width, 1);
   accel->Write(kHeightAddress, &height, 1);
+  accel->Attach(XKRNL_FILTER2D_CONTROL_ADDR_IN_R_DATA, in_mem);
+  accel->Attach(XKRNL_FILTER2D_CONTROL_ADDR_OUT_R_DATA, out_mem);
 
-  accel->Start(StartMode::Continuous);
+  //accel->Start(StartMode::Continuous);
 #ifndef PROFILE_MODE
   std::cout << std::dec;
   std::cout << "----- Starting the Accelerator and Move Data -----"
@@ -114,9 +117,11 @@ int main(int argc, char** argv) {
   std::cout << "INFO: Trigger Download " << img_size << " bytes" << std::endl;
   mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
 #else
-  START_PROFILE(kernel_execution, cynq_profiler, 1000)
-  mover->Upload(in_mem, img_size, 0, ExecutionType::Async);
-  mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
+  START_PROFILE(kernel_execution, cynq_profiler, 100)
+  in_mem->Sync(SyncType::HostToDevice);
+  accel->Start(StartMode::Once);
+  accel->Sync();
+  out_mem->Sync(SyncType::DeviceToHost);
   END_PROFILE(kernel_execution)
   std::cout << cynq_profiler << std::endl;
 #endif

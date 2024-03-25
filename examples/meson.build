@@ -32,6 +32,21 @@ executable('xfopencv-warp-perspective-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+executable('xfcolor-detect-kria',
+  ['zynq-mpsoc/xfcolor-detect.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
+
+executable('matmul-kria',
+  ['zynq-mpsoc/matmul.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
 # ---------------------------------------------
 # Alveo examples
 # ---------------------------------------------

@@ -9,7 +9,8 @@
 subdir('pynq-c-api')
 
 projectinc += [
-  include_directories('pynq-c-api')
+  include_directories('pynq-c-api'),
+  include_directories('hls-types/include')
 ]
 
 subdir('resources')

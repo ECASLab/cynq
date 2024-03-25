@@ -16,14 +16,14 @@
 #include <string>
 #include <vector>
 
-#define str(s) #s
+#define macstr(s) #s
 
 typedef std::chrono::high_resolution_clock::time_point time_point_t;
 #define INIT_PROFILER(NAME) profiler NAME{};
 #define GET_PROFILE_INSTANCE(NAME, PROFILER) \
-  profile_node *NAME = (PROFILER).create(str(NAME));
+  profile_node *NAME = (PROFILER).create(macstr(NAME));
 #define START_PROFILE(NAME, PROFILER, ITER)          \
-  profile_node *NAME = (PROFILER).create(str(NAME)); \
+  profile_node *NAME = (PROFILER).create(macstr(NAME)); \
   for (size_t i{0}; i < (ITER); ++i) {
 #define END_PROFILE(NAME) \
   (NAME)->tick();         \

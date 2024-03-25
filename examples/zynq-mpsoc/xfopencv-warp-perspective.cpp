@@ -94,16 +94,16 @@ int main(int argc, char** argv) {
   std::cout << "----- Creating memory -----" << std::endl;
   const size_t img_size = width * height;
   std::cout << "INFO: Image size: " << img_size << " bytes" << std::endl;
-  std::shared_ptr<IMemory> in_mem = mover->GetBuffer(img_size);
-  std::shared_ptr<IMemory> out_mem = mover->GetBuffer(img_size);
+  //std::shared_ptr<IMemory> in_mem = mover->GetBuffer(img_size);
+  //std::shared_ptr<IMemory> out_mem = mover->GetBuffer(img_size);
   std::shared_ptr<IMemory> buf_mem_1 = mover->GetBuffer(
-      kMaxMemSize, accel->GetMemoryBank(0), MemoryType::Device);
+      img_size, accel->GetMemoryBank(0));
   std::shared_ptr<IMemory> buf_mem_2 = mover->GetBuffer(
-      kMaxMemSize, accel->GetMemoryBank(1), MemoryType::Device);
+      img_size, accel->GetMemoryBank(1));
 
   std::cout << "----- Loading input -----" << std::endl;
-  uint8_t* in_ptr = in_mem->HostAddress<uint8_t>().get();
-  uint8_t* out_ptr = out_mem->HostAddress<uint8_t>().get();
+  uint8_t* in_ptr = buf_mem_1->HostAddress<uint8_t>().get();
+  uint8_t* out_ptr = buf_mem_2->HostAddress<uint8_t>().get();
   std::copy(img, img + img_size, in_ptr);
 
   std::cout << "----- Configuring accelerator -----" << std::endl;
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
   accel->Attach(XWARP_ACCEL_AXILITES_ADDR_MEM1_DATA, buf_mem_1);
   accel->Attach(XWARP_ACCEL_AXILITES_ADDR_MEM2_DATA, buf_mem_2);
 
-  accel->Start(StartMode::Continuous);
+//accel->Start(StartMode::Continuous);
 
 #ifndef PROFILE_MODE
   std::cout << std::dec;
@@ -126,8 +126,10 @@ int main(int argc, char** argv) {
   mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
 #else
   START_PROFILE(kernel_execution, cynq_profiler, 1000)
-  mover->Upload(in_mem, img_size, 0, ExecutionType::Async);
-  mover->Download(out_mem, img_size, 0, ExecutionType::Sync);
+  buf_mem_1->Sync(SyncType::HostToDevice);
+  accel->Start(StartMode::Once);
+  accel->Sync();
+  buf_mem_2->Sync(SyncType::DeviceToHost);
   END_PROFILE(kernel_execution)
   std::cout << cynq_profiler << std::endl;
 #endif
