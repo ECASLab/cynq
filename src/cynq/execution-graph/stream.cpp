@@ -66,7 +66,7 @@ IExecutionGraph::NodeID ExecutionStream::Add(
   NodeID ret;
   {
     /* Safe scope */
-    std::unique_lock lock(params->stream_mutex);
+    std::scoped_lock lock(params->stream_mutex);
 
     /* Construct a new node: others are not needed */
     IExecutionGraph::Node node{};
@@ -115,11 +115,10 @@ Status ExecutionStream::Sync(const IExecutionGraph::NodeID node) {
 
   /* Synchronise */
   while (executing_id <= target_id && running) {
-    {
-      std::unique_lock<std::mutex> lk(params->stream_sync_mutex);
-      params->stream_sync_condition.wait_for(
-          lk, std::chrono::microseconds(params->timeout));
-    }
+    std::unique_lock<std::mutex> lk(params->stream_sync_mutex);
+    params->stream_sync_condition.wait_for(
+        lk, std::chrono::microseconds(params->timeout));
+
     params->stream_mutex.lock();
     if (!params->stream_queue.empty()) {
       executing_id = params->stream_queue.front().id - 1;
@@ -141,7 +140,7 @@ Status ExecutionStream::GetLastError() {
 
   {
     /* Safe scope */
-    std::unique_lock lock(params->stream_mutex);
+    std::scoped_lock lock(params->stream_mutex);
     ret = params->last_error;
   }
 
@@ -172,7 +171,7 @@ void ExecutionStream::Worker() {
       params->stream_condition.wait_for(
           lk, std::chrono::microseconds(params->timeout));
     } else {
-      std::unique_lock<std::mutex> lk(params->stream_mutex);
+      std::scoped_lock<std::mutex> lk(params->stream_mutex);
       node = params->stream_queue.front();
       params->stream_queue.pop();
     }
@@ -181,7 +180,7 @@ void ExecutionStream::Worker() {
     if (node.id != -1) {
       Status ret = node.function();
       if (Status::OK != ret.code) {
-        std::unique_lock<std::mutex> lk(params->stream_mutex);
+        std::scoped_lock<std::mutex> lk(params->stream_mutex);
         params->last_error = ret;
       }
     }
@@ -200,7 +199,7 @@ ExecutionStream::~ExecutionStream() {
 
   {
     /* Safe scope */
-    std::unique_lock lock(params->stream_mutex);
+    std::scoped_lock lock(params->stream_mutex);
     params->stream_terminate = true;
   }
 
