@@ -81,5 +81,8 @@ class ExecutionStream : public IExecutionGraph {
  private:
   /** Parameters of the stream */
   std::shared_ptr<ExecutionGraphParameters> params_;
+
+  /** Worker thread used by the queue to schedule events */
+  void Worker();
 };
 }  // namespace cynq

@@ -23,6 +23,9 @@ namespace cynq {
 struct ExecutionGraphParameters {
   /** Name of the stream */
   std::string name;
+  /** Timeout in microseconds: time waited until having a new element before
+      checking again. It has low impact */
+  uint64_t timeout = 100;
   /** Virtual destructor required for the inheritance */
   virtual ~ExecutionGraphParameters() = default;
 };
@@ -61,7 +64,7 @@ class IExecutionGraph {
    * integrity. However, all objects must be reachable by all the program,
    * especially if they are pointers.
    */
-  typedef std::function<void()> Function;
+  typedef std::function<Status()> Function;
 
   /**
    * @brief Enum with the multiple implementations of the IExecutionGraph
@@ -134,7 +137,6 @@ class IExecutionGraph {
       const IExecutionGraph::Type type,
       const std::shared_ptr<ExecutionGraphParameters> params);
 
- protected:
   /**
    * @brief Node structure to hold information about each node in a generic
    * manner
@@ -145,14 +147,7 @@ class IExecutionGraph {
     /** Auxiliar function to execute by the node */
     Function function;
     /** Dependencies of the node to be executed before the current one */
-    std::vector<NodeID> dependencies;
-    /** Flag to indicate that the node has been already executed */
-    bool executed = false;
-    /** Condition variable of the node used for notifications and
-     * synchronisation */
-    std::condition_variable cv;
-    /** Mutex used to safeguard the node itself and their accesses */
-    std::mutex mtx;
+    std::vector<NodeID> dependencies = {};
     /** Pointers to the parent nodes with the IDs of dependencies */
     std::vector<Node *> parents = {};
     /** Pointers to the children nodes */
