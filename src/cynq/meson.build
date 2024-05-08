@@ -9,6 +9,7 @@
 sources += [
   files('accelerator.cpp'),
   files('datamover.cpp'),
+  files('execution-graph.cpp'),
   files('hardware.cpp'),
   files('memory.cpp'),
 ]
