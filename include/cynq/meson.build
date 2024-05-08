@@ -11,6 +11,7 @@ lib_headers = [
   files('cynq.hpp'),
   files('datamover.hpp'),
   files('enums.hpp'),
+  files('execution-graph.hpp'),
   files('hardware.hpp'),
   files('memory.hpp'),
   files('status.hpp'),
