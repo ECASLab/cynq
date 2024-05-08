@@ -42,3 +42,14 @@ executable('vadd-example-alveo',
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]
 )
+
+# ---------------------------------------------
+# Structure examples
+# ---------------------------------------------
+
+executable('execution-stream',
+  ['structures/execution-stream.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)

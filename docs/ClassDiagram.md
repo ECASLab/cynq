@@ -21,9 +21,6 @@ struct IExecutionGraph::Node {
   id: NodeID,
   func: std::function<void()>
   deps: NodeID[]
-  executed: bool
-  cv: std::condition_variable
-  mt: std::mutex
   parents: pointer []
   children: pointer []
 }
