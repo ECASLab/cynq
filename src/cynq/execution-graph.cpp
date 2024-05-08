@@ -14,7 +14,7 @@ std::shared_ptr<IExecutionGraph> IExecutionGraph::Create(
     IExecutionGraph::Type impl,
     const std::shared_ptr<ExecutionGraphParameters> params) {
   switch (impl) {
-    case IAccelerator::Type::STREAM:
+    case IExecutionGraph::Type::STREAM:
       return std::make_shared<ExecutionStream>(params);
     default:
       return nullptr;

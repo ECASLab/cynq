@@ -6,10 +6,9 @@
  *
  */
 #pragma once
+#include <condition_variable>  // NOLINT
 #include <cynq/enums.hpp>
 #include <cynq/status.hpp>
-
-#include <condition_variable>  // NOLINT
 #include <functional>
 #include <memory>
 #include <mutex>  // NOLINT
@@ -120,6 +119,11 @@ class IExecutionGraph {
   virtual Status GetLastError() = 0;
 
   /**
+   * Default destructor
+   */
+  virtual ~IExecutionGraph() = default;
+
+  /**
    * @brief Factory method to create a new implementation
    *
    * @param type type of implementation given by IExecutionGraph::Type
@@ -143,7 +147,7 @@ class IExecutionGraph {
     /** Dependencies of the node to be executed before the current one */
     std::vector<NodeID> dependencies;
     /** Flag to indicate that the node has been already executed */
-    bool executed = False;
+    bool executed = false;
     /** Condition variable of the node used for notifications and
      * synchronisation */
     std::condition_variable cv;

@@ -7,10 +7,8 @@
  */
 #pragma once
 #include <cynq/enums.hpp>
-#include <cynq/status.hpp>
-
 #include <cynq/execution-graph.hpp>
-
+#include <cynq/status.hpp>
 #include <memory>
 #include <vector>
 
@@ -32,7 +30,7 @@ class ExecutionStream : public IExecutionGraph {
    *
    * @param params parameters of the stream.
    */
-  explicit ExecutionStream(std::shared<ExecutionGraphParameters> params);
+  explicit ExecutionStream(std::shared_ptr<ExecutionGraphParameters> params);
 
   /**
    * @brief Adds a function to the execution stream
