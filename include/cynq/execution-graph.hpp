@@ -91,7 +91,7 @@ class IExecutionGraph {
    * of interest never existed. If the dependencies are already executed, the
    * node will be enqueue as a dangling node or enqueued last.
    */
-  virtual NodeID Add(
+  virtual IExecutionGraph::NodeID Add(
       const Function &function,
       const std::vector<NodeID> dependencies = std::vector<NodeID>(0)) = 0;
 

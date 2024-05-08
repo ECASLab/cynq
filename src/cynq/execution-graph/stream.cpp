@@ -17,4 +17,27 @@ struct ExecutionStreamParameters : public ExecutionGraphParameters {
   virtual ~ExecutionStreamParameters() = default;
 };
 
+ExecutionStream::ExecutionStream(
+    std::shared_ptr<ExecutionGraphParameters> params)
+    : params_{std::make_shared<ExecutionStreamParameters>()} {
+  /* Copy assigment */
+  if (params) {
+    *std::static_pointer_cast<ExecutionGraphParameters>(params_) = *params;
+  }
+}
+
+IExecutionGraph::NodeID ExecutionStream::Add(
+    const IExecutionGraph::Function& /*function*/,
+    const std::vector<IExecutionGraph::NodeID> /*dependencies*/) {
+  return -1;
+}
+
+Status ExecutionStream::Sync(const IExecutionGraph::NodeID /*node*/) {
+  return Status{};
+}
+
+Status ExecutionStream::GetLastError() { return Status{}; }
+
+ExecutionStream::~ExecutionStream() {}
+
 }  // namespace cynq

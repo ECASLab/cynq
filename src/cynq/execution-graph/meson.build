@@ -7,4 +7,5 @@
 #
 
 sources += [
+  files('stream.cpp')
 ]

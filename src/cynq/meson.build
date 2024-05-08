@@ -23,6 +23,7 @@ project_deps += [xrt_dep, uuid_dep]
 
 subdir('alveo')
 subdir('ultrascale')
+subdir('execution-graph')
 subdir('dma')
 subdir('mmio')
 subdir('xrt')

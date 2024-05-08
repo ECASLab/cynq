@@ -73,6 +73,11 @@ class ExecutionStream : public IExecutionGraph {
    */
   Status GetLastError() override;
 
+  /**
+   * @brief destroys the stream
+   */
+  virtual ~ExecutionStream();
+
  private:
   /** Parameters of the stream */
   std::shared_ptr<ExecutionGraphParameters> params_;
