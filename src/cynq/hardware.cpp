@@ -37,4 +37,20 @@ std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
       return nullptr;
   }
 }
+
+std::shared_ptr<IExecutionGraph> IHardware::GetExecutionStream(
+    const std::string& name, const IExecutionGraph::Type type,
+    const std::shared_ptr<ExecutionGraphParameters> params) {
+  std::shared_ptr<ExecutionGraphParameters> output_params = nullptr;
+
+  if (!params) {
+    output_params = std::make_shared<ExecutionGraphParameters>();
+  } else {
+    output_params = params;
+  }
+
+  output_params->name = name;
+  return IExecutionGraph::Create(type, output_params);
+}
+
 }  // namespace cynq
