@@ -32,6 +32,13 @@ executable('xfopencv-warp-perspective-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+executable('ad08-kria',
+  ['zynq-mpsoc/ad08.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
 # ---------------------------------------------
 # Alveo examples
 # ---------------------------------------------
