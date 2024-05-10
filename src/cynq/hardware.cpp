@@ -53,4 +53,12 @@ std::shared_ptr<IExecutionGraph> IHardware::GetExecutionStream(
   return IExecutionGraph::Create(type, output_params);
 }
 
+std::vector<float> IHardware::GetClocks() noexcept {
+  return std::vector<float>(0);
+}
+
+Status IHardware::SetClocks(const std::vector<float>& clocks) {
+  return Status{Status::NOT_IMPLEMENTED, "Cannot adjust clocks"};
+}
+
 }  // namespace cynq

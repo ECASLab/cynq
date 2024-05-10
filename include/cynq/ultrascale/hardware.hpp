@@ -14,6 +14,7 @@
 #include <xrt/xrt_device.h>
 #pragma GCC diagnostic pop
 
+#include <cstdint>
 #include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
@@ -21,8 +22,31 @@
 #include <cynq/status.hpp>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace cynq {
+/**
+ * @brief Contains the information about the registers used for
+ * the clocks
+ */
+struct UltraScaleClocks {
+  inline static constexpr int max_clocks = 4;
+  /** Verifies if the PL clock is enabled */
+  std::array<bool, max_clocks> pl_active = {false};
+  /** Verifies if the PL clock is valid */
+  std::array<bool, max_clocks> pl_valid = {false};
+  /** Contains the source clock frequency */
+  std::array<float, max_clocks> src_freq = {0.f};
+  /** Contains the information about the queried pl registers */
+  std::array<uint32_t, max_clocks> pl_reg;
+  /** Contains the information about the queried source registers */
+  std::array<uint32_t, max_clocks> src_reg;
+  /** Target clocks: used in UltraScale+ */
+  std::array<float, 4> target_clocks_mhz = {-1.f};
+  /** Current clocks: used in UltraScale+ */
+  std::array<float, 4> current_clocks_mhz = {-1.f};
+};
+
 /**
  * @brief Specialisation of the parameters given by the UltraScale. It
  * is based on the PYNQ and XRT
@@ -32,7 +56,8 @@ struct UltraScaleParameters : public HardwareParameters {
   xrt::device device_;
   /** XRT class representing the xclbin object */
   xrt::xclbin xclbin_;
-
+  /** Information regarding the clocks */
+  UltraScaleClocks clocks_;
   /** Virtual destructor required for the inheritance */
   virtual ~UltraScaleParameters() = default;
 };
@@ -131,6 +156,27 @@ class UltraScale : public IHardware {
    */
   Status KernelQuery();
 
+  /**
+   * @brief Get clocks from the PL
+   *
+   * This allows to check the current clocks from the PL in MHz.
+   * This method is optionally implementable. If it is not implemented,
+   * the number of elements of the vector is equal to zero.
+   *
+   * @returns a vector with a number of elements equal to the valid clocks
+   */
+  std::vector<float> GetClocks() noexcept override;
+  /**
+   * @brief Set clocks to the PL
+   *
+   * This allows to set the current clocks from the PL in MHz.
+   * This method is optionally implementable. If it is not implemented,
+   * no changes are performed
+   *
+   * @returns Status of the operation
+   */
+  Status SetClocks(const std::vector<float> &clocks) override;
+
  private:
   /** Parameters used for internal hardware configuration */
   std::shared_ptr<HardwareParameters> parameters_;
@@ -162,6 +208,14 @@ class UltraScale : public IHardware {
    * @param number_pl_clocks number of active PL clocks (from design). Def: 1
    */
   Status GetClocksInformation(const uint number_pl_clocks = 1);
+  /**
+   * @brief Configures the clocks according to the design
+   *
+   * The clock values are encapsulated in the hardware params. They can
+   * be adjusted through an API as well as getting the information from
+   * them.
+   */
+  Status ConfigureClocks();
   /**
    * @brief Loads the XCL Bin.
    *
