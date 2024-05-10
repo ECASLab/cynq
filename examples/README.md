@@ -26,6 +26,16 @@ IMG_PATH=examples/misc/1280x720.png
 sudo ./builddir/examples/xfopencv-filter2d-kria ${IMG_PATH}
 ```
 
+Ad08:
+
+```bash
+A_ROWS=4
+B_COLS=4
+C_COLS=4
+sudo ./builddir/examples/ad08-streams-kria ${A_ROWS} ${B_COLS} ${C_COLS} 
+sudo ./builddir/examples/ad08-sequential-kria ${A_ROWS} ${B_COLS} ${C_COLS} 
+```
+
 ### Alveo Card
 
 Vadd:

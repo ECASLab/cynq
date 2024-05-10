@@ -148,7 +148,7 @@ Cite Us:
               AND Ávila-Torres, Diego
               AND Castro-Godínez, Jorge
             }},
-  title = {{CYNQ (v0.2)}},
+  title = {{CYNQ (v0.3)}},
   year  = {2024},
   url   = {https://github.com/ECASLab/cynq},
 } 
