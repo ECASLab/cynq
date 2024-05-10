@@ -37,6 +37,7 @@ void CYNQ_LOG(T value, Args... args) {
   CYNQ_LOG(args...);
 }
 
+#ifdef DEBUG_MODE
 /**
  * @brief Debugging function
  *
@@ -49,7 +50,6 @@ void CYNQ_LOG(T value, Args... args) {
  */
 template <typename T, typename... Args>
 void CYNQ_DEBUG(const LOG log, T value, Args... args) {
-#ifdef DEBUG_MODE
   switch (log) {
     case LOG::ERROR: {
 #if DEBUG_MODE >= 0
@@ -80,7 +80,10 @@ void CYNQ_DEBUG(const LOG log, T value, Args... args) {
 #endif
     } break;
   }
-#endif
 }
+#else
+template <typename T, typename... Args>
+void CYNQ_DEBUG(const LOG, T, Args...) {}
+#endif
 
 }  // namespace cynq

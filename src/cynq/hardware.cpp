@@ -57,7 +57,7 @@ std::vector<float> IHardware::GetClocks() noexcept {
   return std::vector<float>(0);
 }
 
-Status IHardware::SetClocks(const std::vector<float>& clocks) {
+Status IHardware::SetClocks(const std::vector<float>& /*clocks*/) {
   return Status{Status::NOT_IMPLEMENTED, "Cannot adjust clocks"};
 }
 
