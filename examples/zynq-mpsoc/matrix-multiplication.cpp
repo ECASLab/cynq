@@ -88,6 +88,14 @@ int main() {
   std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
       IHardware::Create(HardwareArchitecture::UltraScale, kBitstream);
+  // Adjust clocks
+  auto clocks = platform->GetClocks();
+  for (uint i = 0; i < clocks.size(); ++i) {
+    std::cout << "\tClock: " << i << " " << clocks[i] << " MHz" << std::endl;
+  }
+  // Adjust to the designed frequency
+  clocks[0] = 250.f;
+  platform->SetClocks(clocks);
 
   // Get an accelerator
   std::shared_ptr<IAccelerator> accel = platform->GetAccelerator(kAccelAddress);
