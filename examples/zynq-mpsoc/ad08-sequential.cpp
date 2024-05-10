@@ -78,10 +78,21 @@ static void print_data(std::shared_ptr<IMemory> buffer, const size_t num) {
   std::cout << std::endl;
 }
 
+#define CYNQ_INFO(msg) std::cout << "[INFO]: " << (msg) << std::endl;
+
+#ifdef PROFILE_MODE
+#undef CYNQ_INFO
+#define CYNQ_INFO
+#endif
+
 int main(int argc, char** argv) {
   // NOTE: This is a basic example. Error checking has been removed to keep
   // simplicity but it is always recommended
   INIT_PROFILER(cynq_profiler)
+#ifdef PROFILE_MODE
+  GET_PROFILE_INSTANCE(total_time, cynq_profiler);
+  total_time->reset();
+#endif
 
   if (argc != 4) {
     std::cerr << "ERROR: Cannot execute the example. Requires a parameter:"
@@ -91,7 +102,7 @@ int main(int argc, char** argv) {
   }
 
   // Load image
-  std::cout << "----- Loading arguments -----" << std::endl;
+  CYNQ_INFO("Loading arguments");
   // Get input size
   int a_rows = std::stoi(argv[1]);
   int b_cols = std::stoi(argv[2]);
@@ -99,9 +110,9 @@ int main(int argc, char** argv) {
   b_cols = b_cols < 8 ? 8 : (b_cols - (b_cols & 4));
   c_cols = c_cols < 8 ? 8 : (c_cols - (c_cols & 4));
 
-  std::cout << "A rows: " << a_rows << "\n"
-            << "B cols: " << b_cols << "\n"
-            << "C cols: " << c_cols << std::endl;
+  CYNQ_INFO(std::string(" A rows: ") + std::to_string(a_rows));
+  CYNQ_INFO(std::string(" B cols: ") + std::to_string(b_cols));
+  CYNQ_INFO(std::string(" C cols: ") + std::to_string(c_cols));
 
   // Compute sizes
   int size_a = a_rows * b_cols;
@@ -110,7 +121,7 @@ int main(int argc, char** argv) {
   int op = 0;  // ADD
 
   // Load hardware
-  std::cout << "----- Initialising platform -----" << std::endl;
+  CYNQ_INFO("Initialising platform");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(setup_time, cynq_profiler);
   setup_time->reset();
@@ -129,7 +140,7 @@ int main(int argc, char** argv) {
 #endif
 
   // Create buffers for input and output
-  std::cout << "----- Creating memory -----" << std::endl;
+  CYNQ_INFO("Creating memory");
   std::shared_ptr<IMemory> buf_mem_mm_a =
       mover->GetBuffer(size_a * sizeof(DataType), matmul->GetMemoryBank(0));
   std::shared_ptr<IMemory> buf_mem_mm_b =
@@ -143,7 +154,7 @@ int main(int argc, char** argv) {
   std::shared_ptr<IMemory> buf_mem_ew_c =
       mover->GetBuffer(size_c * sizeof(DataType), elemwise->GetMemoryBank(2));
 
-  std::cout << "----- Loading input -----" << std::endl;
+  CYNQ_INFO("Loading input");
   fill_data(buf_mem_mm_a, size_a, 1002);
   fill_data(buf_mem_mm_b, size_b, 55);
   fill_data(buf_mem_mm_c, size_c, 0, 0);
@@ -151,7 +162,11 @@ int main(int argc, char** argv) {
   fill_data(buf_mem_ew_b, size_b, 55);
   fill_data(buf_mem_ew_c, size_c, 0, 0);
 
-  std::cout << "----- Configuring accelerators -----" << std::endl;
+  CYNQ_INFO("Configuring accelerators");
+#ifdef PROFILE_MODE
+  GET_PROFILE_INSTANCE(configuration_time, cynq_profiler);
+  configuration_time->reset();
+#endif
   matmul->Write(XMATMUL_CONTROL_ADDR_A_ROWS_DATA, &a_rows, 1);
   matmul->Write(XMATMUL_CONTROL_ADDR_B_COLS_DATA, &b_cols, 1);
   matmul->Write(XMATMUL_CONTROL_ADDR_C_COLS_DATA, &c_cols, 1);
@@ -164,35 +179,59 @@ int main(int argc, char** argv) {
   elemwise->Attach(XELEMENTWISE_CONTROL_ADDR_IN1_DATA, buf_mem_ew_a);
   elemwise->Attach(XELEMENTWISE_CONTROL_ADDR_IN2_DATA, buf_mem_ew_b);
   elemwise->Attach(XELEMENTWISE_CONTROL_ADDR_OUT_R_DATA, buf_mem_ew_c);
+#ifdef PROFILE_MODE
+  configuration_time->tick();
+#endif
 
-  std::cout << std::dec;
-  std::cout << "----- Starting the Accelerator and Move Data -----"
-            << std::endl;
-
-  std::cout << "INFO: Trigger Upload" << std::endl;
+  CYNQ_INFO("Starting the Accelerator and Move Data");
+  CYNQ_INFO("Trigger Upload");
+#ifdef PROFILE_MODE
+  GET_PROFILE_INSTANCE(upload_time, cynq_profiler);
+  upload_time->reset();
+#endif
   buf_mem_mm_a->Sync(SyncType::HostToDevice);
   buf_mem_mm_b->Sync(SyncType::HostToDevice);
   buf_mem_ew_a->Sync(SyncType::HostToDevice);
   buf_mem_ew_b->Sync(SyncType::HostToDevice);
+#ifdef PROFILE_MODE
+  upload_time->tick();
+#endif
 
-  std::cout << "INFO: Starting Accelerator: MatMul" << std::endl;
+  CYNQ_INFO("Starting Accelerators");
+#ifdef PROFILE_MODE
+  GET_PROFILE_INSTANCE(compute_time, cynq_profiler);
+  compute_time->reset();
+#endif
   matmul->Start(StartMode::Once);
   matmul->Sync();
-
-  std::cout << "INFO: Trigger Download" << std::endl;
-  buf_mem_mm_c->Sync(SyncType::DeviceToHost);
-
-  std::cout << "INFO: Starting Accelerator: Element Wise" << std::endl;
   elemwise->Start(StartMode::Once);
   elemwise->Sync();
+#ifdef PROFILE_MODE
+  compute_time->tick();
+#endif
 
-  std::cout << "INFO: Trigger Download" << std::endl;
+  CYNQ_INFO("Trigger Download");
+#ifdef PROFILE_MODE
+  GET_PROFILE_INSTANCE(download_time, cynq_profiler);
+  download_time->reset();
+#endif
+  buf_mem_mm_c->Sync(SyncType::DeviceToHost);
   buf_mem_ew_c->Sync(SyncType::DeviceToHost);
+#ifdef PROFILE_MODE
+  download_time->tick();
+#endif
 
+#ifndef PROFILE_MODE
   std::cout << "MatMul Result: " << std::endl;
   print_data(buf_mem_mm_c, size_c);
   std::cout << "ElementWise Result: " << std::endl;
   print_data(buf_mem_ew_c, size_c);
+#endif
+
+#ifdef PROFILE_MODE
+  total_time->tick();
+#endif
+  std::cout << cynq_profiler << std::endl;
 
   return 0;
 }
