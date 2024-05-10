@@ -294,3 +294,82 @@ the `Download(mem, size, offset, execution_type)` function is used to download d
   * `cynq::ExecutionType::Async`: asynchronous mode
 
 11) The disposal is done automatically, thanks to C++ RAII.
+
+## Using Execution Graphs
+
+From v0.3, CYNQ integrates execution graphs. Currently, they are based on execution queues as in CUDA (CUDA Stream). The idea is to add asynchronous non-blocking execution to CYNQ to offer more flexibility. Here there are some tips:
+
+* Create the execution graph from the platform:
+
+```c++
+auto stream = platform->GetExecutionStream("mystream");
+```
+
+* Use a stream per accelerator.
+
+Thus, you can use the accelerators in parallel without worrying about sequential execution of each accelerator. This can lower your execution time.
+
+* Avoid having a single accelerator in different streams.
+
+Calling an accelerator from different streams may cause race conditions and unexpected behaviours. We are currently working on covering this scenarios so that there are no worries in this matter.
+
+* Avoid oversynchronisation.
+
+You can call asynchronous code within the stream. However, take into account that you may need to synchronise at a certain point. So, IAccelerator::Sync, IDataMover::Sync and IMemory::Sync can be also added to the streams.
+
+### Converting serial code to stream-based parallel code
+
+Basically, you can starting to code sequentially. If you want to move it to a stream, create a stream and add it to the first argument.
+
+For example:
+
+_Sequential code:_
+
+```c++
+matmul->Write(XMATMUL_CONTROL_ADDR_A_ROWS_DATA, &a_rows, 1);
+matmul->Write(XMATMUL_CONTROL_ADDR_B_COLS_DATA, &b_cols, 1);
+matmul->Write(XMATMUL_CONTROL_ADDR_C_COLS_DATA, &c_cols, 1);
+buf_mem_mm_a->Sync(SyncType::HostToDevice);
+buf_mem_mm_b->Sync(SyncType::HostToDevice);
+matmul->Start(StartMode::Once);
+matmul->Sync();
+buf_mem_mm_c->Sync(SyncType::DeviceToHost);
+```
+
+_Stream code:_
+
+```c++
+matmul->Write(stream, XMATMUL_CONTROL_ADDR_A_ROWS_DATA, &a_rows, 1);
+matmul->Write(stream, XMATMUL_CONTROL_ADDR_B_COLS_DATA, &b_cols, 1);
+matmul->Write(stream, XMATMUL_CONTROL_ADDR_C_COLS_DATA, &c_cols, 1);
+buf_mem_mm_a->Sync(stream, SyncType::HostToDevice);
+buf_mem_mm_b->Sync(stream, SyncType::HostToDevice);
+matmul->Start(stream, StartMode::Once);
+matmul->Sync(stream);
+buf_mem_mm_c->Sync(stream, SyncType::DeviceToHost);
+```
+
+Examples: zynq-mpsoc/ad08-sequential.cpp, zynq-mpsoc/ad08-streams.cpp
+
+### Adding non-CYNQ function to the stream
+
+You can also add code which is not part of CYNQ. Here is an example:
+
+```c++
+volatile std::atomic_int num{0};
+
+// Here is the function to add
+cynq::Status dummy_function() {
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::cout << "num: " << num.load() << std::endl;
+  num++;
+  return cynq::Status{};
+}
+
+// Add your function to the stream
+stream->Add(dummy_function);
+```
+
+You can also add a function multiple times.
+
+For an example, you can look at structures/execution-stream.cpp.

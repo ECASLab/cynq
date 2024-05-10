@@ -18,6 +18,13 @@
 #include <third-party/timer.hpp>
 // clang-format on
 
+/**
+ * @example zynq-mpsoc/ad08-sequential.cpp
+ *
+ * This is a use case that involves two accelerators with AXI-MM ports.
+ * The accelerators are executed sequentially
+ */
+
 /*
  * Running: sudo ./builddir/examples/ad08-kria 4 4 4
  *
