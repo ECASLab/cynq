@@ -154,6 +154,15 @@ class UltraScale : public IHardware {
    */
   Status ConfigureBuses();
   /**
+   * @brief Retrieves the information from the current clocks
+   *
+   * This retrieves the system bus and the PLL clocks if they are enabled
+   * and reports them back
+   *
+   * @param number_pl_clocks number of active PL clocks (from design). Def: 1
+   */
+  Status GetClocksInformation(const uint number_pl_clocks = 1);
+  /**
    * @brief Loads the XCL Bin.
    *
    * In the case of the US+, it can be the default design if the bitstream

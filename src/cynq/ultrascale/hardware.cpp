@@ -14,7 +14,10 @@
 #include <xrt/xrt_device.h>
 #pragma GCC diagnostic pop
 
+#define DEBUG_MODE 5
+
 #include <cynq/accelerator.hpp>
+#include <cynq/debug.hpp>
 #include <cynq/dma/datamover.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/hardware.hpp>
@@ -79,6 +82,8 @@ UltraScale::UltraScale(const std::string &bitstream_file,
     msg += st.msg;
     throw std::runtime_error(msg);
   }
+
+  GetClocksInformation();
 }
 
 Status UltraScale::LoadBitstream(const std::string &bitstream_file) {
@@ -143,6 +148,105 @@ Status UltraScale::ConfigureBuses() {
     CHECK_MMIO(PYNQ_closeMMIOWindow(&win));
   }
 
+  return Status{};
+}
+
+template <typename T>
+static T GetSlice(const T input, const uint end, const uint start) {
+  T mask = 1 << (end - start);
+  mask -= 1;
+  T res = input;
+  return (res >> start) & mask;
+}
+
+template <typename T>
+static T GetField(const T input, const uint start) {
+  T mask = 0x1;
+  T res = input;
+  return (res >> start) & mask;
+}
+
+Status UltraScale::GetClocksInformation(const uint number_pl_clocks) {
+  /* This information comes from the PYNQ code according to a default
+     design without major modifications
+
+     Slices start from 0 index and the end are exclusive bounds
+     (not included) */
+  /* APB address and offsets */
+  static constexpr uint crl_apb_address = 0xFF5E0000;
+  static constexpr uint max_number_pl_clocks = 4;
+  static constexpr uint pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
+  static constexpr uint pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
+  /* Source clock */
+  static constexpr uint plx_ctrl_clkact_field_bitfield = 24;
+  static constexpr uint crx_apb_src_default = 0;
+  static constexpr uint crx_apb_src_field_start = 20;
+  static constexpr uint crx_apb_src_field_end = 22;
+  static constexpr uint crx_apb_fbdiv_field_start = 8;
+  static constexpr uint crx_apb_fbdiv_field_end = 14;
+  static constexpr uint crx_apb_odivby2_bitfield = 16;
+  static const float default_src_clock_mhz = 33.333;
+  /* PLL div */
+  static constexpr uint pl_clk_odiv0_field_start = 16;
+  static constexpr uint pl_clk_odiv0_field_end = 21;
+  static constexpr uint pl_clk_odiv1_field_start = 8;
+  static constexpr uint pl_clk_odiv1_field_end = 13;
+
+  PYNQ_MMIO_WINDOW crl_apb_win;
+  const int crl_apb_width = 0x100;
+  CHECK_MMIO(
+      PYNQ_createMMIOWindow(&crl_apb_win, crl_apb_address, crl_apb_width));
+
+  std::array<bool, max_number_pl_clocks> pl_active;
+  std::array<bool, max_number_pl_clocks> pl_valid;
+  std::array<float, max_number_pl_clocks> src_freq;
+  std::array<float, max_number_pl_clocks> pl_freq;
+  std::array<uint32_t, max_number_pl_clocks> pl_reg;
+  std::array<uint32_t, max_number_pl_clocks> src_reg;
+
+  for (uint i = 0; i < number_pl_clocks; ++i) {
+    CHECK_MMIO(PYNQ_readMMIO(&crl_apb_win, &pl_reg[i], pl_ctrl_offsets[i],
+                             sizeof(uint32_t)));
+    CHECK_MMIO(PYNQ_readMMIO(&crl_apb_win, &src_reg[i], pl_src_pll_ctrls[i],
+                             sizeof(uint32_t)));
+    /* Check if it's active */
+    pl_active[i] = GetField(pl_reg[i], plx_ctrl_clkact_field_bitfield);
+    /* Check if it's valid */
+    uint apb_src_field =
+        GetSlice(src_reg[i], crx_apb_src_field_end, crx_apb_src_field_start);
+    pl_valid[i] = apb_src_field == crx_apb_src_default;
+    /* If not valid */
+    if (!pl_valid[i]) continue;
+    /* Compute source frequency */
+    float fbdiv = static_cast<float>(GetSlice(
+        src_reg[i], crx_apb_fbdiv_field_end, crx_apb_fbdiv_field_start));
+    float div2 =
+        GetField(src_reg[i], crx_apb_odivby2_bitfield) == 0x1 ? 0.5f : 1.f;
+    src_freq[i] = default_src_clock_mhz * fbdiv * div2;
+    /* Compute PL clock */
+    float plldiv0 =
+        1.f / static_cast<float>(GetSlice(pl_reg[i], pl_clk_odiv0_field_end,
+                                          pl_clk_odiv0_field_start));
+    float plldiv1 =
+        1.f / static_cast<float>(GetSlice(pl_reg[i], pl_clk_odiv1_field_end,
+                                          pl_clk_odiv1_field_start));
+    pl_freq[i] = src_freq[i] * plldiv0 * plldiv1;
+
+    CYNQ_DEBUG(LOG::DEBUG, "Active: ", pl_active[i]);
+    CYNQ_DEBUG(LOG::DEBUG, "Active: ", pl_active[i]);
+    CYNQ_DEBUG(LOG::DEBUG, "Active:", pl_active[i]);
+    CYNQ_DEBUG(LOG::DEBUG, "Valid:", pl_valid[i]);
+    CYNQ_DEBUG(LOG::DEBUG, "FbDiv:", fbdiv);
+    CYNQ_DEBUG(LOG::DEBUG, "Div2:", div2);
+    CYNQ_DEBUG(LOG::DEBUG, "SRC freq:", src_freq[i], " MHz");
+    CYNQ_DEBUG(LOG::DEBUG, "PL Div0:", plldiv0, "PL Div1:", plldiv1);
+    CYNQ_DEBUG(LOG::DEBUG, "PL freq:", pl_freq[i], " MHz");
+  }
+
+  // std::cout << "Mask: 5, 2 " << (uint32_t)GetSlice<uint>(0b1111010, 5, 2) <<
+  // std::endl;
+
+  CHECK_MMIO(PYNQ_closeMMIOWindow(&crl_apb_win));
   return Status{};
 }
 
