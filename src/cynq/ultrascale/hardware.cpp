@@ -44,6 +44,45 @@ extern "C" {
   }
 
 namespace cynq {
+/* This information comes from the PYNQ code according to a default
+   design without major modifications
+
+   Slices start from 0 index and the end are exclusive bounds
+   (not included)
+
+   They can be found in the PYNQ project
+ */
+
+/* APB address and offsets */
+static constexpr uint crl_apb_address = 0xFF5E0000;
+static constexpr uint max_number_pl_clocks = 4;
+static constexpr uint pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
+static constexpr uint pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
+/* Source clock */
+static constexpr uint plx_ctrl_clkact_field_bitfield = 24;
+static constexpr uint crx_apb_src_default = 0;
+static constexpr uint crx_apb_src_field_start = 20;
+static constexpr uint crx_apb_src_field_end = 22;
+static constexpr uint crx_apb_fbdiv_field_start = 8;
+static constexpr uint crx_apb_fbdiv_field_end = 14;
+static constexpr uint crx_apb_odivby2_bitfield = 16;
+static const float default_src_clock_mhz = 33.333;
+/* PLL div */
+static constexpr uint pl_clk_odiv0_field_start = 16;
+static constexpr uint pl_clk_odiv0_field_end = 21;
+static constexpr uint pl_clk_odiv1_field_start = 8;
+static constexpr uint pl_clk_odiv1_field_end = 13;
+/* Bus configuration */
+static constexpr uint64_t addrs_sclr_kria[] = {0xFD615000, 0xFD615000,
+                                               0xFF419000};
+static constexpr uint8_t lowbitfields_sclr_kria[] = {8, 10, 8};
+static constexpr uint8_t maxigp_widths_kria[] = {2, 2,
+                                                 0};  // 128, 128 and 32bits
+static constexpr uint64_t addrs_afifm_kria[] = {
+    0xFD360000, 0xFD360014, 0xFD370000, 0xFD370014, 0xFD380000,
+    0xFD380014, 0xFD390000, 0xFD390014, 0xFD3A0000, 0xFD3A0014,
+    0xFD3B0000, 0xFD3B0014, 0xFF9B0000, 0xFF9B0014};
+
 UltraScale::UltraScale(const std::string &bitstream_file,
                        const std::string &xclbin_file)
     : parameters_{std::make_shared<UltraScaleParameters>()} {
@@ -97,17 +136,6 @@ Status UltraScale::LoadBitstream(const std::string &bitstream_file) {
 }
 
 Status UltraScale::ConfigureBuses() {
-  /* These addresses are hardware-specific. We have grabbed them from the
-     original PYNQ project */
-  static constexpr uint64_t addrs_sclr_kria[] = {0xFD615000, 0xFD615000,
-                                                 0xFF419000};
-  static constexpr uint8_t lowbitfields_sclr_kria[] = {8, 10, 8};
-  static constexpr uint8_t maxigp_widths_kria[] = {2, 2,
-                                                   0};  // 128, 128 and 32bits
-  static constexpr uint64_t addrs_afifm_kria[] = {
-      0xFD360000, 0xFD360014, 0xFD370000, 0xFD370014, 0xFD380000,
-      0xFD380014, 0xFD390000, 0xFD390014, 0xFD3A0000, 0xFD3A0014,
-      0xFD3B0000, 0xFD3B0014, 0xFF9B0000, 0xFF9B0014};
   const uint8_t lowbitfields_afifm_kria[] = {0, 0, 0, 0, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0};
   const uint8_t saxigp_widths_kria[] = {0, 0, 0, 0, 0, 0, 0,
@@ -188,30 +216,6 @@ static T SetField(const T input, const uint start, const uint val) {
 }
 
 Status UltraScale::GetClocksInformation(const uint number_pl_clocks) {
-  /* This information comes from the PYNQ code according to a default
-     design without major modifications
-
-     Slices start from 0 index and the end are exclusive bounds
-     (not included) */
-  /* APB address and offsets */
-  static constexpr uint crl_apb_address = 0xFF5E0000;
-  static constexpr uint pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
-  static constexpr uint pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
-  /* Source clock */
-  static constexpr uint plx_ctrl_clkact_field_bitfield = 24;
-  static constexpr uint crx_apb_src_default = 0;
-  static constexpr uint crx_apb_src_field_start = 20;
-  static constexpr uint crx_apb_src_field_end = 22;
-  static constexpr uint crx_apb_fbdiv_field_start = 8;
-  static constexpr uint crx_apb_fbdiv_field_end = 14;
-  static constexpr uint crx_apb_odivby2_bitfield = 16;
-  static const float default_src_clock_mhz = 33.333;
-  /* PLL div */
-  static constexpr uint pl_clk_odiv0_field_start = 16;
-  static constexpr uint pl_clk_odiv0_field_end = 21;
-  static constexpr uint pl_clk_odiv1_field_start = 8;
-  static constexpr uint pl_clk_odiv1_field_end = 13;
-
   UltraScaleParameters *params =
       dynamic_cast<UltraScaleParameters *>(this->parameters_.get());
 
@@ -298,27 +302,6 @@ static void FindDivisors(const float src_freq, const float out_freq,  // NOLINT
 }
 
 Status UltraScale::ConfigureClocks() {
-  /* This information comes from the PYNQ code according to a default
-     design without major modifications
-
-     Slices start from 0 index and the end are exclusive bounds
-     (not included) */
-  /* APB address and offsets */
-  static constexpr uint crl_apb_address = 0xFF5E0000;
-  static constexpr uint max_number_pl_clocks = 4;
-  static constexpr uint pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
-  static constexpr uint pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
-  /* Source clock */
-  static constexpr uint plx_ctrl_clkact_field_bitfield = 24;
-  static constexpr uint crx_apb_src_default = 0;
-  static constexpr uint crx_apb_src_field_start = 20;
-  static constexpr uint crx_apb_src_field_end = 22;
-  /* PLL div */
-  static constexpr uint pl_clk_odiv0_field_start = 16;
-  static constexpr uint pl_clk_odiv0_field_end = 21;
-  static constexpr uint pl_clk_odiv1_field_start = 8;
-  static constexpr uint pl_clk_odiv1_field_end = 13;
-
   UltraScaleParameters *params =
       dynamic_cast<UltraScaleParameters *>(this->parameters_.get());
 
