@@ -33,7 +33,8 @@ static constexpr char kBitstream[] = EXAMPLE_MULTIPLICATION_BITSTREAM_LOCATION;
 // set this to true
 static constexpr bool kUseAttach = true;
 
-// Given by the design
+// The Addressed are given by the Vivado design when creating the block diagram
+// You can find them in the Address Editor
 static constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;
 static constexpr uint64_t kDmaAddress = EXAMPLE_KRIA_DMA_ADDR;
 static constexpr uint64_t kAddrWriteInputCols = 24;
@@ -41,8 +42,8 @@ static constexpr uint64_t kAddrWriteOutputCols = 40;
 static constexpr uint64_t kAddrReadInputCols = 32;
 static constexpr uint64_t kAddrReadOutputCols = 48;
 
-// Data parameters
-using DataType = uint16_t;
+// These are the registers for the matmul IP. They can be found in the drivers
+// After the export of the HLS code
 static constexpr int input_a_cols = 400;
 static constexpr int input_a_rows = 2;
 static constexpr int input_b_cols = 4;
@@ -50,6 +51,8 @@ static constexpr int input_b_rows = input_a_cols;
 static constexpr int output_cols = input_b_cols;
 static constexpr int output_rows = input_a_rows;
 static constexpr int word_size = sizeof(DataType);
+
+using DataType = uint16_t;
 
 // Fill data
 void FillData(DataType* A, DataType* B, DataType* C) {
@@ -93,7 +96,7 @@ int main() {
   for (uint i = 0; i < clocks.size(); ++i) {
     std::cout << "\tClock: " << i << " " << clocks[i] << " MHz" << std::endl;
   }
-  // Adjust to the designed frequency
+  // Adjust to the designed frequency: 250 MHz
   clocks[0] = 250.f;
   platform->SetClocks(clocks);
 
