@@ -160,6 +160,18 @@ Both methods take: `(memory, size, offset, execution_type)`, where `size` is the
 
 10) The disposal is done automatically thanks to C++ RAII.
 
+### Clocking
+
+Since we do not read the .hwh file, we are not aware about the clocks. We require clocks to properly run the accelerators at the right speed. It is possible to fix the PLL divisors through the IHardware::SetClocks method. They are used as follows:
+
+```c++
+auto clocks = platform->GetClocks();
+clocks[0] = 250.f;
+platform->SetClocks(clocks);
+```
+
+where `platform` is an `IHardware` instance and `250.f` means `250 MHz`.
+
 ## Alveo Cards or XRT-based platforms with Vitis workflow
 
 1) The first step to integrate CYNQ is to include the header:
