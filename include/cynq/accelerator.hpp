@@ -72,7 +72,7 @@ class IAccelerator {
   /**
    * @brief Start method (asynchronous)
    * Please, refer to IAccelerator::Start for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param mode One of the values in the StartMode enum class
@@ -99,7 +99,7 @@ class IAccelerator {
   /**
    * @brief Stop method (asynchronous)
    * Please, refer to IAccelerator::Stop for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param graph Execution graph to execute on. If nullptr is passed, the
@@ -122,7 +122,7 @@ class IAccelerator {
   /**
    * @brief Sync method (asynchronous)
    * Please, refer to IAccelerator::Sync for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param graph Execution graph to execute on. If nullptr is passed, the

@@ -104,7 +104,7 @@ class IDataMover {
   /**
    * @brief Upload method (asynchronous)
    * Please, refer to IDataMover::Upload for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param graph Execution graph to execute on. If nullptr is passed, the
@@ -149,7 +149,7 @@ class IDataMover {
   /**
    * @brief Download method (asynchronous)
    * Please, refer to IDataMover::Download for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param graph Execution graph to execute on. If nullptr is passed, the
@@ -185,7 +185,7 @@ class IDataMover {
   /**
    * @brief Sync method (asynchronous)
    * Please, refer to IDataMover::Sync for reference. This overload
-   * performs an asynchronous execution of the function based on graph
+   * performs an asynchronous execution of the function based on a graph
    * of operations. It returns as soon as the operation is scheduled
    *
    * @param graph Execution graph to execute on. If nullptr is passed, the

@@ -158,7 +158,7 @@ void ExecutionStream::Worker() {
     node.id = -1;
 
     /* Check if there is a node: if there is no node, waits until the condition
-       variable with a timeout. Once the notification is done, it reiterates
+       variable timeouts. Once the notification is done, it reiterates
        again. If it is not empty, just proceed */
 
     params->stream_mutex.lock();

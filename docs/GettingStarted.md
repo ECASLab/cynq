@@ -319,7 +319,7 @@ You can call asynchronous code within the stream. However, take into account tha
 
 ### Converting serial code to stream-based parallel code
 
-Basically, you can starting to code sequentially. If you want to move it to a stream, create a stream and add it to the first argument.
+Basically, you can code sequentially. If you want to move it to a stream, create a stream and add it to the first argument.
 
 For example:
 

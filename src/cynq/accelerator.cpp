@@ -37,7 +37,7 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(
 /*
    -- Overloaded operations with fixed implementation --
    These functions are agnostic and independent from the
-   platform but still require some implementable componets
+   platform but still require some implementable components
 */
 
 Status IAccelerator::Start(std::shared_ptr<IExecutionGraph> graph,

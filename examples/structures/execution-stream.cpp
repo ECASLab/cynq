@@ -42,11 +42,11 @@ int main(int, char **) {
   std::cout << "Synchronised w.r.t. the third" << std::endl;
 
   stream->Sync();
-  std::cout << "Synchronised w.r.t. the last fifth" << std::endl;
+  std::cout << "Synchronised w.r.t. the last" << std::endl;
 
   stream->Add(func);
   stream->Sync();
-  std::cout << "Synchronised w.r.t. the last sixth" << std::endl;
+  std::cout << "Synchronised w.r.t. the last" << std::endl;
 
   return 0;
 }

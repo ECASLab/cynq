@@ -28,7 +28,7 @@ std::shared_ptr<IDataMover> IDataMover::Create(
 /*
    -- Overloaded operations with fixed implementation --
    These functions are agnostic and independent from the
-   platform but still require some implementable componets
+   platform but still require some implementable components
 */
 
 Status IDataMover::Upload(std::shared_ptr<IExecutionGraph> graph,

@@ -47,7 +47,7 @@ struct ExecutionGraphParameters {
  * catastrophic errors.
  *
  * All implementations of this abstract interface must safeguard the platform
- * independency and must no have any implementation detail.
+ * independency and must not have any implementation detail.
  */
 class IExecutionGraph {
  public:

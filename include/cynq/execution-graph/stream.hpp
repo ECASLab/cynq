@@ -42,7 +42,7 @@ class ExecutionStream : public IExecutionGraph {
    * @param function auxiliar function to add for execution. It is a lambda
    * function with all elements passed by value (recommended) and all the
    * variables used must be reachable.
-   * @param dependencies unused since it is implemented in a FIFO fashion.
+   * @param dependencies unused since it is implemented as a FIFO.
    * @return NodeID id of the newly added node. If the NodeID is -1, it means
    * that the function could not be added.
    */
