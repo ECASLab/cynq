@@ -50,9 +50,9 @@ static constexpr int input_b_cols = 4;
 static constexpr int input_b_rows = input_a_cols;
 static constexpr int output_cols = input_b_cols;
 static constexpr int output_rows = input_a_rows;
-static constexpr int word_size = sizeof(DataType);
 
 using DataType = uint16_t;
+static constexpr int word_size = sizeof(DataType);
 
 // Fill data
 void FillData(DataType* A, DataType* B, DataType* C) {
