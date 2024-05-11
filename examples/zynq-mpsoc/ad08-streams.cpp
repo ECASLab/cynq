@@ -6,6 +6,8 @@
  */
 
 // clang-format off
+#include "ad08.hpp" // NOLINT
+
 #include <algorithm>
 #include <cstdint>
 #include <cynq/accelerator.hpp>
@@ -38,60 +40,12 @@
  *   1057 1077 1097 1117 1137 1157 1177 1197 1217 1237 1257 1277 1297 1317
  *   1337 1357 1377 1397 1417 1437 1457 1477 1497 1517 1537 1557 1577 1597
  *   1617 1637 1657 1677
+ *
+ * The matmul: C = A x B
+ * The elementwise: C = A + B
  */
 
-typedef union {
-  uint16_t rvalues[4];
-  uint64_t packet;
-} PacketU;
-
-using DataType = uint16_t;
 using namespace cynq;  // NOLINT
-
-// Given by the example
-static constexpr char kBitstream[] = AD08_BITSTREAM_LOCATION;
-
-// Given by the design
-static constexpr uint64_t kElemWiseAddr = 0xA0000000;
-static constexpr uint64_t kMatMulAddr = 0xA0020000;
-static constexpr uint64_t kDmaAddress = 0xA0010000;
-#define XMATMUL_CONTROL_ADDR_A_DATA 0x10
-#define XMATMUL_CONTROL_ADDR_B_DATA 0x1c
-#define XMATMUL_CONTROL_ADDR_C_DATA 0x28
-#define XMATMUL_CONTROL_ADDR_A_ROWS_DATA 0x34
-#define XMATMUL_CONTROL_ADDR_B_COLS_DATA 0x3c
-#define XMATMUL_CONTROL_ADDR_C_COLS_DATA 0x44
-#define XELEMENTWISE_CONTROL_ADDR_IN1_DATA 0x10
-#define XELEMENTWISE_CONTROL_ADDR_IN2_DATA 0x1c
-#define XELEMENTWISE_CONTROL_ADDR_OUT_R_DATA 0x28
-#define XELEMENTWISE_CONTROL_ADDR_SIZE_DATA 0x34
-#define XELEMENTWISE_CONTROL_ADDR_OP_DATA 0x3c
-
-/* Auxiliary function to fill buffers */
-static void fill_data(std::shared_ptr<IMemory> buffer, const size_t num,
-                      const DataType start_value = 100,
-                      const DataType step_value = 10) {
-  DataType* data = buffer->HostAddress<DataType>().get();
-  for (size_t i = 0; i < num; ++i) {
-    data[i] = static_cast<DataType>(start_value + step_value * i);
-  }
-}
-
-/* Auxiliary function to print */
-static void print_data(std::shared_ptr<IMemory> buffer, const size_t num) {
-  DataType* data = buffer->HostAddress<DataType>().get();
-  for (size_t i = 0; i < num; ++i) {
-    std::cout << data[i] << " ";
-  }
-  std::cout << std::endl;
-}
-
-#define CYNQ_INFO(msg) std::cout << "[INFO]: " << (msg) << std::endl;
-
-#ifdef PROFILE_MODE
-#undef CYNQ_INFO
-#define CYNQ_INFO
-#endif
 
 int main(int argc, char** argv) {
   // NOTE: This is a basic example. Error checking has been removed to keep
@@ -110,7 +64,7 @@ int main(int argc, char** argv) {
   }
 
   // Load image
-  CYNQ_INFO("Loading arguments");
+  AD08_INFO("Loading arguments");
   // Get input size
   int a_rows = std::stoi(argv[1]);
   int b_cols = std::stoi(argv[2]);
@@ -118,9 +72,9 @@ int main(int argc, char** argv) {
   b_cols = b_cols < 8 ? 8 : (b_cols - (b_cols & 4));
   c_cols = c_cols < 8 ? 8 : (c_cols - (c_cols & 4));
 
-  CYNQ_INFO(std::string(" A rows: ") + std::to_string(a_rows));
-  CYNQ_INFO(std::string(" B cols: ") + std::to_string(b_cols));
-  CYNQ_INFO(std::string(" C cols: ") + std::to_string(c_cols));
+  AD08_INFO(std::string(" A rows: ") + std::to_string(a_rows));
+  AD08_INFO(std::string(" B cols: ") + std::to_string(b_cols));
+  AD08_INFO(std::string(" C cols: ") + std::to_string(c_cols));
 
   // Compute sizes
   int size_a = a_rows * b_cols;
@@ -129,7 +83,7 @@ int main(int argc, char** argv) {
   int op = 0;  // ADD
 
   // Load hardware
-  CYNQ_INFO("Initialising platform");
+  AD08_INFO("Initialising platform");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(setup_time, cynq_profiler);
   setup_time->reset();
@@ -153,7 +107,7 @@ int main(int argc, char** argv) {
 #endif
 
   // Create buffers for input and output
-  CYNQ_INFO("Creating memory");
+  AD08_INFO("Creating memory");
   std::shared_ptr<IMemory> buf_mem_mm_a =
       mover->GetBuffer(size_a * sizeof(DataType), matmul->GetMemoryBank(0));
   std::shared_ptr<IMemory> buf_mem_mm_b =
@@ -167,7 +121,7 @@ int main(int argc, char** argv) {
   std::shared_ptr<IMemory> buf_mem_ew_c =
       mover->GetBuffer(size_c * sizeof(DataType), elemwise->GetMemoryBank(2));
 
-  CYNQ_INFO("Loading input");
+  AD08_INFO("Loading input");
   fill_data(buf_mem_mm_a, size_a, 1002);
   fill_data(buf_mem_mm_b, size_b, 55);
   fill_data(buf_mem_mm_c, size_c, 0, 0);
@@ -175,7 +129,7 @@ int main(int argc, char** argv) {
   fill_data(buf_mem_ew_b, size_b, 55);
   fill_data(buf_mem_ew_c, size_c, 0, 0);
 
-  CYNQ_INFO("Configuring accelerators");
+  AD08_INFO("Configuring accelerators");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(configuration_time, cynq_profiler);
   configuration_time->reset();
@@ -197,8 +151,8 @@ int main(int argc, char** argv) {
   configuration_time->tick();
 #endif
 
-  CYNQ_INFO("Starting the Accelerator and Move Data");
-  CYNQ_INFO("Trigger Upload");
+  AD08_INFO("Starting the Accelerator and Move Data");
+  AD08_INFO("Trigger Upload");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(upload_time, cynq_profiler);
   upload_time->reset();
@@ -211,7 +165,7 @@ int main(int argc, char** argv) {
   upload_time->tick();
 #endif
 
-  CYNQ_INFO("Starting Accelerators");
+  AD08_INFO("Starting Accelerators");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(compute_time, cynq_profiler);
   compute_time->reset();
@@ -224,7 +178,7 @@ int main(int argc, char** argv) {
   compute_time->tick();
 #endif
 
-  CYNQ_INFO("Trigger Download");
+  AD08_INFO("Trigger Download");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(download_time, cynq_profiler);
   download_time->reset();
@@ -235,7 +189,7 @@ int main(int argc, char** argv) {
   download_time->tick();
 #endif
 
-  CYNQ_INFO("Synchronise streams");
+  AD08_INFO("Synchronise streams");
 #ifdef PROFILE_MODE
   GET_PROFILE_INSTANCE(sync_time, cynq_profiler);
   sync_time->reset();
