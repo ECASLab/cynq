@@ -54,10 +54,10 @@ namespace cynq {
  */
 
 /* APB address and offsets */
-static constexpr uint crl_apb_address = 0xFF5E0000;
+static constexpr uint64_t crl_apb_address = 0xFF5E0000;
 static constexpr uint max_number_pl_clocks = 4;
-static constexpr uint pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
-static constexpr uint pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
+static constexpr uint64_t pl_ctrl_offsets[] = {0xC0, 0xC4, 0xC8, 0xCC};
+static constexpr uint64_t pl_src_pll_ctrls[] = {0x20, 0x20, 0x30, 0x2C};
 /* Source clock */
 static constexpr uint plx_ctrl_clkact_field_bitfield = 24;
 static constexpr uint crx_apb_src_default = 0;
