@@ -33,12 +33,13 @@ This first release is a huge advance towards simplicity and we expect that many 
 
 ## How does CYNQ work?
 
-An application is mounted on top of an abstract interface to make the API feel agnostic. In this case, CYNQ is composed of four major components:
+An application is mounted on top of an abstract interface to make the API feel agnostic. In this case, CYNQ is composed of five major components:
 
 * Hardware class
 * Accelerator class
 * Data Mover class
 * Memory class
+* Execution Graph class
 
 Depending on the hardware, these classes are implemented in different manners by using class extension. Thus, users won't feel any change when migrating their applications from one hardware to another. We can link these classes with the following equivalences:
 
@@ -48,6 +49,7 @@ Depending on the hardware, these classes are implemented in different manners by
 | IAccelerator          | Default IP               |
 | IDataMover            | DMA IP                   |
 | IMemory               | Buffer                   |
+| IExecutionGraph       | N.A                      |
 
 As it is possible to see, there is an equivalence at the functional level.
 

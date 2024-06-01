@@ -37,4 +37,28 @@ std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
       return nullptr;
   }
 }
+
+std::shared_ptr<IExecutionGraph> IHardware::GetExecutionStream(
+    const std::string& name, const IExecutionGraph::Type type,
+    const std::shared_ptr<ExecutionGraphParameters> params) {
+  std::shared_ptr<ExecutionGraphParameters> output_params = nullptr;
+
+  if (!params) {
+    output_params = std::make_shared<ExecutionGraphParameters>();
+  } else {
+    output_params = params;
+  }
+
+  output_params->name = name;
+  return IExecutionGraph::Create(type, output_params);
+}
+
+std::vector<float> IHardware::GetClocks() noexcept {
+  return std::vector<float>(0);
+}
+
+Status IHardware::SetClocks(const std::vector<float>& /*clocks*/) {
+  return Status{Status::NOT_IMPLEMENTED, "Cannot adjust clocks"};
+}
+
 }  // namespace cynq

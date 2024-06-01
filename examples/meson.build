@@ -32,12 +32,37 @@ executable('xfopencv-warp-perspective-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+executable('ad08-sequential-kria',
+  ['zynq-mpsoc/ad08-sequential.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
+executable('ad08-streams-kria',
+  ['zynq-mpsoc/ad08-streams.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
 # ---------------------------------------------
 # Alveo examples
 # ---------------------------------------------
 
 executable('vadd-example-alveo',
   ['alveo/vadd-host.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
+# ---------------------------------------------
+# Structure examples
+# ---------------------------------------------
+
+executable('execution-stream',
+  ['structures/execution-stream.cpp'],
   include_directories: [projectinc],
   cpp_args : cpp_args,
   dependencies : [project_deps, libcynq_dep]

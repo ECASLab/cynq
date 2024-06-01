@@ -12,9 +12,9 @@
 
 // cynq headers
 #include <cynq/enums.hpp>
+#include <cynq/execution-graph.hpp>
+#include <cynq/memory.hpp>
 #include <cynq/status.hpp>
-
-#include "cynq/memory.hpp"
 
 namespace cynq {
 
@@ -55,6 +55,7 @@ class IAccelerator {
     /** XRT kernel runtime: compatible with Vitis and Alveo workflows */
     XRT
   };
+
   /**
    * @brief Start method
    * This method starts the accelerator in either once or continuous mode (with
@@ -67,6 +68,24 @@ class IAccelerator {
    * @return Status
    */
   virtual Status Start(const StartMode mode) = 0;
+
+  /**
+   * @brief Start method (asynchronous)
+   * Please, refer to IAccelerator::Start for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param mode One of the values in the StartMode enum class
+   * present in the enums.hpp file.
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @return Status. It fills the retval field with the NodeID of the
+   * execution graph.
+   */
+  virtual Status Start(std::shared_ptr<IExecutionGraph> graph,
+                       const StartMode mode);
+
   /**
    * @brief Stop method
    * This asynchronously turns off the accelerator by removing the autorestart
@@ -76,6 +95,21 @@ class IAccelerator {
    * @return Status
    */
   virtual Status Stop() = 0;
+
+  /**
+   * @brief Stop method (asynchronous)
+   * Please, refer to IAccelerator::Stop for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @return Status. It fills the retval field with the NodeID of the
+   * execution graph.
+   */
+  virtual Status Stop(std::shared_ptr<IExecutionGraph> graph);
+
   /**
    * @brief Sync method
    * This synchronises the execution and wait until the kernel/accelerator
@@ -84,6 +118,21 @@ class IAccelerator {
    * @return Status
    */
   virtual Status Sync() = 0;
+
+  /**
+   * @brief Sync method (asynchronous)
+   * Please, refer to IAccelerator::Sync for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @return Status. It fills the retval field with the NodeID of the
+   * execution graph.
+   */
+  virtual Status Sync(std::shared_ptr<IExecutionGraph> graph);
+
   /**
    * @brief GetStatus method
    * This returns the accelerator state by using the DeviceStatus. This reads
@@ -92,6 +141,7 @@ class IAccelerator {
    * @return DeviceStatus
    */
   virtual DeviceStatus GetStatus() = 0;
+
   /**
    * @brief Create method
    * Factory method used for creating specific subclasses of IAccelerator.
@@ -140,6 +190,7 @@ class IAccelerator {
   static std::shared_ptr<IAccelerator> Create(
       IAccelerator::Type impl, const std::string &kernelname,
       const std::shared_ptr<HardwareParameters> hwparams);
+
   /**
    * @brief Write method
    * Performs a write operation to the accelerator through a register.
@@ -165,6 +216,39 @@ class IAccelerator {
     return this->WriteRegister(address, reinterpret_cast<const uint8_t *>(data),
                                elements * sizeof(T));
   }
+
+  /**
+   * @brief Write method (asynchronous)
+   * Performs a write operation to the accelerator through a register in
+   * an execution graph. It returns as soon as the instruction is scheduled
+   *
+   * @tparam T
+   * Datatype used as the individual unit of information being written to the
+   * device.
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param address
+   * Address of the accelerator.
+   *
+   * @param data
+   * Raw pointer of type T used by the register to access the data.
+   *
+   * @param elements
+   * Number of elements being written to the device. Defaults to one
+   *
+   * @return Status. It fills the retval field with the NodeID within the
+   * execution graph
+   */
+  template <typename T>
+  Status Write(std::shared_ptr<IExecutionGraph> graph, const uint64_t address,
+               const T *data, const size_t elements = 1) {
+    return this->WriteRegister(graph, address,
+                               reinterpret_cast<const uint8_t *>(data),
+                               elements * sizeof(T));
+  }
+
   /**
    * @brief Read method
    * Performs a write operation to the accelerator through a register.
@@ -187,6 +271,37 @@ class IAccelerator {
   template <typename T>
   Status Read(const uint64_t address, T *data, const size_t elements = 1) {
     return this->ReadRegister(address, reinterpret_cast<uint8_t *>(data),
+                              elements * sizeof(T));
+  }
+
+  /**
+   * @brief Read method (asynchronous)
+   * Performs a write operation to the accelerator through a register in
+   * an execution graph. It returns as soon as the instruction is scheduled
+   *
+   * @tparam T
+   * Datatype used as the individual unit of information being read from the
+   * device.
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param address
+   * Address of the accelerator.
+   *
+   * @param data
+   * Raw pointer of type T used by the register to access the data.
+   *
+   * @param elements
+   * Number of elements being read from the device. Defaults to one
+   *
+   * @return Status. It fills the retval field with the NodeID within the
+   * execution graph
+   */
+  template <typename T>
+  Status Read(std::shared_ptr<IExecutionGraph> graph, const uint64_t address,
+              T *data, const size_t elements = 1) {
+    return this->ReadRegister(graph, address, reinterpret_cast<uint8_t *>(data),
                               elements * sizeof(T));
   }
 
@@ -292,6 +407,43 @@ class IAccelerator {
    */
   virtual Status ReadRegister(const uint64_t address, uint8_t *data,
                               const size_t size) = 0;
+
+  /**
+   * @brief Write Register method (asynchronous)
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param address an unsigned integer of 64 bits representing an address.
+   *
+   * @param data a pointer to an unsigned 8 bits variable which holds the
+   * data to write to the register.
+   *
+   * @param size size in bytes of the data to write.
+   *
+   * @return Status
+   */
+  virtual Status WriteRegister(std::shared_ptr<IExecutionGraph> graph,
+                               const uint64_t address, const uint8_t *data,
+                               const size_t size);
+  /**
+   * @brief Read Register method (asynchronous)
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param address an unsigned integer of 64 bits representing an address.
+   *
+   * @param data a pointer to an unsigned 8 bits variable which holds the
+   * data to read from the register.
+   *
+   * @param size size in bytes of the data to read.
+   *
+   * @return Status
+   */
+  virtual Status ReadRegister(std::shared_ptr<IExecutionGraph> graph,
+                              const uint64_t address, uint8_t *data,
+                              const size_t size);
 
   /**
    * @brief Opaque Attach Register method

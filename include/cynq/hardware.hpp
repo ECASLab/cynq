@@ -10,10 +10,12 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "cynq/accelerator.hpp"
 #include "cynq/datamover.hpp"
 #include "cynq/enums.hpp"
+#include "cynq/execution-graph.hpp"
 #include "cynq/status.hpp"
 
 namespace cynq {
@@ -112,6 +114,55 @@ class IHardware {
   virtual std::shared_ptr<IAccelerator> GetAccelerator(
       const std::string &kernelname) = 0;
 
+  /**
+   * @brief GetExecutionStream
+   *
+   * This method is a factory method to obtain an execution stream compatible
+   * with the hardware implementation. By default, it returns a new execution
+   * stream similar to the CUDA Stream, which is a queue-based scheduler to
+   * manage synchronism.
+   *
+   * @param name name of the stream for debugging purposes
+   *
+   * @param type implementation for the execution graph. By default, it is
+   * STREAM
+   *
+   * @param config configurations of the execution graph. By default, it is
+   * empty.
+   *
+   * @return std::shared_ptr<IExecutionGraph>
+   * Returns an execution graph instance compatible with the API of the
+   * interface IExecutionGraph
+   */
+  virtual std::shared_ptr<IExecutionGraph> GetExecutionStream(
+      const std::string &name,
+      const IExecutionGraph::Type type = IExecutionGraph::Type::STREAM,
+      const std::shared_ptr<ExecutionGraphParameters> params = nullptr);
+
+  /**
+   * @brief Get clocks from the PL
+   *
+   * This allows to check the current clocks from the PL in MHz.
+   * This method is optionally implementable. If it is not implemented,
+   * the number of elements of the vector is equal to zero.
+   *
+   * @returns a vector with a number of elements equal to the valid clocks
+   */
+  virtual std::vector<float> GetClocks() noexcept;
+  /**
+   * @brief Set clocks to the PL
+   *
+   * This allows to set the current clocks from the PL in MHz.
+   * This method is optionally implementable. If it is not implemented,
+   * no changes are performed.
+   *
+   * The vector must contain a number of clocks equivalent to the
+   * supported by the platform. If a clock must remain untouched,
+   * set it to -1.f
+   *
+   * @returns Status of the operation
+   */
+  virtual Status SetClocks(const std::vector<float> &clocks);
   /**
    * @brief Create method
    * Factory method to create a hardware-specific subclasses for accelerators

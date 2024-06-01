@@ -5,9 +5,30 @@ interface IHardware {
   +{abstract} Reset() -> Status
   +{abstract} GetDataMover(address = 0) -> IDataMover *
   +{abstract} GetAccelerator(address: uint64) -> IAccelerator *
-  +{abstract} GetAccelerator(address: string) -> IAccelerator *
+  +{virtual} GetExecutionStream(name: string, impl: IExecutionStreamType, config: ExecutionGraphParameters) -> IExecutionGraph *
+  +{virtual} GetClocks() -> float[]
+  +{virtual} SetClocks(clocks: float[]) -> Status
   +{static} Create(hw: HardwareArchitecture, bitstream: string, xclbin: string) -> IHardware*
   +{static} Create(hw: HardwareArchitecture, config: string) -> IHardware*
+}
+
+interface IExecutionGraph {
+  +{abstract} Add(func: std::function<void()>, deps: NodeID[] = {}) -> NodeID
+  +{abstract} Sync(node: NodeID = last) -> Status
+  +{abstract} GetLastError() -> Status
+  +{static} Create(impl: IExecutionStreamType, config: ExecutionGraphParameters) -> IExecutionStream*
+}
+
+struct IExecutionGraph::Node {
+  id: NodeID,
+  func: std::function<void()>
+  deps: NodeID[]
+  parents: pointer []
+  children: pointer []
+}
+
+struct ExecutionGraphParameters {
+  name: Stream
 }
 
 interface IMemory {
@@ -115,6 +136,8 @@ class UltraScale {
   +Reset() -> Status
   +GetDataMover(address, type : DataMoverType) -> DMADataMover *
   +GetAccelerator(address: uint64) -> MMIOAccelerator *
+  +{virtual} GetClocks() -> float[]
+  +{virtual} SetClocks(clocks: float[]) -> Status
   +UltraScale(hw, bitsteam, xclbin)
 }
 
@@ -172,6 +195,13 @@ class XRTDataMover {
   XrtDataMover(mem_bank)
 }
 
+class ExecutionStream {
+  +Add(func: std::function<void()>, deps: NodeID[] = {}) -> NodeID
+  +Sync(node: NodeID = last) -> Status
+  +GetLastError() -> Status
+}
+
+ExecutionStream ..> IExecutionGraph
 UltraScale ..> IHardware
 Alveo ..> IHardware
 XRTMemory ..> IMemory

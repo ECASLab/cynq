@@ -9,6 +9,7 @@
 sources += [
   files('accelerator.cpp'),
   files('datamover.cpp'),
+  files('execution-graph.cpp'),
   files('hardware.cpp'),
   files('memory.cpp'),
 ]
@@ -22,6 +23,7 @@ project_deps += [xrt_dep, uuid_dep]
 
 subdir('alveo')
 subdir('ultrascale')
+subdir('execution-graph')
 subdir('dma')
 subdir('mmio')
 subdir('xrt')

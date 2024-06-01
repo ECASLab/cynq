@@ -7,10 +7,8 @@
  *
  */
 #include <cynq/memory.hpp>
-
-#include <memory>
-
 #include <cynq/xrt/memory.hpp>
+#include <memory>
 
 namespace cynq {
 std::shared_ptr<IMemory> IMemory::Create(IMemory::Type impl,
@@ -23,5 +21,24 @@ std::shared_ptr<IMemory> IMemory::Create(IMemory::Type impl,
     default:
       return nullptr;
   }
+}
+
+Status IMemory::Sync(std::shared_ptr<IExecutionGraph> graph,
+                     const SyncType type) {
+  Status st{};
+
+  /* Check the stream */
+  if (!graph) {
+    return this->Sync(type);
+  }
+
+  /* Functor to execute  */
+  IExecutionGraph::Function func = [&, type]() -> Status {
+    return this->Sync(type);
+  };
+
+  /* Add function */
+  st.retval = graph->Add(func);
+  return st;
 }
 }  // namespace cynq

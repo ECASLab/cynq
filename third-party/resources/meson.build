@@ -27,10 +27,13 @@ cpp_args += [
 matrix_bitstream_location = fmt.format(meson.global_source_root(), files('kria-bitstreams/matrix-multiply/multiply-stream.bit')[0])
 xfopencv_warp_perspective_bitstream_location = fmt.format(meson.global_source_root(), files('kria-bitstreams/xfopencv-warp-perspective/warp.bit')[0])
 xfopencv_filter2d_bitstream_location = fmt.format(meson.global_source_root(), files('kria-bitstreams/xfopencv-filter2d/filter2d.bit')[0])
+ad08_location = fmt.format(meson.global_source_root(), files('kria-bitstreams/ad08/ad08.bit')[0])
+
 cpp_args += [
   '-DEXAMPLE_MULTIPLICATION_BITSTREAM_LOCATION=' + matrix_bitstream_location,
   '-DXFOPENCV_WARP_PERSPECTIVE_BITSTREAM_LOCATION=' + xfopencv_warp_perspective_bitstream_location,
   '-DXFOPENCV_FILTER2D_BITSTREAM_LOCATION=' + xfopencv_filter2d_bitstream_location,
+  '-DAD08_BITSTREAM_LOCATION=' + ad08_location,
   '-DEXAMPLE_KRIA_ACCEL_ADDR=0xa0000000',
   '-DEXAMPLE_KRIA_DMA_ADDR=0xa0010000',
 ]

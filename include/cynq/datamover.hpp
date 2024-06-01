@@ -7,6 +7,7 @@
  *
  */
 #pragma once
+#include <cynq/execution-graph.hpp>
 #include <memory>
 
 #include "cynq/enums.hpp"
@@ -99,6 +100,34 @@ class IDataMover {
    */
   virtual Status Upload(const std::shared_ptr<IMemory> mem, const size_t size,
                         const size_t offset, const ExecutionType exetype) = 0;
+
+  /**
+   * @brief Upload method (asynchronous)
+   * Please, refer to IDataMover::Upload for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param mem IMemory instance to upload.
+   *
+   * @param size Size in bytes of data being uploaded in the memory device by
+   * making use of the buffer.
+   *
+   * @param offset Offset in bytes where the device pointer should start
+   *
+   * @param exetype The execution type to use for the upload, this is either
+   * sync (synchronous) or async (asynchronous) execution. In case of async
+   * execution type, a Sync call must be performed afterwards to get coherent
+   * results.
+   *
+   * @return Status
+   */
+  virtual Status Upload(std::shared_ptr<IExecutionGraph> graph,
+                        const std::shared_ptr<IMemory> mem, const size_t size,
+                        const size_t offset, const ExecutionType exetype);
+
   /**
    * @brief Download method
    *
@@ -116,6 +145,34 @@ class IDataMover {
    */
   virtual Status Download(const std::shared_ptr<IMemory> mem, const size_t size,
                           const size_t offset, const ExecutionType exetype) = 0;
+
+  /**
+   * @brief Download method (asynchronous)
+   * Please, refer to IDataMover::Download for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param mem IMemory instance to download.
+   *
+   * @param size Size in bytes of data being downloaded from the memory device
+   * by making use of the buffer.
+   *
+   * @param offset Offset in bytes where the device pointer should start
+   *
+   * @param exetype The execution type to use for the download, this is either
+   * sync (synchronous) or async (asynchronous) execution. In case of async
+   * execution type, a Sync call must be performed afterwards to get coherent
+   * results.
+   *
+   * @return Status
+   */
+  virtual Status Download(std::shared_ptr<IExecutionGraph> graph,
+                          const std::shared_ptr<IMemory> mem, const size_t size,
+                          const size_t offset, const ExecutionType exetype);
+
   /**
    * @brief Sync method
    * Synchronizes data movements in case of asynchronous Upload/Download.
@@ -124,13 +181,32 @@ class IDataMover {
    * @return Status
    */
   virtual Status Sync(const SyncType type) = 0;
+
+  /**
+   * @brief Sync method (asynchronous)
+   * Please, refer to IDataMover::Sync for reference. This overload
+   * performs an asynchronous execution of the function based on a graph
+   * of operations. It returns as soon as the operation is scheduled
+   *
+   * @param graph Execution graph to execute on. If nullptr is passed, the
+   * execution will be synchronous.
+   *
+   * @param type sync type. Depending on the transaction, it will trigger sync
+   *
+   * @return Status
+   */
+  virtual Status Sync(std::shared_ptr<IExecutionGraph> graph,
+                      const SyncType type);
+
   /**
    * @brief GetStatus method
    * Returns the status of the data mover in terms of transactions.
    *
    * @return DeviceStatus
    */
+
   virtual DeviceStatus GetStatus() = 0;
+
   /**
    * @brief Create method
    * Factory method used for creating specific subclasses of IDataMover.

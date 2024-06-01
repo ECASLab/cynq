@@ -8,6 +8,7 @@
  */
 #pragma once
 #include <cynq/enums.hpp>
+#include <cynq/execution-graph.hpp>
 #include <cynq/status.hpp>
 #include <memory>
 
@@ -47,6 +48,20 @@ class IMemory {
    * @return Status
    */
   virtual Status Sync(const SyncType type) = 0;
+  /**
+   * @brief Sync method (Asynchronous)
+   * This function executes asynchronously through an execution graph. Please,
+   * see IMemory::Sync for more information.
+   *
+   * @param graph The execution graph to work on
+   *
+   * @param type The orientation of the Synchronizaton this can be host to
+   * host to device (HostToDevice) or device to host (DeviceToHost).
+   *
+   * @return Status
+   */
+  virtual Status Sync(std::shared_ptr<IExecutionGraph> graph,
+                      const SyncType type);
   /**
    * @brief Size method
    * Gives the value for the memory size in bytes.
