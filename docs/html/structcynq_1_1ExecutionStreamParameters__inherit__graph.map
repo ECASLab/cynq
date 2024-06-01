@@ -1,0 +1,4 @@
+<map id="cynq::ExecutionStreamParameters" name="cynq::ExecutionStreamParameters">
+<area shape="rect" id="node1" title="Define the parameters for the ExecutionStream class." alt="" coords="5,80,251,107"/>
+<area shape="rect" id="node2" href="$structcynq_1_1ExecutionGraphParameters.html" title="Define an abstract representation of the IExecutionGraph parameters with some prefilled fields." alt="" coords="9,5,247,32"/>
+</map>

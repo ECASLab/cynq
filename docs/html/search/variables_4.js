@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kernel_5f_193',['kernel_',['../structcynq_1_1XRTAcceleratorParameters.html#a714bbcc74ed58887cc6e499353957e31',1,'cynq::XRTAcceleratorParameters']]]
+  ['function_255',['function',['../structcynq_1_1IExecutionGraph_1_1Node.html#a9ca7424084aae149f048db3a97e90fff',1,'cynq::IExecutionGraph::Node']]]
 ];

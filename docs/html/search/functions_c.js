@@ -1,23 +1,6 @@
 var searchData=
 [
-  ['_7eacceleratorparameters_163',['~AcceleratorParameters',['../structcynq_1_1AcceleratorParameters.html#af0cccd1c1d691292bb33ed9e476b7edc',1,'cynq::AcceleratorParameters']]],
-  ['_7ealveo_164',['~Alveo',['../classcynq_1_1Alveo.html#a6c8a7a0c4e623218e48b7983b831dc1a',1,'cynq::Alveo']]],
-  ['_7ealveoparameters_165',['~AlveoParameters',['../structcynq_1_1AlveoParameters.html#a6a8668dd843e5e1d6994f95c45c1945c',1,'cynq::AlveoParameters']]],
-  ['_7edatamoverparameters_166',['~DataMoverParameters',['../structcynq_1_1DataMoverParameters.html#ab32a95eebb5e34b188406003cf13f296',1,'cynq::DataMoverParameters']]],
-  ['_7edmadatamover_167',['~DMADataMover',['../classcynq_1_1DMADataMover.html#aa0249a5066eea2fd03dfb7a6079c9c9f',1,'cynq::DMADataMover']]],
-  ['_7edmadatamoverparameters_168',['~DMADataMoverParameters',['../structcynq_1_1DMADataMoverParameters.html#a5667f48b10b42b457129c2d57e221daa',1,'cynq::DMADataMoverParameters']]],
-  ['_7ehardwareparameters_169',['~HardwareParameters',['../structcynq_1_1HardwareParameters.html#ab88d879905d7cbe9a3bf3fed8ff1a04d',1,'cynq::HardwareParameters']]],
-  ['_7eiaccelerator_170',['~IAccelerator',['../classcynq_1_1IAccelerator.html#a48a1cffcd45a81f55ac18e0f108b2941',1,'cynq::IAccelerator']]],
-  ['_7eidatamover_171',['~IDataMover',['../classcynq_1_1IDataMover.html#ac12de65b05dd9e2c0fdfcacec17a4a8f',1,'cynq::IDataMover']]],
-  ['_7eihardware_172',['~IHardware',['../classcynq_1_1IHardware.html#aa752c0a2d2effe32203e84f3802ec201',1,'cynq::IHardware']]],
-  ['_7eimemory_173',['~IMemory',['../classcynq_1_1IMemory.html#a15d660f6982fdfa3f875cb66fbeb0a5c',1,'cynq::IMemory']]],
-  ['_7emmioaccelerator_174',['~MMIOAccelerator',['../classcynq_1_1MMIOAccelerator.html#a8fcb8341d41357c12dd909bb314f5379',1,'cynq::MMIOAccelerator']]],
-  ['_7emmioacceleratorparameters_175',['~MMIOAcceleratorParameters',['../structcynq_1_1MMIOAcceleratorParameters.html#a67021874a0e026ed14bd47e1eba62407',1,'cynq::MMIOAcceleratorParameters']]],
-  ['_7eultrascale_176',['~UltraScale',['../classcynq_1_1UltraScale.html#a973fe9446d775eee7d6ae987cd30ce3f',1,'cynq::UltraScale']]],
-  ['_7eultrascaleparameters_177',['~UltraScaleParameters',['../structcynq_1_1UltraScaleParameters.html#ae4315d476b8beb917be8543f1839fafa',1,'cynq::UltraScaleParameters']]],
-  ['_7exrtaccelerator_178',['~XRTAccelerator',['../classcynq_1_1XRTAccelerator.html#a159711c105780262d867433bc998ed8d',1,'cynq::XRTAccelerator']]],
-  ['_7exrtacceleratorparameters_179',['~XRTAcceleratorParameters',['../structcynq_1_1XRTAcceleratorParameters.html#a26287a773cc535bf9cf456a462476a53',1,'cynq::XRTAcceleratorParameters']]],
-  ['_7exrtdatamover_180',['~XRTDataMover',['../classcynq_1_1XRTDataMover.html#a944c143f7ccfa28817a112a903f617d2',1,'cynq::XRTDataMover']]],
-  ['_7exrtdatamoverparameters_181',['~XRTDataMoverParameters',['../structcynq_1_1XRTDataMoverParameters.html#a298104618cf130afc2ff9135d860c0ac',1,'cynq::XRTDataMoverParameters']]],
-  ['_7exrtmemory_182',['~XRTMemory',['../classcynq_1_1XRTMemory.html#a5e9279bd77018f1b71bd69be1b9ed5dd',1,'cynq::XRTMemory']]]
+  ['xrtaccelerator_216',['XRTAccelerator',['../classcynq_1_1XRTAccelerator.html#a223cba6729d08661cc52f42ebc8556fb',1,'cynq::XRTAccelerator::XRTAccelerator()=delete'],['../classcynq_1_1XRTAccelerator.html#ab4b7f52151e7b3c87019736327076621',1,'cynq::XRTAccelerator::XRTAccelerator(const std::string &amp;kernelname, const std::shared_ptr&lt; HardwareParameters &gt; hwparams)']]],
+  ['xrtdatamover_217',['XRTDataMover',['../classcynq_1_1XRTDataMover.html#a13f5c6366c3b69406ab15db760d37c95',1,'cynq::XRTDataMover::XRTDataMover(const uint64_t addr, std::shared_ptr&lt; HardwareParameters &gt; hwparams)'],['../classcynq_1_1XRTDataMover.html#a856ebfc4aa9e1a3d62d665843cf8640e',1,'cynq::XRTDataMover::XRTDataMover()=delete']]],
+  ['xrtmemory_218',['XRTMemory',['../classcynq_1_1XRTMemory.html#a06af580d684d4d37f8b322bba00dfbf7',1,'cynq::XRTMemory::XRTMemory(const std::size_t size, uint8_t *hostptr, uint8_t *devptr, void *moverptr)'],['../classcynq_1_1XRTMemory.html#ad43bccecb20bc1e948f827cbb18cc60d',1,'cynq::XRTMemory::XRTMemory()=delete']]]
 ];

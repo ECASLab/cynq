@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">CYNQ </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__home_ubuntu_lleon_cynq_alveo_README"></a> Framework to develop FPGA applications in C++ with the easiness of PYNQ</p>
+<div class="textblock"><p><a class="anchor" id="md__mnt_usbkey_lleon_cynq_README"></a> Framework to develop FPGA applications in C++ with the easiness of PYNQ</p>
 <h1>Introduction</h1>
 <p>CYNQ is a C++ framework to implement FPGA-based accelerated applications with the same ease of use as PYNQ framework for Python. This allows users to implement their own applications with better performance than in Python and avoids the long processing times of coding applications with Vitis.</p>
 <h1>Dependencies</h1>
@@ -111,108 +111,107 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ol>
 <h1>Index</h1>
 <ul>
-<li><a class="el" href="md__home_ubuntu_lleon_cynq_alveo_docs_Foundations.html">Foundations</a><ul>
-<li><a class="el" href="md__home_ubuntu_lleon_cynq_alveo_docs_ClassDiagram.html">Class Diagram</a></li>
+<li><a class="el" href="md__mnt_usbkey_lleon_cynq_docs_Foundations.html">Foundations</a><ul>
+<li><a class="el" href="md__mnt_usbkey_lleon_cynq_docs_ClassDiagram.html">Class Diagram</a></li>
 </ul>
 </li>
-<li><a class="el" href="md__home_ubuntu_lleon_cynq_alveo_docs_Installation.html">Installation</a></li>
-<li><a class="el" href="md__home_ubuntu_lleon_cynq_alveo_docs_GettingStarted.html">Getting Started</a></li>
-<li><a class="el" href="md__home_ubuntu_lleon_cynq_alveo_docs_About.html">About</a></li>
+<li><a class="el" href="md__mnt_usbkey_lleon_cynq_docs_Installation.html">Installation</a></li>
+<li><a class="el" href="md__mnt_usbkey_lleon_cynq_docs_GettingStarted.html">Getting Started</a></li>
+<li><a class="el" href="md__mnt_usbkey_lleon_cynq_docs_About.html">About</a></li>
 </ul>
 <h1>How does CYNQ look like?</h1>
 <p>CYNQ is pretty similar to PYNQ, let's have a look.</p>
 <p>PYNQ:</p>
-<div class="fragment"><div class="line">from pynq import allocate, Overlay</div>
+<div class="fragment"><div class="line"><span class="keyword">from</span> pynq <span class="keyword">import</span> allocate, Overlay</div>
 <div class="line"> </div>
-<div class="line"># Configure the FPGA</div>
-<div class="line">design = Overlay(&quot;design.bit&quot;)</div>
+<div class="line"><span class="comment"># Configure the FPGA</span></div>
+<div class="line">design = Overlay(<span class="stringliteral">&quot;design.bit&quot;</span>)</div>
 <div class="line"> </div>
-<div class="line"># Extract the accelerator (IP Core) and DMA</div>
+<div class="line"><span class="comment"># Extract the accelerator (IP Core) and DMA</span></div>
 <div class="line">dma = design.axi_dma_0</div>
 <div class="line">accel = design.multiplication_accel_0</div>
 <div class="line"> </div>
-<div class="line"># Allocate buffers</div>
+<div class="line"><span class="comment"># Allocate buffers</span></div>
 <div class="line">inbuf = allocate(shape=(input_elements,), dtype=np.uint16)</div>
 <div class="line">outbuf = allocate(shape=(output_elements,), dtype=np.uint16)</div>
 <div class="line"> </div>
-<div class="line"># Run</div>
+<div class="line"><span class="comment"># Run</span></div>
 <div class="line">dma.sendchannel.transfer(inbuf)</div>
 <div class="line">accel.write(accel.register_map.CTRL.address, 0x81)</div>
 <div class="line">accel.write(accel.register_map.n_elements.address, input_elements)</div>
 <div class="line">dma.recvchannel.transfer(outbuf)</div>
 <div class="line">dma.recvchannel.wait()</div>
 <div class="line"> </div>
-<div class="line"># Dispose the buffers</div>
+<div class="line"><span class="comment"># Dispose the buffers</span></div>
 <div class="line">del input_hw</div>
 <div class="line">del output_hw</div>
 </div><!-- fragment --><p>With CYNQ for Xilinx Ultrascale+:</p>
-<div class="fragment"><div class="line"> {c++}</div>
-<div class="line">#include &lt;cynq/cynq.hpp&gt;</div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cynq/cynq.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line">using namespace cynq;</div>
+<div class="line"><span class="keyword">using namespace </span>cynq;</div>
 <div class="line"> </div>
-<div class="line">// Configure the FPGA</div>
-<div class="line">auto kArch = HardwareArchitecture::UltraScale;</div>
-<div class="line">auto platform = IHardware::Create(kArch, &quot;design.bit&quot;);</div>
+<div class="line"><span class="comment">// Configure the FPGA</span></div>
+<div class="line"><span class="keyword">auto</span> kArch = HardwareArchitecture::UltraScale;</div>
+<div class="line"><span class="keyword">auto</span> platform = <a class="code" href="classcynq_1_1IHardware.html#ab3cc41fbed5a6da306d8ae51153a3065">IHardware::Create</a>(kArch, <span class="stringliteral">&quot;design.bit&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line">// Extract the accelerator (IP Core) and DMA</div>
-<div class="line">// Addresses are given by the design</div>
-<div class="line">const uint64_t accel_addr = 0xa000000;</div>
-<div class="line">const uint64_t dma_addr = 0xa0010000;</div>
-<div class="line">auto accel = platform-&gt;GetAccelerator(accel_addr);</div>
-<div class="line">auto dma = platform-&gt;GetDataMover(dma_addr);</div>
+<div class="line"><span class="comment">// Extract the accelerator (IP Core) and DMA</span></div>
+<div class="line"><span class="comment">// Addresses are given by the design</span></div>
+<div class="line"><span class="keyword">const</span> uint64_t accel_addr = 0xa000000;</div>
+<div class="line"><span class="keyword">const</span> uint64_t dma_addr = 0xa0010000;</div>
+<div class="line"><span class="keyword">auto</span> accel = platform-&gt;GetAccelerator(accel_addr);</div>
+<div class="line"><span class="keyword">auto</span> dma = platform-&gt;GetDataMover(dma_addr);</div>
 <div class="line"> </div>
-<div class="line">// Allocate buffers and get the pointers</div>
-<div class="line">auto inbuf = mover-&gt;GetBuffer(input_size, accel-&gt;GetMemoryBank(0));</div>
-<div class="line">auto outbuf = mover-&gt;GetBuffer(output_size, accel-&gt;GetMemoryBank(1));</div>
+<div class="line"><span class="comment">// Allocate buffers and get the pointers</span></div>
+<div class="line"><span class="keyword">auto</span> inbuf = mover-&gt;GetBuffer(input_size, accel-&gt;GetMemoryBank(0));</div>
+<div class="line"><span class="keyword">auto</span> outbuf = mover-&gt;GetBuffer(output_size, accel-&gt;GetMemoryBank(1));</div>
 <div class="line">uint16_t* input_ptr = inbuf-&gt;HostAddress&lt;uint16_t&gt;().get();</div>
 <div class="line">uint16_t* output_ptr = outbuf-&gt;HostAddress&lt;uint16_t&gt;().get();</div>
 <div class="line"> </div>
-<div class="line">// Configure data - Bus: AXI4 Stream is handled by DMA</div>
+<div class="line"><span class="comment">// Configure data - Bus: AXI4 Stream is handled by DMA</span></div>
 <div class="line">uint32_t num_elements = 4096;</div>
-<div class="line">const uint64_t addr_num_elements = 0x20;</div>
+<div class="line"><span class="keyword">const</span> uint64_t addr_num_elements = 0x20;</div>
 <div class="line">accel-&gt;Attach(addr_num_elements, &amp;num_elements, RegisterAccess::RO);</div>
 <div class="line"> </div>
-<div class="line">// Run</div>
+<div class="line"><span class="comment">// Run</span></div>
 <div class="line">mover-&gt;Upload(in_mem, infbuf-&gt;Size(), 0, ExecutionType::Async);</div>
 <div class="line">accel-&gt;Start(StartMode::Continuous);</div>
 <div class="line">mover-&gt;Download(out_mem, outbuf-&gt;Size(), 0, ExecutionType::Sync);</div>
 <div class="line">accel-&gt;Stop();</div>
 <div class="line"> </div>
-<div class="line">// Dispose? We use RAII</div>
+<div class="line"><span class="comment">// Dispose? We use RAII</span></div>
+<div class="ttc" id="aclasscynq_1_1IHardware_html_ab3cc41fbed5a6da306d8ae51153a3065"><div class="ttname"><a href="classcynq_1_1IHardware.html#ab3cc41fbed5a6da306d8ae51153a3065">cynq::IHardware::Create</a></div><div class="ttdeci">static std::shared_ptr&lt; IHardware &gt; Create(const HardwareArchitecture hw, const std::string &amp;bitstream, const std::string &amp;xclbin)</div><div class="ttdoc">Create method Factory method to create a hardware-specific subclasses for accelerators and data mover...</div><div class="ttdef"><b>Definition:</b> hardware.cpp:15</div></div>
 </div><!-- fragment --><p>With CYNQ for Alveo</p>
-<div class="fragment"><div class="line"> {c++}</div>
-<div class="line">#include &lt;cynq/cynq.hpp&gt;</div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cynq/cynq.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line">using namespace cynq;</div>
+<div class="line"><span class="keyword">using namespace </span>cynq;</div>
 <div class="line"> </div>
-<div class="line">// Configure the FPGA</div>
-<div class="line">auto kArch = HardwareArchitecture::Alveo;</div>
-<div class="line">auto platform = IHardware::Create(kArch, &quot;design.xclbin&quot;);</div>
+<div class="line"><span class="comment">// Configure the FPGA</span></div>
+<div class="line"><span class="keyword">auto</span> kArch = HardwareArchitecture::Alveo;</div>
+<div class="line"><span class="keyword">auto</span> platform = <a class="code" href="classcynq_1_1IHardware.html#ab3cc41fbed5a6da306d8ae51153a3065">IHardware::Create</a>(kArch, <span class="stringliteral">&quot;design.xclbin&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line">// Extract the accelerator (IP Core) and DMA</div>
-<div class="line">// Addresses are given by the design</div>
-<div class="line">auto accel = platform-&gt;GetAccelerator(&quot;vadd&quot;);</div>
-<div class="line">auto dma = platform-&gt;GetDataMover(0);</div>
+<div class="line"><span class="comment">// Extract the accelerator (IP Core) and DMA</span></div>
+<div class="line"><span class="comment">// Addresses are given by the design</span></div>
+<div class="line"><span class="keyword">auto</span> accel = platform-&gt;GetAccelerator(<span class="stringliteral">&quot;vadd&quot;</span>);</div>
+<div class="line"><span class="keyword">auto</span> dma = platform-&gt;GetDataMover(0);</div>
 <div class="line"> </div>
-<div class="line">// Allocate buffers and get the pointers</div>
-<div class="line">auto inbuf = mover-&gt;GetBuffer(input_size, accel-&gt;GetMemoryBank(0));</div>
-<div class="line">auto outbuf = mover-&gt;GetBuffer(output_size, accel-&gt;GetMemoryBank(1));</div>
+<div class="line"><span class="comment">// Allocate buffers and get the pointers</span></div>
+<div class="line"><span class="keyword">auto</span> inbuf = mover-&gt;GetBuffer(input_size, accel-&gt;GetMemoryBank(0));</div>
+<div class="line"><span class="keyword">auto</span> outbuf = mover-&gt;GetBuffer(output_size, accel-&gt;GetMemoryBank(1));</div>
 <div class="line">uint16_t* input_ptr = inbuf-&gt;HostAddress&lt;uint16_t&gt;().get();</div>
 <div class="line">uint16_t* output_ptr = outbuf-&gt;HostAddress&lt;uint16_t&gt;().get();</div>
 <div class="line"> </div>
-<div class="line">// Configure the accel - memory mapped</div>
-<div class="line">const uint32_t num_elements = 4096;</div>
+<div class="line"><span class="comment">// Configure the accel - memory mapped</span></div>
+<div class="line"><span class="keyword">const</span> uint32_t num_elements = 4096;</div>
 <div class="line">accel-&gt;Attach(0, bo_0);</div>
 <div class="line">accel-&gt;Attach(1, bo_1);</div>
 <div class="line">accel-&gt;Attach(2, &amp;num_elements, RegisterAccess::RO);</div>
 <div class="line"> </div>
-<div class="line">// Run</div>
+<div class="line"><span class="comment">// Run</span></div>
 <div class="line">mover-&gt;Upload(in_mem, infbuf-&gt;Size(), 0, ExecutionType::Async);</div>
 <div class="line">accel-&gt;Start(StartMode::Once);</div>
 <div class="line">mover-&gt;Download(out_mem, outbuf-&gt;Size(), 0, ExecutionType::Sync);</div>
 <div class="line"> </div>
-<div class="line">// Dispose? We use RAII</div>
+<div class="line"><span class="comment">// Dispose? We use RAII</span></div>
 </div><!-- fragment --><h1>Currently tested</h1>
 <p>So far, we have tested CYNQ on:</p>
 <ol type="1">
@@ -230,7 +229,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">              AND Ávila-Torres, Diego</div>
 <div class="line">              AND Castro-Godínez, Jorge</div>
 <div class="line">            }},</div>
-<div class="line">  title = {{CYNQ (v0.2)}},</div>
+<div class="line">  title = {{CYNQ (v0.3)}},</div>
 <div class="line">  year  = {2024},</div>
 <div class="line">  url   = {https://github.com/ECASLab/cynq},</div>
 <div class="line">} </div>

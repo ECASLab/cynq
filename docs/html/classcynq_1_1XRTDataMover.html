@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -156,6 +156,15 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IDataMover.html#ac12de65b05dd9e2c0fdfcacec17a4a8f">~IDataMover</a> ()=default</td></tr>
 <tr class="memdesc:ac12de65b05dd9e2c0fdfcacec17a4a8f inherit pub_methods_classcynq_1_1IDataMover"><td class="mdescLeft">&#160;</td><td class="mdescRight">~IDataMover destructor method Destroy the <a class="el" href="classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover.">IDataMover</a> object. <br /></td></tr>
 <tr class="separator:ac12de65b05dd9e2c0fdfcacec17a4a8f inherit pub_methods_classcynq_1_1IDataMover"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d1d65e2dc111d95a6bf2d74688d015f inherit pub_methods_classcynq_1_1IDataMover"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IDataMover.html#a2d1d65e2dc111d95a6bf2d74688d015f">Upload</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const std::shared_ptr&lt; <a class="el" href="classcynq_1_1IMemory.html">IMemory</a> &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype)</td></tr>
+<tr class="memdesc:a2d1d65e2dc111d95a6bf2d74688d015f inherit pub_methods_classcynq_1_1IDataMover"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IDataMover.html#a4b4edd65dab0f80bfce10964c14f4ebd" title="Upload method This method moves the data from the host to the device using a DMA engine....">IDataMover::Upload</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IDataMover.html#a2d1d65e2dc111d95a6bf2d74688d015f">More...</a><br /></td></tr>
+<tr class="separator:a2d1d65e2dc111d95a6bf2d74688d015f inherit pub_methods_classcynq_1_1IDataMover"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2d1bf28bf03274f87e9ad6959465d19 inherit pub_methods_classcynq_1_1IDataMover"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IDataMover.html#ab2d1bf28bf03274f87e9ad6959465d19">Download</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const std::shared_ptr&lt; <a class="el" href="classcynq_1_1IMemory.html">IMemory</a> &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype)</td></tr>
+<tr class="memdesc:ab2d1bf28bf03274f87e9ad6959465d19 inherit pub_methods_classcynq_1_1IDataMover"><td class="mdescLeft">&#160;</td><td class="mdescRight">Download method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IDataMover.html#afd87fb9395f3d07c6d2ef4ae4bc19b32" title="Download method.">IDataMover::Download</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IDataMover.html#ab2d1bf28bf03274f87e9ad6959465d19">More...</a><br /></td></tr>
+<tr class="separator:ab2d1bf28bf03274f87e9ad6959465d19 inherit pub_methods_classcynq_1_1IDataMover"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a352fbb167dbc2c5dfb2e06d048df125e inherit pub_methods_classcynq_1_1IDataMover"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IDataMover.html#a352fbb167dbc2c5dfb2e06d048df125e">Sync</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const SyncType type)</td></tr>
+<tr class="memdesc:a352fbb167dbc2c5dfb2e06d048df125e inherit pub_methods_classcynq_1_1IDataMover"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IDataMover.html#a694dce2a4a9d6e150de1dd9992f59df8" title="Sync method Synchronizes data movements in case of asynchronous Upload/Download.">IDataMover::Sync</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IDataMover.html#a352fbb167dbc2c5dfb2e06d048df125e">More...</a><br /></td></tr>
+<tr class="separator:a352fbb167dbc2c5dfb2e06d048df125e inherit pub_methods_classcynq_1_1IDataMover"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -501,8 +510,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/xrt/<a class="el" href="xrt_2datamover_8hpp_source.html">datamover.hpp</a></li>
-<li>/home/ubuntu/lleon/cynq-alveo/src/cynq/xrt/datamover.cpp</li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/xrt/<a class="el" href="xrt_2datamover_8hpp_source.html">datamover.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/src/cynq/xrt/datamover.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -137,12 +137,21 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:ac2b6ce03ee4e29d86e5abf2bc76b79e5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#ac2b6ce03ee4e29d86e5abf2bc76b79e5">Start</a> (const StartMode mode)=0</td></tr>
 <tr class="memdesc:ac2b6ce03ee4e29d86e5abf2bc76b79e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start method This method starts the accelerator in either once or continuous mode (with the autorestart). Under the hood, this writes the control register to turn on the accelerator with/without the autorestart bit.  <a href="classcynq_1_1IAccelerator.html#ac2b6ce03ee4e29d86e5abf2bc76b79e5">More...</a><br /></td></tr>
 <tr class="separator:ac2b6ce03ee4e29d86e5abf2bc76b79e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4fb85fe59fea08edb62e0bc3fb1566c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#aa4fb85fe59fea08edb62e0bc3fb1566c">Start</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const StartMode mode)</td></tr>
+<tr class="memdesc:aa4fb85fe59fea08edb62e0bc3fb1566c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#ac2b6ce03ee4e29d86e5abf2bc76b79e5" title="Start method This method starts the accelerator in either once or continuous mode (with the autoresta...">IAccelerator::Start</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IAccelerator.html#aa4fb85fe59fea08edb62e0bc3fb1566c">More...</a><br /></td></tr>
+<tr class="separator:aa4fb85fe59fea08edb62e0bc3fb1566c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77b8b797e26fa0fed24bc994e35e54cc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a77b8b797e26fa0fed24bc994e35e54cc">Stop</a> ()=0</td></tr>
 <tr class="memdesc:a77b8b797e26fa0fed24bc994e35e54cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop method This asynchronously turns off the accelerator by removing the autorestart and start bits from the control registers. Please, note that the accelerator will turn off once it finishes its current task.  <a href="classcynq_1_1IAccelerator.html#a77b8b797e26fa0fed24bc994e35e54cc">More...</a><br /></td></tr>
 <tr class="separator:a77b8b797e26fa0fed24bc994e35e54cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09f682847cf10519e0c60c1838748e50"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a09f682847cf10519e0c60c1838748e50">Stop</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph)</td></tr>
+<tr class="memdesc:a09f682847cf10519e0c60c1838748e50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#a77b8b797e26fa0fed24bc994e35e54cc" title="Stop method This asynchronously turns off the accelerator by removing the autorestart and start bits ...">IAccelerator::Stop</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IAccelerator.html#a09f682847cf10519e0c60c1838748e50">More...</a><br /></td></tr>
+<tr class="separator:a09f682847cf10519e0c60c1838748e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8d39d779a45333c0413635880a40a86"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#ac8d39d779a45333c0413635880a40a86">Sync</a> ()=0</td></tr>
 <tr class="memdesc:ac8d39d779a45333c0413635880a40a86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync method This synchronises the execution and wait until the kernel/accelerator finishes its execution.  <a href="classcynq_1_1IAccelerator.html#ac8d39d779a45333c0413635880a40a86">More...</a><br /></td></tr>
 <tr class="separator:ac8d39d779a45333c0413635880a40a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac887a3347b20bcf963ea421f44382e5d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#ac887a3347b20bcf963ea421f44382e5d">Sync</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph)</td></tr>
+<tr class="memdesc:ac887a3347b20bcf963ea421f44382e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#ac8d39d779a45333c0413635880a40a86" title="Sync method This synchronises the execution and wait until the kernel/accelerator finishes its execut...">IAccelerator::Sync</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled.  <a href="classcynq_1_1IAccelerator.html#ac887a3347b20bcf963ea421f44382e5d">More...</a><br /></td></tr>
+<tr class="separator:ac887a3347b20bcf963ea421f44382e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec8a15b14e4a5f8659aa0082789f3fe5"><td class="memItemLeft" align="right" valign="top">virtual DeviceStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#aec8a15b14e4a5f8659aa0082789f3fe5">GetStatus</a> ()=0</td></tr>
 <tr class="memdesc:aec8a15b14e4a5f8659aa0082789f3fe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetStatus method This returns the accelerator state by using the DeviceStatus. This reads the control register flags.  <a href="classcynq_1_1IAccelerator.html#aec8a15b14e4a5f8659aa0082789f3fe5">More...</a><br /></td></tr>
 <tr class="separator:aec8a15b14e4a5f8659aa0082789f3fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,10 +159,18 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a66bbfe47db266e24af40983d8ea4f0c2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a66bbfe47db266e24af40983d8ea4f0c2">Write</a> (const uint64_t address, const T *data, const size_t elements=1)</td></tr>
 <tr class="memdesc:a66bbfe47db266e24af40983d8ea4f0c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write method Performs a write operation to the accelerator through a register.  <a href="classcynq_1_1IAccelerator.html#a66bbfe47db266e24af40983d8ea4f0c2">More...</a><br /></td></tr>
 <tr class="separator:a66bbfe47db266e24af40983d8ea4f0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a878433d85822dd05c31de6b4090d3804"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a878433d85822dd05c31de6b4090d3804"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a878433d85822dd05c31de6b4090d3804">Write</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const uint64_t address, const T *data, const size_t elements=1)</td></tr>
+<tr class="memdesc:a878433d85822dd05c31de6b4090d3804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write method (asynchronous) Performs a write operation to the accelerator through a register in an execution graph. It returns as soon as the instruction is scheduled.  <a href="classcynq_1_1IAccelerator.html#a878433d85822dd05c31de6b4090d3804">More...</a><br /></td></tr>
+<tr class="separator:a878433d85822dd05c31de6b4090d3804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6466252df8737b91a9a8292d345cafd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa6466252df8737b91a9a8292d345cafd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#aa6466252df8737b91a9a8292d345cafd">Read</a> (const uint64_t address, T *data, const size_t elements=1)</td></tr>
 <tr class="memdesc:aa6466252df8737b91a9a8292d345cafd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read method Performs a write operation to the accelerator through a register.  <a href="classcynq_1_1IAccelerator.html#aa6466252df8737b91a9a8292d345cafd">More...</a><br /></td></tr>
 <tr class="separator:aa6466252df8737b91a9a8292d345cafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa86eb3ce99ff5a99eee5aff088384263"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aa86eb3ce99ff5a99eee5aff088384263"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#aa86eb3ce99ff5a99eee5aff088384263">Read</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const uint64_t address, T *data, const size_t elements=1)</td></tr>
+<tr class="memdesc:aa86eb3ce99ff5a99eee5aff088384263"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read method (asynchronous) Performs a write operation to the accelerator through a register in an execution graph. It returns as soon as the instruction is scheduled.  <a href="classcynq_1_1IAccelerator.html#aa86eb3ce99ff5a99eee5aff088384263">More...</a><br /></td></tr>
+<tr class="separator:aa86eb3ce99ff5a99eee5aff088384263"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afda10253dc949dbe5d604bb59f483333"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#afda10253dc949dbe5d604bb59f483333">GetMemoryBank</a> (const uint pos)=0</td></tr>
 <tr class="memdesc:afda10253dc949dbe5d604bb59f483333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the memory bank ID.  <a href="classcynq_1_1IAccelerator.html#afda10253dc949dbe5d604bb59f483333">More...</a><br /></td></tr>
 <tr class="separator:afda10253dc949dbe5d604bb59f483333"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,6 +203,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3f3a93792eeea45fba841818dbef6a62"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a3f3a93792eeea45fba841818dbef6a62">ReadRegister</a> (const uint64_t address, uint8_t *data, const size_t size)=0</td></tr>
 <tr class="memdesc:a3f3a93792eeea45fba841818dbef6a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opaque Read Register method.  <a href="classcynq_1_1IAccelerator.html#a3f3a93792eeea45fba841818dbef6a62">More...</a><br /></td></tr>
 <tr class="separator:a3f3a93792eeea45fba841818dbef6a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ccd05a839043193d3befc16b829f15d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a5ccd05a839043193d3befc16b829f15d">WriteRegister</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const uint64_t address, const uint8_t *data, const size_t size)</td></tr>
+<tr class="memdesc:a5ccd05a839043193d3befc16b829f15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write Register method (asynchronous)  <a href="classcynq_1_1IAccelerator.html#a5ccd05a839043193d3befc16b829f15d">More...</a><br /></td></tr>
+<tr class="separator:a5ccd05a839043193d3befc16b829f15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4991cb02f70b301d5cb9a22caacd551"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#ad4991cb02f70b301d5cb9a22caacd551">ReadRegister</a> (std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; graph, const uint64_t address, uint8_t *data, const size_t size)</td></tr>
+<tr class="memdesc:ad4991cb02f70b301d5cb9a22caacd551"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read Register method (asynchronous)  <a href="classcynq_1_1IAccelerator.html#ad4991cb02f70b301d5cb9a22caacd551">More...</a><br /></td></tr>
+<tr class="separator:ad4991cb02f70b301d5cb9a22caacd551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49bea1df3dd82f4309b1c01162a1876d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IAccelerator.html#a49bea1df3dd82f4309b1c01162a1876d">AttachRegister</a> (const uint64_t index, uint8_t *data, const RegisterAccess access, const size_t size)=0</td></tr>
 <tr class="memdesc:a49bea1df3dd82f4309b1c01162a1876d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opaque Attach Register method.  <a href="classcynq_1_1IAccelerator.html#a49bea1df3dd82f4309b1c01162a1876d">More...</a><br /></td></tr>
 <tr class="separator:a49bea1df3dd82f4309b1c01162a1876d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -618,7 +641,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <a id="aa6466252df8737b91a9a8292d345cafd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6466252df8737b91a9a8292d345cafd">&#9670;&nbsp;</a></span>Read()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6466252df8737b91a9a8292d345cafd">&#9670;&nbsp;</a></span>Read() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,8 +701,76 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="aa86eb3ce99ff5a99eee5aff088384263"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa86eb3ce99ff5a99eee5aff088384263">&#9670;&nbsp;</a></span>Read() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::Read </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint64_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>elements</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read method (asynchronous) Performs a write operation to the accelerator through a register in an execution graph. It returns as soon as the instruction is scheduled. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Datatype used as the individual unit of information being read from the device.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+    <tr><td class="paramname">address</td><td>Address of the accelerator.</td></tr>
+    <tr><td class="paramname">data</td><td>Raw pointer of type T used by the register to access the data.</td></tr>
+    <tr><td class="paramname">elements</td><td>Number of elements being read from the device. Defaults to one</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a>. It fills the retval field with the NodeID within the execution graph </dd></dl>
+
+</div>
+</div>
 <a id="a3f3a93792eeea45fba841818dbef6a62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f3a93792eeea45fba841818dbef6a62">&#9670;&nbsp;</a></span>ReadRegister()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f3a93792eeea45fba841818dbef6a62">&#9670;&nbsp;</a></span>ReadRegister() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -733,8 +824,68 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="ad4991cb02f70b301d5cb9a22caacd551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4991cb02f70b301d5cb9a22caacd551">&#9670;&nbsp;</a></span>ReadRegister() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::ReadRegister </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint64_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read Register method (asynchronous) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+    <tr><td class="paramname">address</td><td>an unsigned integer of 64 bits representing an address.</td></tr>
+    <tr><td class="paramname">data</td><td>a pointer to an unsigned 8 bits variable which holds the data to read from the register.</td></tr>
+    <tr><td class="paramname">size</td><td>size in bytes of the data to read.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> </dd></dl>
+
+</div>
+</div>
 <a id="ac2b6ce03ee4e29d86e5abf2bc76b79e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2b6ce03ee4e29d86e5abf2bc76b79e5">&#9670;&nbsp;</a></span>Start()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2b6ce03ee4e29d86e5abf2bc76b79e5">&#9670;&nbsp;</a></span>Start() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -770,8 +921,54 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="aa4fb85fe59fea08edb62e0bc3fb1566c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4fb85fe59fea08edb62e0bc3fb1566c">&#9670;&nbsp;</a></span>Start() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::Start </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const StartMode&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Start method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#ac2b6ce03ee4e29d86e5abf2bc76b79e5" title="Start method This method starts the accelerator in either once or continuous mode (with the autoresta...">IAccelerator::Start</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>One of the values in the StartMode enum class present in the <a class="el" href="enums_8hpp_source.html">enums.hpp</a> file. </td></tr>
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a>. It fills the retval field with the NodeID of the execution graph. </dd></dl>
+
+</div>
+</div>
 <a id="a77b8b797e26fa0fed24bc994e35e54cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77b8b797e26fa0fed24bc994e35e54cc">&#9670;&nbsp;</a></span>Stop()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77b8b797e26fa0fed24bc994e35e54cc">&#9670;&nbsp;</a></span>Stop() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -800,8 +997,43 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a09f682847cf10519e0c60c1838748e50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09f682847cf10519e0c60c1838748e50">&#9670;&nbsp;</a></span>Stop() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::Stop </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stop method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#a77b8b797e26fa0fed24bc994e35e54cc" title="Stop method This asynchronously turns off the accelerator by removing the autorestart and start bits ...">IAccelerator::Stop</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a>. It fills the retval field with the NodeID of the execution graph. </dd></dl>
+
+</div>
+</div>
 <a id="ac8d39d779a45333c0413635880a40a86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8d39d779a45333c0413635880a40a86">&#9670;&nbsp;</a></span>Sync()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d39d779a45333c0413635880a40a86">&#9670;&nbsp;</a></span>Sync() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -830,8 +1062,43 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="ac887a3347b20bcf963ea421f44382e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac887a3347b20bcf963ea421f44382e5d">&#9670;&nbsp;</a></span>Sync() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::Sync </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sync method (asynchronous) Please, refer to <a class="el" href="classcynq_1_1IAccelerator.html#ac8d39d779a45333c0413635880a40a86" title="Sync method This synchronises the execution and wait until the kernel/accelerator finishes its execut...">IAccelerator::Sync</a> for reference. This overload performs an asynchronous execution of the function based on a graph of operations. It returns as soon as the operation is scheduled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a>. It fills the retval field with the NodeID of the execution graph. </dd></dl>
+
+</div>
+</div>
 <a id="a66bbfe47db266e24af40983d8ea4f0c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66bbfe47db266e24af40983d8ea4f0c2">&#9670;&nbsp;</a></span>Write()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a66bbfe47db266e24af40983d8ea4f0c2">&#9670;&nbsp;</a></span>Write() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -891,8 +1158,76 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a878433d85822dd05c31de6b4090d3804"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a878433d85822dd05c31de6b4090d3804">&#9670;&nbsp;</a></span>Write() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::Write </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint64_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>elements</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write method (asynchronous) Performs a write operation to the accelerator through a register in an execution graph. It returns as soon as the instruction is scheduled. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Datatype used as the individual unit of information being written to the device.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+    <tr><td class="paramname">address</td><td>Address of the accelerator.</td></tr>
+    <tr><td class="paramname">data</td><td>Raw pointer of type T used by the register to access the data.</td></tr>
+    <tr><td class="paramname">elements</td><td>Number of elements being written to the device. Defaults to one</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a>. It fills the retval field with the NodeID within the execution graph </dd></dl>
+
+</div>
+</div>
 <a id="a2345b427daaef05033e9f66202210bf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2345b427daaef05033e9f66202210bf2">&#9670;&nbsp;</a></span>WriteRegister()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2345b427daaef05033e9f66202210bf2">&#9670;&nbsp;</a></span>WriteRegister() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -946,9 +1281,69 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a5ccd05a839043193d3befc16b829f15d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ccd05a839043193d3befc16b829f15d">&#9670;&nbsp;</a></span>WriteRegister() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IAccelerator::WriteRegister </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td>
+          <td class="paramname"><em>graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint64_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write Register method (asynchronous) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">graph</td><td>Execution graph to execute on. If nullptr is passed, the execution will be synchronous.</td></tr>
+    <tr><td class="paramname">address</td><td>an unsigned integer of 64 bits representing an address.</td></tr>
+    <tr><td class="paramname">data</td><td>a pointer to an unsigned 8 bits variable which holds the data to write to the register.</td></tr>
+    <tr><td class="paramname">size</td><td>size in bytes of the data to write.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/<a class="el" href="accelerator_8hpp_source.html">accelerator.hpp</a></li>
-<li>/home/ubuntu/lleon/cynq-alveo/src/cynq/accelerator.cpp</li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/<a class="el" href="accelerator_8hpp_source.html">accelerator.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/src/cynq/accelerator.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

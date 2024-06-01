@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structcynq_1_1XRTDataMoverMeta.html" title="Metadata inserted into each XRTMemory instance." alt="" coords="5,5,196,32"/>
+<area shape="rect" id="node1" href="$classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices:" alt="" coords="5,31,133,57"/>
+<area shape="rect" id="node2" href="$classcynq_1_1Alveo.html" title="Alveo class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are the ..." alt="" coords="196,5,295,32"/>
+<area shape="rect" id="node3" href="$classcynq_1_1UltraScale.html" title="UltraScale class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are..." alt="" coords="181,56,309,83"/>
 </map>

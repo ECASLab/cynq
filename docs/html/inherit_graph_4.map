@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator." alt="" coords="5,31,144,57"/>
-<area shape="rect" id="node2" href="$classcynq_1_1MMIOAccelerator.html" title="MMIOAccelerator class This class provides the api to operate the accelerator." alt="" coords="192,5,365,32"/>
-<area shape="rect" id="node3" href="$classcynq_1_1XRTAccelerator.html" title="XRTAccelerator class This class provides the api to operate the accelerator." alt="" coords="199,56,358,83"/>
+<area shape="rect" id="node1" href="$structcynq_1_1HardwareParameters.html" title="Define an abstract representation of the hardware parameters with some prefilled fields." alt="" coords="5,31,204,57"/>
+<area shape="rect" id="node2" href="$structcynq_1_1AlveoParameters.html" title="Specialisation of the parameters given by the Alveo. It is based on the XRT stack." alt="" coords="267,5,439,32"/>
+<area shape="rect" id="node3" href="$structcynq_1_1UltraScaleParameters.html" title="Specialisation of the parameters given by the UltraScale. It is based on the PYNQ and XRT." alt="" coords="252,56,455,83"/>
 </map>

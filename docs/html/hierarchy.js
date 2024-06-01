@@ -9,6 +9,9 @@ var hierarchy =
       [ "cynq::XRTDataMoverParameters", "structcynq_1_1XRTDataMoverParameters.html", null ]
     ] ],
     [ "cynq::DMADataMoverMeta", "structcynq_1_1DMADataMoverMeta.html", null ],
+    [ "cynq::ExecutionGraphParameters", "structcynq_1_1ExecutionGraphParameters.html", [
+      [ "cynq::ExecutionStreamParameters", "structcynq_1_1ExecutionStreamParameters.html", null ]
+    ] ],
     [ "cynq::HardwareParameters", "structcynq_1_1HardwareParameters.html", [
       [ "cynq::AlveoParameters", "structcynq_1_1AlveoParameters.html", null ],
       [ "cynq::UltraScaleParameters", "structcynq_1_1UltraScaleParameters.html", null ]
@@ -21,6 +24,9 @@ var hierarchy =
       [ "cynq::DMADataMover", "classcynq_1_1DMADataMover.html", null ],
       [ "cynq::XRTDataMover", "classcynq_1_1XRTDataMover.html", null ]
     ] ],
+    [ "cynq::IExecutionGraph", "classcynq_1_1IExecutionGraph.html", [
+      [ "cynq::ExecutionStream", "classcynq_1_1ExecutionStream.html", null ]
+    ] ],
     [ "cynq::IHardware", "classcynq_1_1IHardware.html", [
       [ "cynq::Alveo", "classcynq_1_1Alveo.html", null ],
       [ "cynq::UltraScale", "classcynq_1_1UltraScale.html", null ]
@@ -28,6 +34,8 @@ var hierarchy =
     [ "cynq::IMemory", "classcynq_1_1IMemory.html", [
       [ "cynq::XRTMemory", "classcynq_1_1XRTMemory.html", null ]
     ] ],
+    [ "cynq::IExecutionGraph::Node", "structcynq_1_1IExecutionGraph_1_1Node.html", null ],
     [ "cynq::Status", "structcynq_1_1Status.html", null ],
+    [ "cynq::UltraScaleClocks", "structcynq_1_1UltraScaleClocks.html", null ],
     [ "cynq::XRTDataMoverMeta", "structcynq_1_1XRTDataMoverMeta.html", null ]
 ];

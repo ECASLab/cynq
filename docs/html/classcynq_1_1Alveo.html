@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -152,6 +152,15 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#aa752c0a2d2effe32203e84f3802ec201">~IHardware</a> ()=default</td></tr>
 <tr class="memdesc:aa752c0a2d2effe32203e84f3802ec201 inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">~IHardware destructor method Destroy the <a class="el" href="classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices:">IHardware</a> object. <br /></td></tr>
 <tr class="separator:aa752c0a2d2effe32203e84f3802ec201 inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">GetExecutionStream</a> (const std::string &amp;name, const <a class="el" href="classcynq_1_1IExecutionGraph.html#a51ffcfe6e8875b8d830a3a42a9917a0f">IExecutionGraph::Type</a> type=IExecutionGraph::Type::STREAM, const std::shared_ptr&lt; <a class="el" href="structcynq_1_1ExecutionGraphParameters.html">ExecutionGraphParameters</a> &gt; params=nullptr)</td></tr>
+<tr class="memdesc:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetExecutionStream.  <a href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">More...</a><br /></td></tr>
+<tr class="separator:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f3b2258fb409266ea7ae2c2ff493712 inherit pub_methods_classcynq_1_1IHardware"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#a0f3b2258fb409266ea7ae2c2ff493712">GetClocks</a> () noexcept</td></tr>
+<tr class="memdesc:a0f3b2258fb409266ea7ae2c2ff493712 inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clocks from the PL.  <a href="classcynq_1_1IHardware.html#a0f3b2258fb409266ea7ae2c2ff493712">More...</a><br /></td></tr>
+<tr class="separator:a0f3b2258fb409266ea7ae2c2ff493712 inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1141eb0f02995d676e70bd1ed19fc21d inherit pub_methods_classcynq_1_1IHardware"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#a1141eb0f02995d676e70bd1ed19fc21d">SetClocks</a> (const std::vector&lt; float &gt; &amp;clocks)</td></tr>
+<tr class="memdesc:a1141eb0f02995d676e70bd1ed19fc21d inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set clocks to the PL.  <a href="classcynq_1_1IHardware.html#a1141eb0f02995d676e70bd1ed19fc21d">More...</a><br /></td></tr>
+<tr class="separator:a1141eb0f02995d676e70bd1ed19fc21d inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -383,8 +392,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/alveo/<a class="el" href="alveo_2hardware_8hpp_source.html">hardware.hpp</a></li>
-<li>/home/ubuntu/lleon/cynq-alveo/src/cynq/alveo/hardware.cpp</li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/alveo/<a class="el" href="alveo_2hardware_8hpp_source.html">hardware.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/src/cynq/alveo/hardware.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

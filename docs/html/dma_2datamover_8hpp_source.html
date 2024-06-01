@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CYNQ: /home/ubuntu/lleon/cynq-alveo/include/cynq/dma/datamover.hpp Source File</title>
+<title>CYNQ: /mnt/usbkey/lleon/cynq/include/cynq/dma/datamover.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('dma_2datamover_8hpp_source.html',''); 
 <div class="ttc" id="aclasscynq_1_1DMADataMover_html_aa0249a5066eea2fd03dfb7a6079c9c9f"><div class="ttname"><a href="classcynq_1_1DMADataMover.html#aa0249a5066eea2fd03dfb7a6079c9c9f">cynq::DMADataMover::~DMADataMover</a></div><div class="ttdeci">virtual ~DMADataMover()</div><div class="ttdoc">~DMADataMover destructor method Destroy the DMADataMover object.</div><div class="ttdef"><b>Definition:</b> datamover.cpp:94</div></div>
 <div class="ttc" id="aclasscynq_1_1DMADataMover_html_ab78f58416e2fcaf78b9c637edb23d357"><div class="ttname"><a href="classcynq_1_1DMADataMover.html#ab78f58416e2fcaf78b9c637edb23d357">cynq::DMADataMover::Upload</a></div><div class="ttdeci">Status Upload(const std::shared_ptr&lt; IMemory &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype) override</div><div class="ttdoc">Upload method This method moves the data from the host to the device using a DMA engine....</div><div class="ttdef"><b>Definition:</b> datamover.cpp:105</div></div>
 <div class="ttc" id="aclasscynq_1_1DMADataMover_html_ac982afe3938dde9aea448866a7a42d80"><div class="ttname"><a href="classcynq_1_1DMADataMover.html#ac982afe3938dde9aea448866a7a42d80">cynq::DMADataMover::Download</a></div><div class="ttdeci">Status Download(const std::shared_ptr&lt; IMemory &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype) override</div><div class="ttdoc">Download method.</div><div class="ttdef"><b>Definition:</b> datamover.cpp:156</div></div>
-<div class="ttc" id="aclasscynq_1_1IDataMover_html"><div class="ttname"><a href="classcynq_1_1IDataMover.html">cynq::IDataMover</a></div><div class="ttdoc">Interface for standardising the API of DataMover for a specific device: XRTDataMover.</div><div class="ttdef"><b>Definition:</b> datamover.hpp:39</div></div>
+<div class="ttc" id="aclasscynq_1_1IDataMover_html"><div class="ttname"><a href="classcynq_1_1IDataMover.html">cynq::IDataMover</a></div><div class="ttdoc">Interface for standardising the API of DataMover for a specific device: XRTDataMover.</div><div class="ttdef"><b>Definition:</b> datamover.hpp:40</div></div>
 <div class="ttc" id="astructcynq_1_1DMADataMoverMeta_html"><div class="ttname"><a href="structcynq_1_1DMADataMoverMeta.html">cynq::DMADataMoverMeta</a></div><div class="ttdoc">Metadata inserted into each XRTMemory instance.</div><div class="ttdef"><b>Definition:</b> datamover.hpp:23</div></div>
 <div class="ttc" id="astructcynq_1_1DMADataMoverMeta_html_acf2ade2688121fba56801dde3eaeb877"><div class="ttname"><a href="structcynq_1_1DMADataMoverMeta.html#acf2ade2688121fba56801dde3eaeb877">cynq::DMADataMoverMeta::type_</a></div><div class="ttdeci">MemoryType type_</div><div class="ttdef"><b>Definition:</b> datamover.hpp:27</div></div>
 <div class="ttc" id="astructcynq_1_1DMADataMoverMeta_html_afa98c406b625edefe09da201079c412c"><div class="ttname"><a href="structcynq_1_1DMADataMoverMeta.html#afa98c406b625edefe09da201079c412c">cynq::DMADataMoverMeta::bo_</a></div><div class="ttdeci">std::shared_ptr&lt; xrt::bo &gt; bo_</div><div class="ttdef"><b>Definition:</b> datamover.hpp:25</div></div>

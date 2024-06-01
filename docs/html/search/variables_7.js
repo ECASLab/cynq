@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['type_5f_196',['type_',['../structcynq_1_1DMADataMoverMeta.html#acf2ade2688121fba56801dde3eaeb877',1,'cynq::DMADataMoverMeta::type_()'],['../structcynq_1_1XRTDataMoverMeta.html#a813891b351aa430a2faa78f357601091',1,'cynq::XRTDataMoverMeta::type_()']]]
+  ['kernel_5f_260',['kernel_',['../structcynq_1_1XRTAcceleratorParameters.html#a714bbcc74ed58887cc6e499353957e31',1,'cynq::XRTAcceleratorParameters']]]
 ];

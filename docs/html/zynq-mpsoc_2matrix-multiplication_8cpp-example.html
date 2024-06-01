@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -128,7 +128,8 @@ $(document).ready(function(){initNavTree('zynq-mpsoc_2matrix-multiplication_8cpp
 <div class="line"><span class="comment">// set this to true</span></div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">bool</span> kUseAttach = <span class="keyword">true</span>;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Given by the design</span></div>
+<div class="line"><span class="comment">// The Addressed are given by the Vivado design when creating the block diagram</span></div>
+<div class="line"><span class="comment">// You can find them in the Address Editor</span></div>
 <div class="line"><span class="keyword">static</span> constexpr uint64_t kAccelAddress = EXAMPLE_KRIA_ACCEL_ADDR;</div>
 <div class="line"><span class="keyword">static</span> constexpr uint64_t kDmaAddress = EXAMPLE_KRIA_DMA_ADDR;</div>
 <div class="line"><span class="keyword">static</span> constexpr uint64_t kAddrWriteInputCols = 24;</div>
@@ -136,14 +137,16 @@ $(document).ready(function(){initNavTree('zynq-mpsoc_2matrix-multiplication_8cpp
 <div class="line"><span class="keyword">static</span> constexpr uint64_t kAddrReadInputCols = 32;</div>
 <div class="line"><span class="keyword">static</span> constexpr uint64_t kAddrReadOutputCols = 48;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Data parameters</span></div>
-<div class="line"><span class="keyword">using</span> DataType = uint16_t;</div>
+<div class="line"><span class="comment">// These are the registers for the matmul IP. They can be found in the drivers</span></div>
+<div class="line"><span class="comment">// After the export of the HLS code</span></div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> input_a_cols = 400;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> input_a_rows = 2;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> input_b_cols = 4;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> input_b_rows = input_a_cols;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> output_cols = input_b_cols;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> output_rows = input_a_rows;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using</span> DataType = uint16_t;</div>
 <div class="line"><span class="keyword">static</span> constexpr <span class="keywordtype">int</span> word_size = <span class="keyword">sizeof</span>(DataType);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Fill data</span></div>
@@ -183,6 +186,14 @@ $(document).ready(function(){initNavTree('zynq-mpsoc_2matrix-multiplication_8cpp
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;----- Initialising platform -----&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">  std::shared_ptr&lt;IHardware&gt; platform =</div>
 <div class="line">      <a name="a0"></a><a class="code" href="classcynq_1_1IHardware.html#ab3cc41fbed5a6da306d8ae51153a3065">IHardware::Create</a>(HardwareArchitecture::UltraScale, kBitstream);</div>
+<div class="line">  <span class="comment">// Adjust clocks</span></div>
+<div class="line">  <span class="keyword">auto</span> clocks = platform-&gt;GetClocks();</div>
+<div class="line">  <span class="keywordflow">for</span> (uint i = 0; i &lt; clocks.size(); ++i) {</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;\tClock: &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; clocks[i] &lt;&lt; <span class="stringliteral">&quot; MHz&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  }</div>
+<div class="line">  <span class="comment">// Adjust to the designed frequency: 250 MHz</span></div>
+<div class="line">  clocks[0] = 250.f;</div>
+<div class="line">  platform-&gt;SetClocks(clocks);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// Get an accelerator</span></div>
 <div class="line">  std::shared_ptr&lt;IAccelerator&gt; accel = platform-&gt;GetAccelerator(kAccelAddress);</div>

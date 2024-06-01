@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['write_158',['Write',['../classcynq_1_1IAccelerator.html#a66bbfe47db266e24af40983d8ea4f0c2',1,'cynq::IAccelerator']]],
-  ['writeregister_159',['WriteRegister',['../classcynq_1_1IAccelerator.html#a2345b427daaef05033e9f66202210bf2',1,'cynq::IAccelerator::WriteRegister()'],['../classcynq_1_1MMIOAccelerator.html#afbd5694d2425dad6d6cc7090a56f5976',1,'cynq::MMIOAccelerator::WriteRegister()'],['../classcynq_1_1XRTAccelerator.html#a5523f65637502496574afd594bd5b938',1,'cynq::XRTAccelerator::WriteRegister()']]]
+  ['ultrascale_212',['UltraScale',['../classcynq_1_1UltraScale.html#a998fa059d0601c5b883f1b21f2658871',1,'cynq::UltraScale::UltraScale(const std::string &amp;bitstream_file, const std::string &amp;xclbin_file)'],['../classcynq_1_1UltraScale.html#a384b72f33f59feb42df37f2e7b02561c',1,'cynq::UltraScale::UltraScale()=delete']]],
+  ['upload_213',['Upload',['../classcynq_1_1IDataMover.html#a4b4edd65dab0f80bfce10964c14f4ebd',1,'cynq::IDataMover::Upload(const std::shared_ptr&lt; IMemory &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype)=0'],['../classcynq_1_1IDataMover.html#a2d1d65e2dc111d95a6bf2d74688d015f',1,'cynq::IDataMover::Upload(std::shared_ptr&lt; IExecutionGraph &gt; graph, const std::shared_ptr&lt; IMemory &gt; mem, const size_t size, const size_t offset, const ExecutionType exetype)'],['../classcynq_1_1DMADataMover.html#ab78f58416e2fcaf78b9c637edb23d357',1,'cynq::DMADataMover::Upload()'],['../classcynq_1_1XRTDataMover.html#ac06d357e8d8f13618f6326afe3e23636',1,'cynq::XRTDataMover::Upload()']]]
 ];

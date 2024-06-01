@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CYNQ: /home/ubuntu/lleon/cynq-alveo/include/cynq/alveo/hardware.hpp Source File</title>
+<title>CYNQ: /mnt/usbkey/lleon/cynq/include/cynq/alveo/hardware.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -155,14 +155,14 @@ $(document).ready(function(){initNavTree('alveo_2hardware_8hpp_source.html','');
 <div class="ttc" id="aclasscynq_1_1Alveo_html_a6c8a7a0c4e623218e48b7983b831dc1a"><div class="ttname"><a href="classcynq_1_1Alveo.html#a6c8a7a0c4e623218e48b7983b831dc1a">cynq::Alveo::~Alveo</a></div><div class="ttdeci">virtual ~Alveo()</div><div class="ttdoc">Alveo destructor method Destroy the Alveo object.</div><div class="ttdef"><b>Definition:</b> hardware.cpp:86</div></div>
 <div class="ttc" id="aclasscynq_1_1Alveo_html_a85b3d06e372578ce9358dd47a5be558f"><div class="ttname"><a href="classcynq_1_1Alveo.html#a85b3d06e372578ce9358dd47a5be558f">cynq::Alveo::Reset</a></div><div class="ttdeci">Status Reset() override</div><div class="ttdoc">Reset method Sets the Alveo instance to its initial state.</div><div class="ttdef"><b>Definition:</b> hardware.cpp:64</div></div>
 <div class="ttc" id="aclasscynq_1_1Alveo_html_aa1981111ac347840b36007879455094c"><div class="ttname"><a href="classcynq_1_1Alveo.html#aa1981111ac347840b36007879455094c">cynq::Alveo::GetDataMover</a></div><div class="ttdeci">std::shared_ptr&lt; IDataMover &gt; GetDataMover(const uint64_t address) override</div><div class="ttdoc">GetDataMover method Used for accessing the IDataMover instance of the Alveo object....</div><div class="ttdef"><b>Definition:</b> hardware.cpp:72</div></div>
-<div class="ttc" id="aclasscynq_1_1IHardware_html"><div class="ttname"><a href="classcynq_1_1IHardware.html">cynq::IHardware</a></div><div class="ttdoc">Interface for standardising the API of Hardware Devices:</div><div class="ttdef"><b>Definition:</b> hardware.hpp:37</div></div>
+<div class="ttc" id="aclasscynq_1_1IHardware_html"><div class="ttname"><a href="classcynq_1_1IHardware.html">cynq::IHardware</a></div><div class="ttdoc">Interface for standardising the API of Hardware Devices:</div><div class="ttdef"><b>Definition:</b> hardware.hpp:39</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html">cynq::AlveoParameters</a></div><div class="ttdoc">Specialisation of the parameters given by the Alveo. It is based on the XRT stack.</div><div class="ttdef"><b>Definition:</b> hardware.hpp:29</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html_a1bc44037b50483b3f42ab299c2448fba"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html#a1bc44037b50483b3f42ab299c2448fba">cynq::AlveoParameters::xclbin_</a></div><div class="ttdeci">xrt::xclbin xclbin_</div><div class="ttdef"><b>Definition:</b> hardware.hpp:33</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html_a6a8668dd843e5e1d6994f95c45c1945c"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html#a6a8668dd843e5e1d6994f95c45c1945c">cynq::AlveoParameters::~AlveoParameters</a></div><div class="ttdeci">virtual ~AlveoParameters()=default</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html_a7ad619b3c6de31af8a876746a7a5ed1b"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html#a7ad619b3c6de31af8a876746a7a5ed1b">cynq::AlveoParameters::uuid_</a></div><div class="ttdeci">xrt::uuid uuid_</div><div class="ttdef"><b>Definition:</b> hardware.hpp:35</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html_a9c98e5e224b2bc4e0a512bead7f9c6ad"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html#a9c98e5e224b2bc4e0a512bead7f9c6ad">cynq::AlveoParameters::device_</a></div><div class="ttdeci">xrt::device device_</div><div class="ttdef"><b>Definition:</b> hardware.hpp:31</div></div>
 <div class="ttc" id="astructcynq_1_1AlveoParameters_html_af38ca075ddf3d5cf5440ebb17070e72e"><div class="ttname"><a href="structcynq_1_1AlveoParameters.html#af38ca075ddf3d5cf5440ebb17070e72e">cynq::AlveoParameters::xclbin_file_</a></div><div class="ttdeci">std::string xclbin_file_</div><div class="ttdef"><b>Definition:</b> hardware.hpp:37</div></div>
-<div class="ttc" id="astructcynq_1_1HardwareParameters_html"><div class="ttname"><a href="structcynq_1_1HardwareParameters.html">cynq::HardwareParameters</a></div><div class="ttdoc">Define an abstract representation of the hardware parameters with some prefilled fields.</div><div class="ttdef"><b>Definition:</b> hardware.hpp:24</div></div>
+<div class="ttc" id="astructcynq_1_1HardwareParameters_html"><div class="ttname"><a href="structcynq_1_1HardwareParameters.html">cynq::HardwareParameters</a></div><div class="ttdoc">Define an abstract representation of the hardware parameters with some prefilled fields.</div><div class="ttdef"><b>Definition:</b> hardware.hpp:26</div></div>
 <div class="ttc" id="astructcynq_1_1Status_html"><div class="ttname"><a href="structcynq_1_1Status.html">cynq::Status</a></div><div class="ttdoc">Structure to define the return characteristics of each function.</div><div class="ttdef"><b>Definition:</b> status.hpp:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['uuid_5f_197',['uuid_',['../structcynq_1_1AlveoParameters.html#a7ad619b3c6de31af8a876746a7a5ed1b',1,'cynq::AlveoParameters']]]
+  ['last_5ferror_261',['last_error',['../structcynq_1_1ExecutionStreamParameters.html#a030f5b6adc6e5a9cc526073541f4bdbb',1,'cynq::ExecutionStreamParameters']]]
 ];

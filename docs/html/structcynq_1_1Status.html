@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -146,18 +146,25 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a787d0b31d7ca262e48d34f5451c7d56c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcynq_1_1Status.html#a787d0b31d7ca262e48d34f5451c7d56c">Status</a> (const int code, const std::string &amp;<a class="el" href="structcynq_1_1Status.html#a419bb14a6cb9d365917200c9744eee83">msg</a>) noexcept</td></tr>
 <tr class="memdesc:a787d0b31d7ca262e48d34f5451c7d56c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> object.  <a href="structcynq_1_1Status.html#a787d0b31d7ca262e48d34f5451c7d56c">More...</a><br /></td></tr>
 <tr class="separator:a787d0b31d7ca262e48d34f5451c7d56c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70a77e20099420f4c5f9570178eb05c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcynq_1_1Status.html#a70a77e20099420f4c5f9570178eb05c4">Status</a> (const int code, const int <a class="el" href="structcynq_1_1Status.html#a2bb0bfddef758cc927733c9c31adfdeb">retval</a>, const std::string &amp;<a class="el" href="structcynq_1_1Status.html#a419bb14a6cb9d365917200c9744eee83">msg</a>) noexcept</td></tr>
+<tr class="memdesc:a70a77e20099420f4c5f9570178eb05c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> object.  <a href="structcynq_1_1Status.html#a70a77e20099420f4c5f9570178eb05c4">More...</a><br /></td></tr>
+<tr class="separator:a70a77e20099420f4c5f9570178eb05c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:ae20c879deb279a433c108f2e4187eefe"><td class="memItemLeft" align="right" valign="top"><a id="ae20c879deb279a433c108f2e4187eefe"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>code</b></td></tr>
 <tr class="separator:ae20c879deb279a433c108f2e4187eefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb0bfddef758cc927733c9c31adfdeb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcynq_1_1Status.html#a2bb0bfddef758cc927733c9c31adfdeb">retval</a></td></tr>
+<tr class="separator:a2bb0bfddef758cc927733c9c31adfdeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a419bb14a6cb9d365917200c9744eee83"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcynq_1_1Status.html#a419bb14a6cb9d365917200c9744eee83">msg</a></td></tr>
 <tr class="separator:a419bb14a6cb9d365917200c9744eee83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Structure to define the return characteristics of each function. </p>
 <p>It includes a code and a description that works to track errors </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="structures_2execution-stream_8cpp-example.html#_a0">structures/execution-stream.cpp</a>.</dd>
+</dl>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a37a41280e0f5f26784730a859ec7bc98"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a37a41280e0f5f26784730a859ec7bc98">&#9670;&nbsp;</a></span>anonymous enum</h2>
@@ -196,7 +203,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>code</b></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1462c2a1822df0bdd84fcc65f351a95f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1462c2a1822df0bdd84fcc65f351a95f">&#9670;&nbsp;</a></span>Status() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1462c2a1822df0bdd84fcc65f351a95f">&#9670;&nbsp;</a></span>Status() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,7 +232,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>code</b></td></tr>
 </div>
 </div>
 <a id="a787d0b31d7ca262e48d34f5451c7d56c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a787d0b31d7ca262e48d34f5451c7d56c">&#9670;&nbsp;</a></span>Status() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a787d0b31d7ca262e48d34f5451c7d56c">&#9670;&nbsp;</a></span>Status() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,6 +277,59 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>code</b></td></tr>
 
 </div>
 </div>
+<a id="a70a77e20099420f4c5f9570178eb05c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70a77e20099420f4c5f9570178eb05c4">&#9670;&nbsp;</a></span>Status() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cynq::Status::Status </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>retval</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new <a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> object. </p>
+<p>It defines the constructor to define a custom code and description</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>code of the error </td></tr>
+    <tr><td class="paramname">retval</td><td>return value in case of integer </td></tr>
+    <tr><td class="paramname">msg</td><td>description </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a419bb14a6cb9d365917200c9744eee83"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a419bb14a6cb9d365917200c9744eee83">&#9670;&nbsp;</a></span>msg</h2>
@@ -282,12 +342,27 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>code</b></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Auxiliar data coming from user </p>
+
+</div>
+</div>
+<a id="a2bb0bfddef758cc927733c9c31adfdeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb0bfddef758cc927733c9c31adfdeb">&#9670;&nbsp;</a></span>retval</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cynq::Status::retval</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 <p>Code of the error </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/<a class="el" href="status_8hpp_source.html">status.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/<a class="el" href="status_8hpp_source.html">status.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

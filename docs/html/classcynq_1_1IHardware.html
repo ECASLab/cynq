@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -144,6 +144,15 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a6d70f8d2b11d3d04309decd6502def8e"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classcynq_1_1IAccelerator.html">IAccelerator</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#a6d70f8d2b11d3d04309decd6502def8e">GetAccelerator</a> (const std::string &amp;kernelname)=0</td></tr>
 <tr class="memdesc:a6d70f8d2b11d3d04309decd6502def8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetAccelerator method <a class="el" href="classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator.">IAccelerator</a> instance of <a class="el" href="classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator.">IAccelerator</a> inheritors separating the hardware logic from the specific logic of the accelerator.  <a href="classcynq_1_1IHardware.html#a6d70f8d2b11d3d04309decd6502def8e">More...</a><br /></td></tr>
 <tr class="separator:a6d70f8d2b11d3d04309decd6502def8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5183c92ba284d7dee739a0db101297b"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">GetExecutionStream</a> (const std::string &amp;name, const <a class="el" href="classcynq_1_1IExecutionGraph.html#a51ffcfe6e8875b8d830a3a42a9917a0f">IExecutionGraph::Type</a> type=IExecutionGraph::Type::STREAM, const std::shared_ptr&lt; <a class="el" href="structcynq_1_1ExecutionGraphParameters.html">ExecutionGraphParameters</a> &gt; params=nullptr)</td></tr>
+<tr class="memdesc:ae5183c92ba284d7dee739a0db101297b"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetExecutionStream.  <a href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">More...</a><br /></td></tr>
+<tr class="separator:ae5183c92ba284d7dee739a0db101297b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f3b2258fb409266ea7ae2c2ff493712"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#a0f3b2258fb409266ea7ae2c2ff493712">GetClocks</a> () noexcept</td></tr>
+<tr class="memdesc:a0f3b2258fb409266ea7ae2c2ff493712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clocks from the PL.  <a href="classcynq_1_1IHardware.html#a0f3b2258fb409266ea7ae2c2ff493712">More...</a><br /></td></tr>
+<tr class="separator:a0f3b2258fb409266ea7ae2c2ff493712"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1141eb0f02995d676e70bd1ed19fc21d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#a1141eb0f02995d676e70bd1ed19fc21d">SetClocks</a> (const std::vector&lt; float &gt; &amp;clocks)</td></tr>
+<tr class="memdesc:a1141eb0f02995d676e70bd1ed19fc21d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set clocks to the PL.  <a href="classcynq_1_1IHardware.html#a1141eb0f02995d676e70bd1ed19fc21d">More...</a><br /></td></tr>
+<tr class="separator:a1141eb0f02995d676e70bd1ed19fc21d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -233,7 +242,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;IHardware&gt; Returns an <a class="el" href="classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator.">IAccelerator</a> pointer with reference counting. It should be thread-safe. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="alveo_2vadd-host_8cpp-example.html#a0">alveo/vadd-host.cpp</a>, <a class="el" href="zynq-mpsoc_2matrix-multiplication_8cpp-example.html#a0">zynq-mpsoc/matrix-multiplication.cpp</a>, <a class="el" href="zynq-mpsoc_2xfopencv-filter2d_8cpp-example.html#a0">zynq-mpsoc/xfopencv-filter2d.cpp</a>, and <a class="el" href="zynq-mpsoc_2xfopencv-warp-perspective_8cpp-example.html#a0">zynq-mpsoc/xfopencv-warp-perspective.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="alveo_2vadd-host_8cpp-example.html#a0">alveo/vadd-host.cpp</a>, <a class="el" href="zynq-mpsoc_2ad08-sequential_8cpp-example.html#a0">zynq-mpsoc/ad08-sequential.cpp</a>, <a class="el" href="zynq-mpsoc_2ad08-streams_8cpp-example.html#a0">zynq-mpsoc/ad08-streams.cpp</a>, <a class="el" href="zynq-mpsoc_2matrix-multiplication_8cpp-example.html#a0">zynq-mpsoc/matrix-multiplication.cpp</a>, <a class="el" href="zynq-mpsoc_2xfopencv-filter2d_8cpp-example.html#a0">zynq-mpsoc/xfopencv-filter2d.cpp</a>, and <a class="el" href="zynq-mpsoc_2xfopencv-warp-perspective_8cpp-example.html#a0">zynq-mpsoc/xfopencv-warp-perspective.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -358,6 +367,37 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a0f3b2258fb409266ea7ae2c2ff493712"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f3b2258fb409266ea7ae2c2ff493712">&#9670;&nbsp;</a></span>GetClocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; float &gt; cynq::IHardware::GetClocks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get clocks from the PL. </p>
+<p>This allows to check the current clocks from the PL in MHz. This method is optionally implementable. If it is not implemented, the number of elements of the vector is equal to zero.</p>
+<dl class="section return"><dt>Returns</dt><dd>a vector with a number of elements equal to the valid clocks </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classcynq_1_1UltraScale.html#a1f9f64eadde06f4ab00a892237586e70">cynq::UltraScale</a>.</p>
+
+</div>
+</div>
 <a id="aeb117ff0c548a15e35df8c10e85cf3f2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb117ff0c548a15e35df8c10e85cf3f2">&#9670;&nbsp;</a></span>GetDataMover()</h2>
 
@@ -395,6 +435,60 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae5183c92ba284d7dee739a0db101297b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5183c92ba284d7dee739a0db101297b">&#9670;&nbsp;</a></span>GetExecutionStream()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt; cynq::IHardware::GetExecutionStream </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classcynq_1_1IExecutionGraph.html#a51ffcfe6e8875b8d830a3a42a9917a0f">IExecutionGraph::Type</a>&#160;</td>
+          <td class="paramname"><em>type</em> = <code>IExecutionGraph::Type::STREAM</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="structcynq_1_1ExecutionGraphParameters.html">ExecutionGraphParameters</a> &gt;&#160;</td>
+          <td class="paramname"><em>params</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>GetExecutionStream. </p>
+<p>This method is a factory method to obtain an execution stream compatible with the hardware implementation. By default, it returns a new execution stream similar to the CUDA Stream, which is a queue-based scheduler to manage synchronism.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>name of the stream for debugging purposes</td></tr>
+    <tr><td class="paramname">type</td><td>implementation for the execution graph. By default, it is STREAM</td></tr>
+    <tr><td class="paramname">config</td><td>configurations of the execution graph. By default, it is empty.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;IExecutionGraph&gt; Returns an execution graph instance compatible with the API of the interface <a class="el" href="classcynq_1_1IExecutionGraph.html" title="Execution Graph Interface.">IExecutionGraph</a> </dd></dl>
+
+</div>
+</div>
 <a id="a4d4cab7fa109789a63af9a7bcbf869e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4d4cab7fa109789a63af9a7bcbf869e3">&#9670;&nbsp;</a></span>Reset()</h2>
 
@@ -425,9 +519,42 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1141eb0f02995d676e70bd1ed19fc21d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1141eb0f02995d676e70bd1ed19fc21d">&#9670;&nbsp;</a></span>SetClocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::IHardware::SetClocks </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>clocks</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set clocks to the PL. </p>
+<p>This allows to set the current clocks from the PL in MHz. This method is optionally implementable. If it is not implemented, no changes are performed.</p>
+<p>The vector must contain a number of clocks equivalent to the supported by the platform. If a clock must remain untouched, set it to -1.f</p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> of the operation </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classcynq_1_1UltraScale.html#adaedc762dbb0fd6e2cd0a7f515b08e77">cynq::UltraScale</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/<a class="el" href="hardware_8hpp_source.html">hardware.hpp</a></li>
-<li>/home/ubuntu/lleon/cynq-alveo/src/cynq/hardware.cpp</li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/<a class="el" href="hardware_8hpp_source.html">hardware.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/src/cynq/hardware.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

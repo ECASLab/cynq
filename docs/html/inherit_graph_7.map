@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classcynq_1_1IMemory.html" title="Interface for standardising the API of Memory devices: XRTMemory." alt="" coords="5,5,124,32"/>
-<area shape="rect" id="node2" href="$classcynq_1_1XRTMemory.html" title="XRTMemory class Provides the api for configuring the data buffers, this class is based on the Buffer ..." alt="" coords="172,5,312,32"/>
+<area shape="rect" id="node1" href="$classcynq_1_1IExecutionGraph.html" title="Execution Graph Interface." alt="" coords="5,5,172,32"/>
+<area shape="rect" id="node2" href="$classcynq_1_1ExecutionStream.html" title="ExecutionStream Implementation." alt="" coords="220,5,391,32"/>
 </map>

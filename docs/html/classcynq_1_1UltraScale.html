@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -153,11 +153,20 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a15ab3f7340590499eec472ce22a97b17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1UltraScale.html#a15ab3f7340590499eec472ce22a97b17">KernelQuery</a> ()</td></tr>
 <tr class="memdesc:a15ab3f7340590499eec472ce22a97b17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the kernels available in the design.  <a href="classcynq_1_1UltraScale.html#a15ab3f7340590499eec472ce22a97b17">More...</a><br /></td></tr>
 <tr class="separator:a15ab3f7340590499eec472ce22a97b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f9f64eadde06f4ab00a892237586e70"><td class="memItemLeft" align="right" valign="top">std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1UltraScale.html#a1f9f64eadde06f4ab00a892237586e70">GetClocks</a> () noexcept override</td></tr>
+<tr class="memdesc:a1f9f64eadde06f4ab00a892237586e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clocks from the PL.  <a href="classcynq_1_1UltraScale.html#a1f9f64eadde06f4ab00a892237586e70">More...</a><br /></td></tr>
+<tr class="separator:a1f9f64eadde06f4ab00a892237586e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaedc762dbb0fd6e2cd0a7f515b08e77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcynq_1_1Status.html">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1UltraScale.html#adaedc762dbb0fd6e2cd0a7f515b08e77">SetClocks</a> (const std::vector&lt; float &gt; &amp;clocks) override</td></tr>
+<tr class="memdesc:adaedc762dbb0fd6e2cd0a7f515b08e77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set clocks to the PL.  <a href="classcynq_1_1UltraScale.html#adaedc762dbb0fd6e2cd0a7f515b08e77">More...</a><br /></td></tr>
+<tr class="separator:adaedc762dbb0fd6e2cd0a7f515b08e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcynq_1_1IHardware"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcynq_1_1IHardware')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcynq_1_1IHardware.html">cynq::IHardware</a></td></tr>
 <tr class="memitem:aa752c0a2d2effe32203e84f3802ec201 inherit pub_methods_classcynq_1_1IHardware"><td class="memItemLeft" align="right" valign="top"><a id="aa752c0a2d2effe32203e84f3802ec201"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#aa752c0a2d2effe32203e84f3802ec201">~IHardware</a> ()=default</td></tr>
 <tr class="memdesc:aa752c0a2d2effe32203e84f3802ec201 inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">~IHardware destructor method Destroy the <a class="el" href="classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices:">IHardware</a> object. <br /></td></tr>
 <tr class="separator:aa752c0a2d2effe32203e84f3802ec201 inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classcynq_1_1IExecutionGraph.html">IExecutionGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">GetExecutionStream</a> (const std::string &amp;name, const <a class="el" href="classcynq_1_1IExecutionGraph.html#a51ffcfe6e8875b8d830a3a42a9917a0f">IExecutionGraph::Type</a> type=IExecutionGraph::Type::STREAM, const std::shared_ptr&lt; <a class="el" href="structcynq_1_1ExecutionGraphParameters.html">ExecutionGraphParameters</a> &gt; params=nullptr)</td></tr>
+<tr class="memdesc:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetExecutionStream.  <a href="classcynq_1_1IHardware.html#ae5183c92ba284d7dee739a0db101297b">More...</a><br /></td></tr>
+<tr class="separator:ae5183c92ba284d7dee739a0db101297b inherit pub_methods_classcynq_1_1IHardware"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -339,6 +348,37 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1f9f64eadde06f4ab00a892237586e70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f9f64eadde06f4ab00a892237586e70">&#9670;&nbsp;</a></span>GetClocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; float &gt; cynq::UltraScale::GetClocks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get clocks from the PL. </p>
+<p>This allows to check the current clocks from the PL in MHz. This method is optionally implementable. If it is not implemented, the number of elements of the vector is equal to zero.</p>
+<dl class="section return"><dt>Returns</dt><dd>a vector with a number of elements equal to the valid clocks </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classcynq_1_1IHardware.html#a0f3b2258fb409266ea7ae2c2ff493712">cynq::IHardware</a>.</p>
+
+</div>
+</div>
 <a id="a78a305f728676f7d425fdeaf76faf79e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a78a305f728676f7d425fdeaf76faf79e">&#9670;&nbsp;</a></span>GetDataMover()</h2>
 
@@ -427,9 +467,41 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="adaedc762dbb0fd6e2cd0a7f515b08e77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adaedc762dbb0fd6e2cd0a7f515b08e77">&#9670;&nbsp;</a></span>SetClocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcynq_1_1Status.html">Status</a> cynq::UltraScale::SetClocks </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>clocks</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set clocks to the PL. </p>
+<p>This allows to set the current clocks from the PL in MHz. This method is optionally implementable. If it is not implemented, no changes are performed</p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function.">Status</a> of the operation </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classcynq_1_1IHardware.html#a1141eb0f02995d676e70bd1ed19fc21d">cynq::IHardware</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ubuntu/lleon/cynq-alveo/include/cynq/ultrascale/<a class="el" href="ultrascale_2hardware_8hpp_source.html">hardware.hpp</a></li>
-<li>/home/ubuntu/lleon/cynq-alveo/src/cynq/ultrascale/hardware.cpp</li>
+<li>/mnt/usbkey/lleon/cynq/include/cynq/ultrascale/<a class="el" href="ultrascale_2hardware_8hpp_source.html">hardware.hpp</a></li>
+<li>/mnt/usbkey/lleon/cynq/src/cynq/ultrascale/hardware.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

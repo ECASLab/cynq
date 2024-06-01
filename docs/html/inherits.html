@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CYNQ
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Framework to develop FPGA applications in C++ with the easiness of PYNQ</div>
   </td>
@@ -120,46 +120,68 @@ $(document).ready(function(){initNavTree('hierarchy.html',''); initResizable(); 
 <area shape="rect" href="structcynq_1_1DMADataMoverMeta.html" title="Metadata inserted into each XRTMemory instance." alt="" coords="5,5,203,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_3.png" border="0" usemap="#acynq_1_1HardwareParameters" alt=""/>
+<tr><td><img src="inherit_graph_3.png" border="0" usemap="#acynq_1_1ExecutionGraphParameters" alt=""/>
+<map name="acynq_1_1ExecutionGraphParameters" id="acynq_1_1ExecutionGraphParameters">
+<area shape="rect" href="structcynq_1_1ExecutionGraphParameters.html" title="Define an abstract representation of the IExecutionGraph parameters with some prefilled fields." alt="" coords="5,5,243,32"/>
+<area shape="rect" href="structcynq_1_1ExecutionStreamParameters.html" title="Define the parameters for the ExecutionStream class." alt="" coords="291,5,536,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_4.png" border="0" usemap="#acynq_1_1HardwareParameters" alt=""/>
 <map name="acynq_1_1HardwareParameters" id="acynq_1_1HardwareParameters">
 <area shape="rect" href="structcynq_1_1HardwareParameters.html" title="Define an abstract representation of the hardware parameters with some prefilled fields." alt="" coords="5,31,204,57"/>
 <area shape="rect" href="structcynq_1_1AlveoParameters.html" title="Specialisation of the parameters given by the Alveo. It is based on the XRT stack." alt="" coords="267,5,439,32"/>
 <area shape="rect" href="structcynq_1_1UltraScaleParameters.html" title="Specialisation of the parameters given by the UltraScale. It is based on the PYNQ and XRT." alt="" coords="252,56,455,83"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_4.png" border="0" usemap="#acynq_1_1IAccelerator" alt=""/>
+<tr><td><img src="inherit_graph_5.png" border="0" usemap="#acynq_1_1IAccelerator" alt=""/>
 <map name="acynq_1_1IAccelerator" id="acynq_1_1IAccelerator">
 <area shape="rect" href="classcynq_1_1IAccelerator.html" title="Interface for standardising the API for any Accelerator device: XRTAccelerator." alt="" coords="5,31,144,57"/>
 <area shape="rect" href="classcynq_1_1MMIOAccelerator.html" title="MMIOAccelerator class This class provides the api to operate the accelerator." alt="" coords="192,5,365,32"/>
 <area shape="rect" href="classcynq_1_1XRTAccelerator.html" title="XRTAccelerator class This class provides the api to operate the accelerator." alt="" coords="199,56,358,83"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_5.png" border="0" usemap="#acynq_1_1IDataMover" alt=""/>
+<tr><td><img src="inherit_graph_6.png" border="0" usemap="#acynq_1_1IDataMover" alt=""/>
 <map name="acynq_1_1IDataMover" id="acynq_1_1IDataMover">
 <area shape="rect" href="classcynq_1_1IDataMover.html" title="Interface for standardising the API of DataMover for a specific device: XRTDataMover." alt="" coords="5,31,143,57"/>
 <area shape="rect" href="classcynq_1_1DMADataMover.html" title="DMADataMover class Provides the api from which to interact with the data buffers responsable for memo..." alt="" coords="191,5,355,32"/>
 <area shape="rect" href="classcynq_1_1XRTDataMover.html" title="XRTDataMover class Provides the API to interact with the data buffers responsible for memory operatio..." alt="" coords="193,56,352,83"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_6.png" border="0" usemap="#acynq_1_1IHardware" alt=""/>
+<tr><td><img src="inherit_graph_7.png" border="0" usemap="#acynq_1_1IExecutionGraph" alt=""/>
+<map name="acynq_1_1IExecutionGraph" id="acynq_1_1IExecutionGraph">
+<area shape="rect" href="classcynq_1_1IExecutionGraph.html" title="Execution Graph Interface." alt="" coords="5,5,172,32"/>
+<area shape="rect" href="classcynq_1_1ExecutionStream.html" title="ExecutionStream Implementation." alt="" coords="220,5,391,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_8.png" border="0" usemap="#acynq_1_1IExecutionGraph_1_1Node" alt=""/>
+<map name="acynq_1_1IExecutionGraph_1_1Node" id="acynq_1_1IExecutionGraph_1_1Node">
+<area shape="rect" href="structcynq_1_1IExecutionGraph_1_1Node.html" title="Node structure to hold information about each node in a generic manner." alt="" coords="5,5,172,47"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_9.png" border="0" usemap="#acynq_1_1IHardware" alt=""/>
 <map name="acynq_1_1IHardware" id="acynq_1_1IHardware">
 <area shape="rect" href="classcynq_1_1IHardware.html" title="Interface for standardising the API of Hardware Devices:" alt="" coords="5,31,133,57"/>
 <area shape="rect" href="classcynq_1_1Alveo.html" title="Alveo class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are the ..." alt="" coords="196,5,295,32"/>
 <area shape="rect" href="classcynq_1_1UltraScale.html" title="UltraScale class Provides an interface to access IP Cores in Xilinx FPGAs, the compatible devices are..." alt="" coords="181,56,309,83"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_7.png" border="0" usemap="#acynq_1_1IMemory" alt=""/>
+<tr><td><img src="inherit_graph_10.png" border="0" usemap="#acynq_1_1IMemory" alt=""/>
 <map name="acynq_1_1IMemory" id="acynq_1_1IMemory">
 <area shape="rect" href="classcynq_1_1IMemory.html" title="Interface for standardising the API of Memory devices: XRTMemory." alt="" coords="5,5,124,32"/>
 <area shape="rect" href="classcynq_1_1XRTMemory.html" title="XRTMemory class Provides the api for configuring the data buffers, this class is based on the Buffer ..." alt="" coords="172,5,312,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_8.png" border="0" usemap="#acynq_1_1Status" alt=""/>
+<tr><td><img src="inherit_graph_11.png" border="0" usemap="#acynq_1_1Status" alt=""/>
 <map name="acynq_1_1Status" id="acynq_1_1Status">
 <area shape="rect" href="structcynq_1_1Status.html" title="Structure to define the return characteristics of each function." alt="" coords="5,5,108,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_9.png" border="0" usemap="#acynq_1_1XRTDataMoverMeta" alt=""/>
+<tr><td><img src="inherit_graph_12.png" border="0" usemap="#acynq_1_1UltraScaleClocks" alt=""/>
+<map name="acynq_1_1UltraScaleClocks" id="acynq_1_1UltraScaleClocks">
+<area shape="rect" href="structcynq_1_1UltraScaleClocks.html" title="Contains the information about the registers used for the clocks." alt="" coords="5,5,176,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_13.png" border="0" usemap="#acynq_1_1XRTDataMoverMeta" alt=""/>
 <map name="acynq_1_1XRTDataMoverMeta" id="acynq_1_1XRTDataMoverMeta">
 <area shape="rect" href="structcynq_1_1XRTDataMoverMeta.html" title="Metadata inserted into each XRTMemory instance." alt="" coords="5,5,196,32"/>
 </map>

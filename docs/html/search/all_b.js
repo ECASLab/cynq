@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['none_55',['None',['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6dacc4ba19f629441f35b484b09b16b2332',1,'cynq::IAccelerator::None()'],['../classcynq_1_1IDataMover.html#a49c77afa8a4effaab4d91f0aa8a3fec4a8302850dfa953ea5e9ee3663e9966394',1,'cynq::IDataMover::None()'],['../classcynq_1_1IHardware.html#aa34f15214af5df9acb1436734e0c7500adac2bc8f9a5faf2862f54d491d7fbf58',1,'cynq::IHardware::None()'],['../classcynq_1_1IMemory.html#add4032f8b90c3b6fb2eb48ddacd95b7fa7f99b4fcc3f3b95dac96ee4d1aec3e8c',1,'cynq::IMemory::None()']]],
-  ['not_5fimplemented_56',['NOT_IMPLEMENTED',['../structcynq_1_1Status.html#a37a41280e0f5f26784730a859ec7bc98a027401df899853a96eb4af7dd0b31162',1,'cynq::Status']]]
+  ['member_5fabsent_67',['MEMBER_ABSENT',['../structcynq_1_1Status.html#a37a41280e0f5f26784730a859ec7bc98a04fd2bd5f8f17c1c8127f28f4a2c83cd',1,'cynq::Status']]],
+  ['mmio_68',['MMIO',['../classcynq_1_1IAccelerator.html#a4c25efe8acfb1a6e01908dbdfbacfd6daf1bd3f79969ebb0d3eefa11c9e674d84',1,'cynq::IAccelerator']]],
+  ['mmioaccelerator_69',['MMIOAccelerator',['../classcynq_1_1MMIOAccelerator.html',1,'cynq::MMIOAccelerator'],['../classcynq_1_1MMIOAccelerator.html#a776e9f7997d20748cb1219176222df5b',1,'cynq::MMIOAccelerator::MMIOAccelerator()=delete'],['../classcynq_1_1MMIOAccelerator.html#a373cf46133e14fe6d4fa07e314c25493',1,'cynq::MMIOAccelerator::MMIOAccelerator(const uint64_t addr)']]],
+  ['mmioacceleratorparameters_70',['MMIOAcceleratorParameters',['../structcynq_1_1MMIOAcceleratorParameters.html',1,'cynq']]],
+  ['msg_71',['msg',['../structcynq_1_1Status.html#a419bb14a6cb9d365917200c9744eee83',1,'cynq::Status']]]
 ];

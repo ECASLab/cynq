@@ -25,12 +25,12 @@
 var NAVTREE =
 [
   [ "CYNQ", "index.html", [
-    [ "Examples", "md__home_ubuntu_lleon_cynq_alveo_examples_README.html", null ],
-    [ "About", "md__home_ubuntu_lleon_cynq_alveo_docs_About.html", null ],
-    [ "Class Diagram", "md__home_ubuntu_lleon_cynq_alveo_docs_ClassDiagram.html", null ],
-    [ "Foundations", "md__home_ubuntu_lleon_cynq_alveo_docs_Foundations.html", null ],
-    [ "Getting Started", "md__home_ubuntu_lleon_cynq_alveo_docs_GettingStarted.html", null ],
-    [ "Installation", "md__home_ubuntu_lleon_cynq_alveo_docs_Installation.html", null ],
+    [ "Examples", "md__mnt_usbkey_lleon_cynq_examples_README.html", null ],
+    [ "About", "md__mnt_usbkey_lleon_cynq_docs_About.html", null ],
+    [ "Class Diagram", "md__mnt_usbkey_lleon_cynq_docs_ClassDiagram.html", null ],
+    [ "Foundations", "md__mnt_usbkey_lleon_cynq_docs_Foundations.html", null ],
+    [ "Getting Started", "md__mnt_usbkey_lleon_cynq_docs_GettingStarted.html", null ],
+    [ "Installation", "md__mnt_usbkey_lleon_cynq_docs_Installation.html", null ],
     [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
     [ "Examples", "examples.html", "examples" ]
   ] ]
