@@ -10,6 +10,7 @@
 
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
+#include <cynq/debug.hpp>
 #include <cynq/enums.hpp>
 #include <cynq/execution-graph.hpp>
 #include <cynq/hardware.hpp>

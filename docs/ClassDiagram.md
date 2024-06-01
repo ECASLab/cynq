@@ -5,7 +5,9 @@ interface IHardware {
   +{abstract} Reset() -> Status
   +{abstract} GetDataMover(address = 0) -> IDataMover *
   +{abstract} GetAccelerator(address: uint64) -> IAccelerator *
-  +{abstract} GetExecutionStream(name: string, impl: IExecutionStreamType, config: ExecutionGraphParameters) -> IExecutionGraph *
+  +{virtual} GetExecutionStream(name: string, impl: IExecutionStreamType, config: ExecutionGraphParameters) -> IExecutionGraph *
+  +{virtual} GetClocks() -> float[]
+  +{virtual} SetClocks(clocks: float[]) -> Status
   +{static} Create(hw: HardwareArchitecture, bitstream: string, xclbin: string) -> IHardware*
   +{static} Create(hw: HardwareArchitecture, config: string) -> IHardware*
 }
@@ -134,6 +136,8 @@ class UltraScale {
   +Reset() -> Status
   +GetDataMover(address, type : DataMoverType) -> DMADataMover *
   +GetAccelerator(address: uint64) -> MMIOAccelerator *
+  +{virtual} GetClocks() -> float[]
+  +{virtual} SetClocks(clocks: float[]) -> Status
   +UltraScale(hw, bitsteam, xclbin)
 }
 

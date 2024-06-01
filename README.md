@@ -28,7 +28,7 @@ CYNQ is pretty similar to PYNQ, let's have a look.
 
 PYNQ:
 
-```python
+~~~~~~~~~~~~~{.py}
 from pynq import allocate, Overlay
 
 # Configure the FPGA
@@ -52,11 +52,11 @@ dma.recvchannel.wait()
 # Dispose the buffers
 del input_hw
 del output_hw
-```
+~~~~~~~~~~~~~
 
 With CYNQ for Xilinx Ultrascale+:
 
-```c++
+~~~~~~~~~~~~~{.cpp}
 #include <cynq/cynq.hpp>
 
 using namespace cynq;
@@ -90,11 +90,11 @@ mover->Download(out_mem, outbuf->Size(), 0, ExecutionType::Sync);
 accel->Stop();
 
 // Dispose? We use RAII
-```
+~~~~~~~~~~~~~
 
 With CYNQ for Alveo
 
-```c++
+~~~~~~~~~~~~~{.cpp}
 #include <cynq/cynq.hpp>
 
 using namespace cynq;
@@ -126,7 +126,7 @@ accel->Start(StartMode::Once);
 mover->Download(out_mem, outbuf->Size(), 0, ExecutionType::Sync);
 
 // Dispose? We use RAII
-```
+~~~~~~~~~~~~~
 
 ## Currently tested
 
@@ -142,7 +142,7 @@ So far, we have tested CYNQ on:
 
 Cite Us:
 
-```
+~~~~~~~~~~~~~
 @misc{cynq,
   author = {{León-Vega, Luis G.
               AND Ávila-Torres, Diego
@@ -152,4 +152,4 @@ Cite Us:
   year  = {2024},
   url   = {https://github.com/ECASLab/cynq},
 } 
-```
+~~~~~~~~~~~~~
