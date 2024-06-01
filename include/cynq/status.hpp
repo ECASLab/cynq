@@ -35,6 +35,7 @@ struct Status {
   };
 
   int code;        /** Code of the error */
+  int retval;      /** Auxiliar data coming from user */
   std::string msg; /** Description of the error */
 
   /**
@@ -42,7 +43,7 @@ struct Status {
    *
    * It default the error to be 0 or OK
    */
-  Status() noexcept : code{0} {}
+  Status() noexcept : code{0}, retval{0} {}
 
   /**
    * @brief Construct a new Status object
@@ -53,6 +54,18 @@ struct Status {
    * @param msg description
    */
   Status(const int code, const std::string &msg) noexcept
-      : code{code}, msg{msg} {}
+      : code{code}, retval{0}, msg{msg} {}
+
+  /**
+   * @brief Construct a new Status object
+   *
+   * It defines the constructor to define a custom code and description
+   *
+   * @param code code of the error
+   * @param retval return value in case of integer
+   * @param msg description
+   */
+  Status(const int code, const int retval, const std::string &msg) noexcept
+      : code{code}, retval{retval}, msg{msg} {}
 };
 }  // namespace cynq

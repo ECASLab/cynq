@@ -14,6 +14,7 @@
 #include "cynq/accelerator.hpp"
 #include "cynq/datamover.hpp"
 #include "cynq/enums.hpp"
+#include "cynq/execution-graph.hpp"
 #include "cynq/status.hpp"
 
 namespace cynq {
@@ -111,6 +112,31 @@ class IHardware {
    */
   virtual std::shared_ptr<IAccelerator> GetAccelerator(
       const std::string &kernelname) = 0;
+
+  /**
+   * @brief GetExecutionStream
+   *
+   * This method is a factory method to obtain an execution stream compatible
+   * with the hardware implementation. By default, it returns a new execution
+   * stream similar to the CUDA Stream, which is a queue-based scheduler to
+   * manage synchronism.
+   *
+   * @param name name of the stream for debugging purposes
+   *
+   * @param type implementation for the execution graph. By default, it is
+   * STREAM
+   *
+   * @param config configurations of the execution graph. By default, it is
+   * empty.
+   *
+   * @return std::shared_ptr<IExecutionGraph>
+   * Returns an execution graph instance compatible with the API of the
+   * interface IExecutionGraph
+   */
+  virtual std::shared_ptr<IExecutionGraph> GetExecutionStream(
+      const std::string &name,
+      const IExecutionGraph::Type type = IExecutionGraph::Type::STREAM,
+      const std::shared_ptr<ExecutionGraphParameters> params = nullptr);
 
   /**
    * @brief Create method
