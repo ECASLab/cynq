@@ -45,9 +45,12 @@ DMADataMover::DMADataMover(const uint64_t addr,
 
   params->addr_ = addr;
   params->hw_params_ = hwparams;
+  params->dma_ = nullptr;
 
   /* Create the DMA accessor */
-  PYNQ_openDMA(&params->dma_, addr);
+  if (static_cast<uint64_t>(0ul) != addr) {
+    PYNQ_openDMA(&params->dma_, addr);
+  }
 }
 
 std::shared_ptr<IMemory> DMADataMover::GetBuffer(const size_t size, const int,
@@ -95,7 +98,9 @@ DMADataMover::~DMADataMover() {
   /* The assumption is that at this point, it is ok */
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
-  PYNQ_closeDMA(&params->dma_);
+  if (params->dma_) {
+    PYNQ_closeDMA(&params->dma_);
+  }
 }
 
 /* TODO: All implementations below can be implemented cleverly. However, it
@@ -126,23 +131,25 @@ Status DMADataMover::Upload(const std::shared_ptr<IMemory> mem,
     meta->bo_->sync(XCL_BO_SYNC_BO_TO_DEVICE, size, offset);
   }
 
-  /* Get device pointer */
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
-  }
-
   /* Issue transaction */
-  PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
-  pmem.pointer = nullptr;
+  if (params->dma_) {
+    /* Get device pointer */
+    std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
+    if (!ptr) {
+      return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
+    }
 
-  ret =
-      PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_WRITE);
+    PYNQ_SHARED_MEMORY pmem;
+    pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
+    pmem.pointer = nullptr;
 
-  /* Check transaction */
-  if (PYNQ_SUCCESS != ret) {
-    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+    ret = PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size,
+                                AXI_DMA_WRITE);
+
+    /* Check transaction */
+    if (PYNQ_SUCCESS != ret) {
+      return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+    }
   }
 
   /* Synchronise if needed */
@@ -177,21 +184,25 @@ Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
     meta->bo_->sync(XCL_BO_SYNC_BO_FROM_DEVICE, size, offset);
   }
 
-  /* Get device pointer */
-  std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
-  if (!ptr) {
-    return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
-  }
-
   /* Issue transaction */
-  PYNQ_SHARED_MEMORY pmem;
-  pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
-  pmem.pointer = nullptr;
-  ret = PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_READ);
+  if (params->dma_) {
+    std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
 
-  /* Check transaction */
-  if (PYNQ_SUCCESS != ret) {
-    return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+    /* Get device pointer */
+    if (!ptr) {
+      return Status{Status::INVALID_PARAMETER, "Device pointer is null"};
+    }
+
+    PYNQ_SHARED_MEMORY pmem;
+    pmem.physical_address = (uint64_t)(ptr.get());  // NOLINT
+    pmem.pointer = nullptr;
+    ret =
+        PYNQ_issueDMATransfer(&params->dma_, &pmem, offset, size, AXI_DMA_READ);
+
+    /* Check transaction */
+    if (PYNQ_SUCCESS != ret) {
+      return Status{Status::REGISTER_IO_ERROR, "Cannot issue the transfer"};
+    }
   }
 
   /* Synchronise if needed */
@@ -203,10 +214,14 @@ Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
 }
 
 Status DMADataMover::Sync(const SyncType type) {
-  int ret = PYNQ_SUCCESS;
-
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
+
+  if (!params->dma_) {
+    return Status{};
+  }
+
+  int ret = PYNQ_SUCCESS;
 
   if (SyncType::HostToDevice == type) {
     ret = PYNQ_waitForDMAComplete(&params->dma_, AXI_DMA_WRITE);

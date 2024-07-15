@@ -42,7 +42,9 @@ class DMADataMover : public IDataMover {
    * This constructs a data mover that uses DMA to execute the transfers
    * between the host and the device. Moreover, it uses XRT buffer object as
    * memory buffers.
-   * @param addr DMA address in the physical memory map
+   * @param addr DMA address in the physical memory map. if 0, DMA engine for
+   * AXI Stream is not instantiated but the memory map functionality will still
+   * work.
    * @param hwparams Hardware-specific params
    */
   DMADataMover(const uint64_t addr,
