@@ -45,7 +45,6 @@ DMADataMover::DMADataMover(const uint64_t addr,
 
   params->addr_ = addr;
   params->hw_params_ = hwparams;
-  params->dma_ = nullptr;
 
   /* Create the DMA accessor */
   if (static_cast<uint64_t>(0ul) != addr) {
@@ -98,7 +97,7 @@ DMADataMover::~DMADataMover() {
   /* The assumption is that at this point, it is ok */
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
-  if (params->dma_) {
+  if (static_cast<uint64_t>(0ul) != params->addr_) {
     PYNQ_closeDMA(&params->dma_);
   }
 }
@@ -132,7 +131,7 @@ Status DMADataMover::Upload(const std::shared_ptr<IMemory> mem,
   }
 
   /* Issue transaction */
-  if (params->dma_) {
+  if (static_cast<uint64_t>(0ul) != params->addr_) {
     /* Get device pointer */
     std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
     if (!ptr) {
@@ -185,7 +184,7 @@ Status DMADataMover::Download(const std::shared_ptr<IMemory> mem,
   }
 
   /* Issue transaction */
-  if (params->dma_) {
+  if (static_cast<uint64_t>(0ul) != params->addr_) {
     std::shared_ptr<uint8_t> ptr = mem->DeviceAddress<uint8_t>();
 
     /* Get device pointer */
@@ -217,7 +216,7 @@ Status DMADataMover::Sync(const SyncType type) {
   auto params =
       dynamic_cast<DMADataMoverParameters *>(data_mover_params_.get());
 
-  if (!params->dma_) {
+  if (static_cast<uint64_t>(0ul) == params->addr_) {
     return Status{};
   }
 
