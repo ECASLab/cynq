@@ -126,6 +126,23 @@ UltraScale::UltraScale(const std::string &bitstream_file,
   GetClocksInformation();
 }
 
+UltraScale::UltraScale()
+    : parameters_{std::make_shared<UltraScaleParameters>()} {
+  /* For the UltraScale, there is only a single device. It is possible to
+     load either a bitstream or a xclbin. */
+  Status st{};
+
+  /* Configure the buses accordingly to the default design */
+  st = LoadXclBin(EXAMPLE_KRIA_DEFAULT_XCLBIN_LOCATION);
+  if (st.code != Status::OK) {
+    std::string msg = "Error while configuring the buses: ";
+    msg += st.msg;
+    throw std::runtime_error(msg);
+  }
+
+  GetClocksInformation();
+}
+
 Status UltraScale::LoadBitstream(const std::string &bitstream_file) {
   /* FIXME: This is a temporal implementation while we are coding our own
      implementation. Use with caution */

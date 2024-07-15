@@ -86,9 +86,12 @@ class UltraScale : public IHardware {
    */
   UltraScale(const std::string &bitstream_file, const std::string &xclbin_file);
   /**
-   * No default constructor required
+   * @brief Construct a new UltraScale object
+   *
+   * Configure the hardware platform without loading a bitstream nor xclbin.
+   * This is useful for already configured FPGAs.
    */
-  UltraScale() = delete;
+  UltraScale();
   /**
    * @brief ~UltraScale destructor method
    * Destroy the UltraScale object.
