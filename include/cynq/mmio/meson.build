@@ -6,7 +6,9 @@
 #         Luis G. Leon Vega <luis.leon@ieee.org>
 #
 
-sources += [
-  files('accelerator.cpp'),
-  files('axi-gpio.cpp'),
+lib_headers = [
+  files('accelerator.hpp'),
+  files('axi-gpio.hpp'),
 ]
+
+install_headers(lib_headers, subdir : 'cynq/mmio')
