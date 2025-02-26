@@ -18,3 +18,5 @@ lib_headers = [
 ]
 
 install_headers(lib_headers, subdir : 'cynq')
+
+subdir('mmio')
