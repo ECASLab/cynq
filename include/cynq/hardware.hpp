@@ -70,8 +70,9 @@ class IHardware {
    *
    * @param address a unsigned integer of 64 bits representing an address.
    * In the case of ZYNQ boards, it corresponds to the base address of the
-   * accelerator BAR (Bank Address Register). In the case of Alveo boards,
-   * it is unused.
+   * accelerator BAR (Bank Address Register). In the case of Alveo boards or
+   * already configured devices (UltraScale default construction), it is
+   * unused.
    *
    * @return std::shared_ptr<IDataMover>
    * Returns an IDataMover pointer with reference counting. It should be
@@ -208,5 +209,22 @@ class IHardware {
    */
   static std::shared_ptr<IHardware> Create(const HardwareArchitecture hw,
                                            const std::string &config);
+
+  /**
+   * @brief Create method
+   * Factory method to create a hardware-specific subclasses for accelerators
+   * and data movers. The configuration of the FPGA is not performed by using
+   * this constructor, since this assumes that there is none bitstream to load.
+   *
+   * @param hw One of the values in the HardwareArchitecture enum class
+   * present in the enums.hpp file that should correspond to the device being
+   * used.
+   *
+   * @return std::shared_ptr<IHardware>
+   * Returns an IAccelerator pointer with reference counting. It should be
+   * thread-safe.
+   *
+   */
+  static std::shared_ptr<IHardware> Create(const HardwareArchitecture hw);
 };
 }  // namespace cynq

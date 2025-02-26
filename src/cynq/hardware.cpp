@@ -38,6 +38,15 @@ std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw,
   }
 }
 
+std::shared_ptr<IHardware> IHardware::Create(const HardwareArchitecture hw) {
+  switch (hw) {
+    case HardwareArchitecture::UltraScale:
+      return std::make_shared<UltraScale>();
+    default:
+      return nullptr;
+  }
+}
+
 std::shared_ptr<IExecutionGraph> IHardware::GetExecutionStream(
     const std::string& name, const IExecutionGraph::Type type,
     const std::shared_ptr<ExecutionGraphParameters> params) {
