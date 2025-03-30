@@ -92,12 +92,18 @@ Status AXIGPIO::Write(const uint channel, const uint start_bit,
   /* Filter the value. It needs to be negated since we are going to write
      a negative mask. Assume we are going to write a 0b10 in the bits from 1:3,
      so, we need to negate it to have 0b01 */
-  new_value = mask & ~value;
+  new_value = mask & value;
   /* Then we shift and negate to have: 0b00010 -> 0b11101, so when we
      write the value using an AND, we have xx10x, where x is the original
      value of already written */
-  new_value = ~(new_value << start_bit);
-  new_value = current_value & new_value;
+  new_value = new_value << start_bit;
+
+  /* Clean the portion to write */
+  mask = ~(mask << start_bit);
+  current_value &= mask;
+
+  /* Write the portion */
+  new_value |= current_value;
 
   st = WriteRegister(addr, reinterpret_cast<uint8_t *>(&new_value),
                      sizeof(uint32_t));
@@ -108,7 +114,7 @@ Status AXIGPIO::Config(const uint channel, const uint start_bit,
                        const uint stop_bit,            // NOLINT
                        const AXIGPIO::PinMode mode) {  // NOLINT
   uint64_t addr = channel * XGPIO_CHAN_OFFSET + XGPIO_TRI_OFFSET;
-  uint32_t config = 0, result = 0;
+  uint32_t config = 0, result = 0, neg_mask = 0;
 
   /* Read the current mask */
   Status st = ReadRegister(addr, reinterpret_cast<uint8_t *>(&config),
@@ -118,17 +124,18 @@ Status AXIGPIO::Config(const uint channel, const uint start_bit,
   uint32_t bits = stop_bit - start_bit; /* 3-1 = 2 */
   uint32_t mask = (1 << bits) - 1;      /* 2^2 = 4 - 1 = 0b0011 */
   mask <<= start_bit;                   /* 0b0011 << 1 = 0b00110 */
+  neg_mask = ~mask;
   /* If output: multiplies by 0, otherwise, leave as is */
   mask *= static_cast<uint32_t>(mode);
-  /* In case if mask is 00100 and inputs are 00110 or 00010 */
-  /* First XOR:  00010, 00110 */
-  result = config ^ mask;
-  /* Second XOR: 00110, 00010 (as configured in the input) */
-  result ^= config;
+  /* Clean the portion to write */
+  config &= neg_mask;
+  /* Write the portion of interest */
+  result = config | mask;
 
   /* Write direction */
   st = WriteRegister(addr, reinterpret_cast<uint8_t *>(&result),
                      sizeof(uint32_t));
+
   return st;
 }
 
