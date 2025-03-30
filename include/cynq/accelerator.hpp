@@ -52,6 +52,8 @@ class IAccelerator {
     None = 0,
     /** MMIO runtime: compatible with ZYNQ and Vivado workflows */
     MMIO,
+    /** AXI GPIO: this is compatible with AXI-GPIO over MMIO */
+    AXI_GPIO,
     /** XRT kernel runtime: compatible with Vitis and Alveo workflows */
     XRT
   };

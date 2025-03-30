@@ -139,12 +139,12 @@ class AXIGPIO : public MMIOAccelerator {
    *
    * @param stop_bit GPIO stop pin (exclusive)
    *
-   * @param bit Result of the bit after read
+   * @param value Result of the bits after read
    *
    * @return Status
    */
-  Status ReadP(const uint channel, const uint start_bit, const uint stop_bit,
-               uint &bit);  // NOLINT
+  Status Read(const uint channel, const uint start_bit, const uint stop_bit,
+              uint32_t &value);  // NOLINT
 
   /**
    * @brief Writes a GPIO channel
@@ -157,12 +157,12 @@ class AXIGPIO : public MMIOAccelerator {
    *
    * @param stop_bit GPIO stop pin (exclusive)
    *
-   * @param bit Bit value to write (LSB)
+   * @param value Bit values to write (LSB)
    *
    * @return Status
    */
   Status Write(const uint channel, const uint start_bit, const uint stop_bit,
-               const uint bit);  // NOLINT
+               const uint32_t value);  // NOLINT
 
   /**
    * @brief Configure a GPIO channel

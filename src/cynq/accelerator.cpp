@@ -9,23 +9,27 @@
 #include <cynq/accelerator.hpp>
 #include <cynq/execution-graph.hpp>
 #include <cynq/mmio/accelerator.hpp>
+#include <cynq/mmio/axi-gpio.hpp>
 #include <cynq/xrt/accelerator.hpp>
 #include <memory>
+#include <string>
 
 namespace cynq {
-std::shared_ptr<IAccelerator> IAccelerator::Create(IAccelerator::Type impl,
-                                                   const uint64_t addr) {
+std::shared_ptr<IAccelerator> IAccelerator::Create(
+    IAccelerator::Type impl, const uint64_t addr) {  // NOLINT
   switch (impl) {
     case IAccelerator::Type::MMIO:
       return std::make_shared<MMIOAccelerator>(addr);
+    case IAccelerator::Type::AXI_GPIO:
+      return std::make_shared<AXIGPIO>(addr);
     default:
       return nullptr;
   }
 }
 
 std::shared_ptr<IAccelerator> IAccelerator::Create(
-    IAccelerator::Type impl, const std::string &addr,
-    const std::shared_ptr<HardwareParameters> params) {
+    IAccelerator::Type impl, const std::string &addr,    // NOLINT
+    const std::shared_ptr<HardwareParameters> params) {  // NOLINT
   switch (impl) {
     case IAccelerator::Type::XRT:
       return std::make_shared<XRTAccelerator>(addr, params);
@@ -41,7 +45,7 @@ std::shared_ptr<IAccelerator> IAccelerator::Create(
 */
 
 Status IAccelerator::Start(std::shared_ptr<IExecutionGraph> graph,
-                           const StartMode mode) {
+                           const StartMode mode) {  // NOLINT
   Status st{};
 
   /* Check the stream */
@@ -92,8 +96,9 @@ Status IAccelerator::Sync(std::shared_ptr<IExecutionGraph> graph) {
 }
 
 Status IAccelerator::WriteRegister(std::shared_ptr<IExecutionGraph> graph,
-                                   const uint64_t address, const uint8_t *data,
-                                   const size_t size) {
+                                   const uint64_t address,  // NOLINT
+                                   const uint8_t *data,     // NOLINT
+                                   const size_t size) {     // NOLINT
   Status st{};
 
   /* Check the stream */
@@ -112,8 +117,9 @@ Status IAccelerator::WriteRegister(std::shared_ptr<IExecutionGraph> graph,
 }
 
 Status IAccelerator::ReadRegister(std::shared_ptr<IExecutionGraph> graph,
-                                  const uint64_t address, uint8_t *data,
-                                  const size_t size) {
+                                  const uint64_t address,  // NOLINT
+                                  uint8_t *data,           // NOLINT
+                                  const size_t size) {     // NOLINT
   Status st{};
 
   /* Check the stream */
