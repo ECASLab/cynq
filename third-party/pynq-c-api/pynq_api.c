@@ -686,7 +686,13 @@ int PYNQ_closeMMIOWindow(PYNQ_MMIO_WINDOW *state) {
  */
 int PYNQ_writeMMIO(PYNQ_MMIO_WINDOW *state, void *data, size_t offset,
                    size_t size_data) {
-  memcpy(&(state->buffer[state->virt_offset + offset]), data, size_data);
+  if (size_data != sizeof(uint32_t)) {
+    return PYNQ_ERROR;
+  }
+  uint64_t ioffset = (state->virt_offset + offset) >> 2;
+  uint32_t *buffer = (uint32_t *)state->buffer;
+  buffer[ioffset] = *(uint32_t *)(data);
+  //memcpy(&(state->buffer[state->virt_offset + offset]), data, size_data);
   return PYNQ_SUCCESS;
 }
 
@@ -696,7 +702,13 @@ int PYNQ_writeMMIO(PYNQ_MMIO_WINDOW *state, void *data, size_t offset,
  */
 int PYNQ_readMMIO(PYNQ_MMIO_WINDOW *state, void *data, size_t offset,
                   size_t size_data) {
-  memcpy(data, &(state->buffer[state->virt_offset + offset]), size_data);
+  if (size_data != sizeof(uint32_t)) {
+    return PYNQ_ERROR;
+  }
+  uint64_t ioffset = (state->virt_offset + offset) >> 2;
+  uint32_t *buffer = (uint32_t *)state->buffer;
+  *(uint32_t *)(data) = buffer[ioffset];
+  //memcpy(data, &(state->buffer[state->virt_offset + offset]), size_data);
   return PYNQ_SUCCESS;
 }
 
