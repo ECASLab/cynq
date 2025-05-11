@@ -61,9 +61,13 @@ Status AXIGPIO::Read(const uint channel, const uint start_bit,
   uint64_t addr = channel * XGPIO_CHAN_OFFSET;
   uint32_t current_value = 0;
 
+  Status st =
+      this->Config(channel, start_bit, stop_bit, AXIGPIO::PinMode::MODE_INPUT);
+  if (st.code) return st;
+
   /* Read the current value */
-  Status st = ReadRegister(addr, reinterpret_cast<uint8_t *>(&current_value),
-                           sizeof(uint32_t));
+  st = ReadRegister(addr, reinterpret_cast<uint8_t *>(&current_value),
+                    sizeof(uint32_t));
 
   /* Prepare the mask */
   uint32_t bits = stop_bit - start_bit; /* 3-1 = 2 */
@@ -80,9 +84,13 @@ Status AXIGPIO::Write(const uint channel, const uint start_bit,
   uint64_t addr = channel * XGPIO_CHAN_OFFSET;
   uint32_t current_value = 0, new_value = 0;
 
+  Status st =
+      this->Config(channel, start_bit, stop_bit, AXIGPIO::PinMode::MODE_OUTPUT);
+  if (st.code) return st;
+
   /* Read the current value */
-  Status st = ReadRegister(addr, reinterpret_cast<uint8_t *>(&current_value),
-                           sizeof(uint32_t));
+  st = ReadRegister(addr, reinterpret_cast<uint8_t *>(&current_value),
+                    sizeof(uint32_t));
   if (st.code) return st;
 
   /* Prepare the mask */
@@ -124,7 +132,7 @@ Status AXIGPIO::Config(const uint channel, const uint start_bit,
   uint32_t bits = stop_bit - start_bit; /* 3-1 = 2 */
   uint32_t mask = (1 << bits) - 1;      /* 2^2 = 4 - 1 = 0b0011 */
   mask <<= start_bit;                   /* 0b0011 << 1 = 0b00110 */
-  neg_mask = ~mask;
+  neg_mask = ~mask;                     /* 0b11001 */
   /* If output: multiplies by 0, otherwise, leave as is */
   mask *= static_cast<uint32_t>(mode);
   /* Clean the portion to write */
