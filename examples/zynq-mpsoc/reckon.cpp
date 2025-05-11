@@ -358,8 +358,8 @@ static std::vector<uint32_t> spi_send(std::shared_ptr<cynq::IAccelerator> spi,
   return xfer(spi, packet, 2);
 }
 
-static std::vector<uint32_t> spi_read(std::shared_ptr<cynq::IAccelerator> spi,
-                                      uint32_t addr, uint32_t data) {
+[[maybe_unused]] static std::vector<uint32_t> spi_read(
+    std::shared_ptr<cynq::IAccelerator> spi, uint32_t addr, uint32_t /*data*/) {
   uint32_t packet[2] = {addr};
   return xfer(spi, packet, 1);
 }
@@ -649,7 +649,7 @@ int main() {
 
       std::cout << "OK signal received" << std::endl;
 
-      uint32_t inference =
+      int32_t inference =
           gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);
 
       if (test) {
