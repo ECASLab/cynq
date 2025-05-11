@@ -18,6 +18,13 @@ executable('matrix-multiplication-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+executable('reckon-kria',
+  ['zynq-mpsoc/reckon.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
 executable('xfopencv-filter2d-kria',
   ['zynq-mpsoc/xfopencv-filter2d.cpp'],
   include_directories: [projectinc],
