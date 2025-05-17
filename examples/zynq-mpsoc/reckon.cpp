@@ -131,25 +131,26 @@ constexpr uint64_t SLAVE_NO_SELECTION = 0xFFFFFFFF;
 
 #define SLEEP(delay) usleep(delay);
 
-static cynq::Status __attribute__((optimize("O0")))
-spi_write_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr,
-               uint32_t val) {
+static cynq::Status __attribute__((optimize("O0"))) spi_write_word(
+    std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr, uint32_t val) {
   auto err = spi->Write(addr, &val);
   SLEEP(1);
   CHECK_CYNQ_ERROR(err);
+  SLEEP(1);
   return err;
 }
 
-static uint32_t __attribute__((optimize("O0")))
-spi_read_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr) {
+static uint32_t __attribute__((optimize("O0"))) spi_read_word(
+    std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr) {
   uint32_t val = 0;
   SLEEP(1);
   CHECK_CYNQ_ERROR(spi->Read(addr, &val));
+  SLEEP(1);
   return val;
 }
 
-static void __attribute__((optimize("O0")))
-config_spi(std::shared_ptr<cynq::IAccelerator> spi) {
+static void __attribute__((optimize("O0"))) config_spi(
+    std::shared_ptr<cynq::IAccelerator> spi) {
   std::cout << "Configure device" << std::endl;
   uint32_t ControlReg = 0;
 
@@ -209,6 +210,7 @@ enum class GpioTransaction {
 static uint32_t gpio_transaction(std::shared_ptr<cynq::AXIGPIO> gpio,
                                  GpioTransaction trans, uint32_t data = 0) {
   uint32_t val = 0;
+  SLEEP(10);
   switch (trans) {
     case GpioTransaction::TIME_TICK_high: {
       val = 0x1;
@@ -311,8 +313,8 @@ static uint32_t gpio_transaction(std::shared_ptr<cynq::AXIGPIO> gpio,
   return val;
 }
 
-std::vector<uint32_t> __attribute__((optimize("O0")))
-xfer(std::shared_ptr<cynq::IAccelerator> spi, uint32_t *packet, uint32_t len) {
+std::vector<uint32_t> __attribute__((optimize("O0"))) xfer(
+    std::shared_ptr<cynq::IAccelerator> spi, uint32_t *packet, uint32_t len) {
   uint32_t ControlReg = 0, StatusReg = 0, RxFifoStatus = 0, temp = 0;
   // std::cout << "Transfer data" << std::endl;
 
@@ -471,9 +473,9 @@ int main() {
   std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
       IHardware::Create(HardwareArchitecture::UltraScale);
-  auto clocks = platform->GetClocks();
-  clocks[0] = 125.f;  // Same frequency as PYNQ
-  platform->SetClocks(clocks);
+  // auto clocks = platform->GetClocks();
+  // clocks[0] = 125.f;  // Same frequency as PYNQ
+  // platform->SetClocks(clocks);
 
   // Get IP cores involved
   auto spi = platform->GetAccelerator(0x80000000);
@@ -589,82 +591,88 @@ int main() {
 
   check_status(gpio);
 
-  for (uint test = 0; test <= 1; test++) {
-    int32_t *ptr = nullptr;
+  for (uint epoch = 0; epoch < 50; epoch++) {
+    SLEEP(1000);
+    for (uint test = 0; test <= 1; test++) {
+      SLEEP(10);
+      int32_t *ptr = nullptr;
 
-    spi_send(spi, 0x00010000, 0x00000001);
-    if (test) {
-      spi_send(spi, 0x00010009, 0x00000000);
-      ptr = test_ptr;
-      gpio_transaction(gpio, GpioTransaction::TEST_high);
-    } else {
-      spi_send(spi, 0x00010009, 0x00000007);
-      ptr = train_ptr;
-      gpio_transaction(gpio, GpioTransaction::TEST_low);
-    }
-    spi_send(spi, 0x00010000, 0x00000000);
-
-    uint32_t sample = 0;
-
-    int32_t evt_target = 0;
-
-    uint32_t correct = 0;
-
-    for (uint curr_sample = 0; curr_sample < 50; curr_sample++) {
-      std::cout << "Sample: " << curr_sample << std::endl;
-      int32_t evt_neur = ptr[sample++];
-      int32_t evt_time = ptr[sample++];
-
-      uint i = 0;
-
-      while (true) {
-        input_buffer_hptr[i] =
-            (uint32_t)(evt_neur * 65536 + evt_time);  // NOLINT
-
-        i++;
-
-        if (evt_neur == -1) break;
-        if (evt_neur == -2) evt_target = evt_time;
-
-        evt_neur = ptr[sample++];
-        evt_time = ptr[sample++];
-      }
-
-      auto send_buffer = dma->GetBuffer((++i) * sizeof(uint32_t));
-      uint32_t *send_buffer_hptr = send_buffer->HostAddress<uint32_t>().get();
-
-      for (uint j = 0; j < i; ++j) {
-        send_buffer_hptr[j] = input_buffer_hptr[j];
-      }
-
-      std::cout << "Sending Buffer" << std::endl;
-      dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
-      std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
-
-      uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
-      for (int i = 0; i < 1000000; ++i) {
-        kk = gpio_transaction(gpio, GpioTransaction::OK_read);
-        if (kk) break;
-      }
-
-      std::cout << "OK signal received" << std::endl;
-
-      int32_t inference =
-          gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);
-
+      spi_send(spi, 0x00010000, 0x00000001);
       if (test) {
-        std::cout << "Test: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
+        spi_send(spi, 0x00010009, 0x00000000);
+        ptr = test_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_high);
       } else {
-        std::cout << "Train: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
+        spi_send(spi, 0x00010009, 0x00000007);
+        ptr = train_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_low);
       }
-      correct += (uint32_t)(inference == evt_target);  // NOLINT
-    }
-    std::cout << "Correct Events: " << correct << std::endl;
-  }
+      spi_send(spi, 0x00010000, 0x00000000);
 
+      uint32_t sample = 0;
+
+      int32_t evt_target = 0;
+
+      uint32_t correct = 0;
+      SLEEP(100);
+
+      for (uint curr_sample = 0; curr_sample < 50; curr_sample++) {
+        int32_t evt_neur = ptr[sample++];
+        int32_t evt_time = ptr[sample++];
+        std::cout << "Sample: " << curr_sample << " " << evt_neur << " "
+                  << evt_time << std::endl;
+
+        uint i = 0;
+
+        while (true) {
+          input_buffer_hptr[i] =
+              (uint32_t)(evt_neur * 65536 + evt_time);  // NOLINT
+
+          i++;
+
+          if (evt_neur == -1) break;
+          if (evt_neur == -2) evt_target = evt_time;
+
+          evt_neur = ptr[sample++];
+          evt_time = ptr[sample++];
+        }
+
+        uint32_t data_size = i + 1;
+        auto send_buffer = dma->GetBuffer((data_size) * sizeof(uint32_t));
+        uint32_t *send_buffer_hptr = send_buffer->HostAddress<uint32_t>().get();
+
+        for (uint j = 0; j < i; ++j) {
+          send_buffer_hptr[j] = input_buffer_hptr[j];
+        }
+
+        std::cout << "Sending Buffer" << std::endl;
+        dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
+        std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
+
+        uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
+        for (int tr = 0; tr < 1000000; ++tr) {
+          kk = gpio_transaction(gpio, GpioTransaction::OK_read);
+          if (kk) break;
+        }
+
+        std::cout << "OK signal received" << std::endl;
+
+        int32_t inference =
+            gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);
+
+        if (test) {
+          std::cout << "Test: inference = " << inference
+                    << " and target = " << evt_target << " Num Samples = " << i
+                    << std::endl;
+        } else {
+          std::cout << "Train: inference = " << inference
+                    << " and target = " << evt_target << " Num Samples = " << i
+                    << std::endl;
+        }
+        correct += (uint32_t)(inference == evt_target);  // NOLINT
+      }
+      std::cout << "Correct Events: " << correct << std::endl;
+    }
+  }
   return 0;
 }

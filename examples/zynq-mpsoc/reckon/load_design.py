@@ -5,4 +5,5 @@ import os
 os.environ["XILINX_XRT"] = "/usr"
 
 ol = Overlay("./examples/zynq-mpsoc/reckon/pynqKria.bit")
+ol.reset()
 exit(0)
