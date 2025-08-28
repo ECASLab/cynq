@@ -8,17 +8,17 @@
 
 
 project('cynq',['c','cpp'],version : '0.3.1',
-  default_options : ['warning_level=3',
+ default_options : ['warning_level=3',
                      'cpp_std=c++17',
                      'cpp_args=-Werror'])
 
 add_global_arguments(
-  '-Wno-ignored-qualifiers',
+ '-Wno-ignored-qualifiers',
   language : 'cpp'
 )
 
 cc = meson.get_compiler('cpp')
-
+cmake = import('cmake')
 #############################
 ## Dependencies definition ##
 #############################

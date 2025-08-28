@@ -7,10 +7,16 @@
  *
  */
 
+#include <pybind11/embed.h>
+#include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <unistd.h>
 
+#include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <ctime>
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
@@ -18,6 +24,7 @@
 #include <cynq/memory.hpp>
 #include <cynq/mmio/axi-gpio.hpp>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -97,11 +104,11 @@ constexpr uint32_t SPI_H_1 = 0x00000000;
 constexpr uint32_t SPI_H_2 = 0x00000000;
 constexpr uint32_t SPI_H_3 = 0x00000000;
 constexpr uint32_t SPI_H_4 = 0x00000001;
-constexpr uint32_t SPI_LR_R_WINP = 0x00000000;
+uint32_t SPI_LR_R_WINP = 0x00000000;
 static uint32_t SPI_LR_P_WINP = 0x00000008;
-constexpr uint32_t SPI_LR_R_WREC = 0x00000000;
+uint32_t SPI_LR_R_WREC = 0x00000000;
 static uint32_t SPI_LR_P_WREC = 0x00000008;
-constexpr uint32_t SPI_LR_R_WOUT = 0x00000000;
+uint32_t SPI_LR_R_WOUT = 0x00000000;
 static uint32_t SPI_LR_P_WOUT = 0x0000000e;
 constexpr uint32_t SPI_SEED_INP = 0x0000f0f0;
 constexpr uint32_t SPI_SEED_REC = 0x0000f1f1;
@@ -123,6 +130,16 @@ constexpr uint32_t SPI_REGUL_K_REC_P = 0x0000000a;
 constexpr uint32_t SPI_REGUL_K_MUL = 0x00000000;
 constexpr uint32_t SPI_NOISE_STR = 0x00000000;
 constexpr uint64_t SLAVE_NO_SELECTION = 0xFFFFFFFF;
+namespace py = pybind11;
+class EpochData {
+ public:
+  uint32_t number;
+  std::string name;
+  double precision;
+  double sampleTimes;
+  double dmaTimes;
+};
+
 typedef struct {
   uint32_t alpha;
   uint32_t firing;
@@ -130,7 +147,6 @@ typedef struct {
   uint32_t lr_p_rec;
   uint32_t lr_p_out;
   uint32_t epoch;
-  bool read_sram;
 } experiment;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
@@ -140,43 +156,38 @@ experiment e7 = {.alpha = 3964,
                  .lr_p_inp = 13,
                  .lr_p_rec = 11,
                  .lr_p_out = 13,
-                 .epoch = 10,
-                 .read_sram = true};
+                 .epoch = 10};
 experiment e3 = {.alpha = 3824,
                  .firing = 631,
                  .lr_p_inp = 12,
                  .lr_p_rec = 12,
                  .lr_p_out = 12,
-                 .epoch = 1000,
-                 .read_sram = false};
+                 .epoch = 1000};
 experiment e5 = {.alpha = 3825,
                  .firing = 639,
                  .lr_p_inp = 12,
                  .lr_p_rec = 11,
                  .lr_p_out = 13,
-                 .epoch = 100,
-                 .read_sram = false};
+                 .epoch = 100};
 experiment e6 = {.alpha = 3943,
                  .firing = 253,
                  .lr_p_inp = 13,
                  .lr_p_rec = 10,
                  .lr_p_out = 13,
-                 .epoch = 1000,
-                 .read_sram = false};
+                 .epoch = 1000};
 experiment e8 = {.alpha = 3845,
                  .firing = 366,
                  .lr_p_inp = 13,
                  .lr_p_rec = 9,
                  .lr_p_out = 14,
-                 .epoch = 500,
-                 .read_sram = true};
+                 .epoch = 500};
 experiment e4 = {.alpha = 3825,
                  .firing = 641,
                  .lr_p_inp = 8,
                  .lr_p_rec = 8,
                  .lr_p_out = 12,
-                 .epoch = 1000,
-                 .read_sram = false};
+                 .epoch = 100};
+
 #pragma GCC diagnostic pop
 #define CHECK_CYNQ_ERROR(err) \
   if (err.code != 0) std::cerr << "[CYNQ ERR]: " << err.msg << std::endl;
@@ -189,25 +200,32 @@ experiment e4 = {.alpha = 3825,
 static cynq::Status __attribute__((optimize("O0")))
 spi_write_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr,
                uint32_t val) {
-  auto err = spi->Write(addr, &val);
+  cynq::Status err;
+
+  err = spi->Write(addr, &val);
   SLEEP(1);
   CHECK_CYNQ_ERROR(err);
-  SLEEP(1);
   return err;
+}
+static double __attribute__((optimize("O0"))) get_timestamp() {
+  double time = std::chrono::duration_cast<std::chrono::duration<double>>(
+                    std::chrono::system_clock::now().time_since_epoch())
+                    .count();
+  return time;
 }
 
 static uint32_t __attribute__((optimize("O0")))
-spi_read_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr) {
+spi_read_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr,
+              bool = false) {
   uint32_t val = 0;
   SLEEP(1);
   CHECK_CYNQ_ERROR(spi->Read(addr, &val));
-  SLEEP(1);
   return val;
 }
 
 static void __attribute__((optimize("O0")))
 config_spi(std::shared_ptr<cynq::IAccelerator> spi) {
-  td::cout << "Configure device" << std::endl;
+  std::cout << "Configure device" << std::endl;
   uint32_t ControlReg = 0;
 
   // Reset the SPI device
@@ -266,7 +284,6 @@ enum class GpioTransaction {
 static uint32_t gpio_transaction(std::shared_ptr<cynq::AXIGPIO> gpio,
                                  GpioTransaction trans, uint32_t data = 0) {
   uint32_t val = 0;
-  SLEEP(10);
   switch (trans) {
     case GpioTransaction::TIME_TICK_high: {
       val = 0x1;
@@ -376,23 +393,24 @@ xfer(std::shared_ptr<cynq::IAccelerator> spi, uint32_t *packet, uint32_t len) {
 
   for (uint i = 0; i < len; ++i) {
     spi_write_word(spi, XSP_DTR_OFFSET, packet[i]);
-    spi_write_word(spi, XSP_SSR_OFFSET, 0xFFFFFFFE);
-    ControlReg = spi_read_word(spi, XSP_CR_OFFSET);
-    ControlReg = ControlReg & ~XSP_CR_TRANS_INHIBIT_MASK;
-    spi_write_word(spi, XSP_CR_OFFSET, ControlReg);
-
-    StatusReg = spi_read_word(spi, XSP_SR_OFFSET);
-
-    while ((StatusReg & XSP_SR_TX_EMPTY_MASK) == 0) {
-      StatusReg = spi_read_word(spi, XSP_SR_OFFSET);
-    }
-
-    // std::cout << "XSP_RFO_OFFSET: " << spi_read_word(spi, XSP_RFO_OFFSET) <<
-    // std::endl;
-    ControlReg = spi_read_word(spi, XSP_CR_OFFSET);
-    ControlReg = ControlReg | XSP_CR_TRANS_INHIBIT_MASK;
-    spi_write_word(spi, XSP_CR_OFFSET, ControlReg);
   }
+
+  spi_write_word(spi, XSP_SSR_OFFSET, 0xFFFFFFFE);
+  ControlReg = spi_read_word(spi, XSP_CR_OFFSET);
+  ControlReg = ControlReg & ~XSP_CR_TRANS_INHIBIT_MASK;
+  spi_write_word(spi, XSP_CR_OFFSET, ControlReg);
+
+  StatusReg = spi_read_word(spi, XSP_SR_OFFSET);
+
+  while ((StatusReg & XSP_SR_TX_EMPTY_MASK) == 0) {
+    StatusReg = spi_read_word(spi, XSP_SR_OFFSET);
+  }
+
+  // std::cout << "XSP_RFO_OFFSET: " << spi_read_word(spi, XSP_RFO_OFFSET) <<
+  // std::endl;
+  ControlReg = spi_read_word(spi, XSP_CR_OFFSET);
+  ControlReg = ControlReg | XSP_CR_TRANS_INHIBIT_MASK;
+  spi_write_word(spi, XSP_CR_OFFSET, ControlReg);
 
   spi_write_word(spi, XSP_SSR_OFFSET, SLAVE_NO_SELECTION);
 
@@ -519,21 +537,21 @@ static void check_status(std::shared_ptr<cynq::AXIGPIO> gpio) {
   std::cout << "SPIRDY= "
             << gpio_transaction(gpio, GpioTransaction::SPIRDY_read)
             << std::endl;
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
 }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 static void transmit_input(std::shared_ptr<cynq::IAccelerator> spi, uint Ninp,
                            uint Nrec, int32_t *buffer,
-                           uint32_t /*buffer_size*/) {
-    // NOLINT
-      uint32_t counter = 0;
-  for (uint i = 0; i < Ninp; ++i) {
-    spi_half_send(spi, (0x30 << 24 | ((uint32_t)(Nrec / 4) << 16)) |  // NOLINT
-                           (0x3fc0 & (i << 6)));                      // NOLINT
-    for (uint32_t j = 0; j < (uint32_t)(Nrec / 4); ++j) {             // NOLINT
+                           uint32_t /*buffer_size*/) {  // NOLINT
+  uint32_t counter = 0;
+  for (int32_t i = 0; i < (int32_t)Ninp; i++) {                      // NOLINT
+    spi_half_send(spi, (0x30 << 24 | ((int32_t)(Nrec / 4) << 16)) |  // NOLINT
+                           (0x3fc0 & (i << 6)));                     // NOLINT
+    for (uint32_t j = 0; j < (uint32_t)(Nrec / 4); j++) {            // NOLINT
       uint32_t prog_val32 = 0;
-      for (uint k = 0; k < 4; ++k) {
+      for (uint k = 0; k < 4; k++) {
         int32_t weight = buffer[counter];
         counter++;
         prog_val32 |= (weight & 0x000000FF) << (8 * k);  // NOLINT
@@ -549,10 +567,10 @@ static void transmit_input(std::shared_ptr<cynq::IAccelerator> spi, uint Ninp,
 static void transmit_rec(std::shared_ptr<cynq::IAccelerator> spi, uint Nrec,
                          int32_t *buffer, uint32_t /*buffer_size*/) {  // NOLINT
   uint32_t counter = 0;
-  for (uint32_t i = 0; i < Nrec; ++i) {
-    spi_half_send(spi, (0x40 << 24 | (uint32_t)(Nrec / 4) << 16) |  // NOLINT
-                           (0x3fc0 & (i << 6)));                    // NOLINT
-    for (uint32_t j = 0; j < (uint32_t)(Nrec / 4); ++j) {           // NOLINT
+  for (int32_t i = 0; i < (int32_t)Nrec; i++) {                    // NOLINT
+    spi_half_send(spi, (0x40 << 24 | (int32_t)(Nrec / 4) << 16) |  // NOLINT
+                           (0x3fc0 & (i << 6)));                   // NOLINT
+    for (int32_t j = 0; j < (int32_t)(Nrec / 4); j++) {            // NOLINT
       uint32_t prog_val32 = 0;
       for (uint32_t k = 0; k < 4; k++) {
         int32_t weight = buffer[counter];  // NOLINT
@@ -572,9 +590,9 @@ static void transmit_out(std::shared_ptr<cynq::IAccelerator> spi,
                          uint Nout, int32_t *buffer,
                          uint32_t /*buffer_size*/) {  // NOLINT
   int counter = 0;
-  for (uint32_t i = 0; i < Nrec; ++i) {
+  for (uint32_t i = 0; i < Nrec; i++) {
     uint32_t prog_val32 = 0;
-    for (uint32_t k = 0; k < Nout; ++k) {
+    for (uint32_t k = 0; k < Nout; k++) {
       int32_t weight = buffer[counter];  // NOLINT
       counter++;
       prog_val32 |= (weight & 0x000000FF) << (8 * k);  // NOLINT
@@ -594,8 +612,8 @@ static void initialise_neurons(std::shared_ptr<cynq::IAccelerator> spi,
       ((Alpha_12lsb << 20) | (Firing_TH << 4)),  // NOLINT
       0x0, 0x0, 0x0};
   spi_half_send(spi, (0x1 << 28 | ((Nrec * 4) << 16)));  // NOLINT
-  for (uint32_t i = 0; i < Nrec; ++i) {
-    for (uint32_t j = 0; j < 4; ++j) {
+  for (uint32_t i = 0; i < Nrec; i++) {
+    for (uint32_t j = 0; j < 4; j++) {
       uint32_t prog_val32 = prog_val128[3 - j];  // NOLINT
       spi_half_send(spi, prog_val32);
     }
@@ -611,8 +629,8 @@ static void initialise_neurons(std::shared_ptr<cynq::IAccelerator> spi,
   std::vector<uint32_t> output;
   uint32_t address =
       ((uint32_t)(0x9) << (uint32_t)(28) | ((Nrec * 4) << 16));  // NOLINT
-  for (uint32_t i = 0; i < Nrec; ++i) {
-    for (uint32_t j = 0; j < 4; ++j) {
+  for (uint32_t i = 0; i < Nrec; i++) {
+    for (uint32_t j = 0; j < 4; j++) {
       uint32_t address_r = address | (i * 4 + j);  // NOLINT
       output.push_back(spi_read_word(spi, address_r));
     }
@@ -621,13 +639,12 @@ static void initialise_neurons(std::shared_ptr<cynq::IAccelerator> spi,
 }
 #pragma GCC diagnostic pop
 
-int __attribute__((optimize("O0"))) main() {
+std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
   // NOTE: This is a basic example. Error checking has been removed to keep
   // simplicity but it is always recommended
   using namespace cynq;  // NOLINT
-
+  // py::scoped_interpreter guard{};
   // Create the platform
-  std::cout << "----- Initialising platform -----" << std::endl;
   std::shared_ptr<IHardware> platform =
       IHardware::Create(HardwareArchitecture::UltraScale);
 
@@ -637,22 +654,268 @@ int __attribute__((optimize("O0"))) main() {
     platform->SetClocks(clocks);
   */
   // Get IP cores involved
+  std::vector<double> trainData;
+  std::vector<double> testData;
+  std::vector<double> afterTrainData;
+
   auto spi = platform->GetAccelerator(0x80000000);
   auto gpio = std::make_shared<AXIGPIO>(0x80010000);
   auto dma = platform->GetDataMover(0x80020000);
 
-  std::ifstream test_file("examples/zynq-mpsoc/reckon/test.bin",
-                          std::ios::binary);
-  std::ifstream train_file("examples/zynq-mpsoc/reckon/train.bin",
-                           std::ios::binary);
+  std::ifstream test_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/test_wb.bin",
+      std::ios::binary);
+  std::ifstream train_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/train_wb.bin",
+      std::ios::binary);
   std::ifstream inp_file(
-      "examples/zynq-mpsoc/reckon/init_rand_weights_inp_cueAcc.bin",
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_inp_cueAcc.bin",
       std::ios::binary);
   std::ifstream rec_file(
-      "examples/zynq-mpsoc/reckon/init_rand_weights_rec_cueAcc.bin",
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_rec_cueAcc.bin",
       std::ios::binary);
   std::ifstream out_file(
-      "examples/zynq-mpsoc/reckon/init_rand_weights_out_cueAcc.bin",
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_out_cueAcc.bin",
+      std::ios::binary);
+
+  // Copy the data
+  std::vector<char> test_buffer(std::istreambuf_iterator<char>(test_file), {});
+  std::vector<char> train_buffer(std::istreambuf_iterator<char>(train_file),
+                                 {});
+  std::vector<char> inp_buffer(std::istreambuf_iterator<char>(inp_file), {});
+  std::vector<char> rec_buffer(std::istreambuf_iterator<char>(rec_file), {});
+  std::vector<char> out_buffer(std::istreambuf_iterator<char>(out_file), {});
+
+  int32_t *test_ptr = reinterpret_cast<int32_t *>(test_buffer.data());
+  int32_t *train_ptr = reinterpret_cast<int32_t *>(train_buffer.data());
+  int32_t *inp_ptr = reinterpret_cast<int32_t *>(inp_buffer.data());
+  int32_t *rec_ptr = reinterpret_cast<int32_t *>(rec_buffer.data());
+  int32_t *out_ptr = reinterpret_cast<int32_t *>(out_buffer.data());
+
+  uint32_t inpNeur = SPI_NUM_INP_NEUR + 1;  // NOLINT
+  uint32_t recNeur = SPI_NUM_REC_NEUR + 1;  // NOLINT
+  uint32_t outNeur = SPI_NUM_OUT_NEUR + 1;  // NOLINT
+  // experiment parameters
+  experiment ex = e4;
+
+  uint32_t Alpha_12lsb = ex.alpha;
+  uint32_t Firing_TH = ex.firing;
+  uint32_t epochs = ex.epoch;
+
+  SPI_LR_P_WINP = ex.lr_p_inp;
+  SPI_LR_P_WREC = ex.lr_p_rec;
+  SPI_LR_P_WOUT = ex.lr_p_out;
+  // Configure
+
+  // gpio_transaction(gpio, GpioTransaction::RST_high);
+  // gpio_transaction(gpio, GpioTransaction::RST_low);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  config_spi(spi);
+
+  // Check configuration
+  // check_status(gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  send_snn_parameters(spi);
+  spi_send(spi, 0x00010000, SPI_EN_CONF);
+  transmit_input(spi, inpNeur, recNeur, inp_ptr, inp_buffer.size());
+  SLEEP(1);
+  transmit_rec(spi, recNeur, rec_ptr, rec_buffer.size());
+  SLEEP(1);
+  transmit_out(spi, recNeur, outNeur, out_ptr, out_buffer.size());
+  SLEEP(1);
+  initialise_neurons(spi, recNeur, Alpha_12lsb, Firing_TH);
+  spi_send(spi, 0x00010000, 0x00000000);
+
+  // Create buffer
+
+  std::cout << "Training-Test Loop" << std::endl;
+  auto input_buffer = dma->GetBuffer(1000 * sizeof(uint32_t));
+  uint32_t *input_buffer_hptr = input_buffer->HostAddress<uint32_t>().get();
+  auto send_buffer = dma->GetBuffer(1000 * sizeof(uint32_t));
+  uint32_t *send_buffer_hptr = send_buffer->HostAddress<uint32_t>().get();
+  // check_status(gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+
+  double beggining = get_timestamp();
+  for (uint epoch = 0; epoch <= epochs; epoch++) {
+    EpochData trainEpoch;
+    EpochData testEpoch;
+    EpochData afterTrainEpoch;
+    trainEpoch.number = epoch;
+    testEpoch.number = epoch;
+    afterTrainEpoch.number = epoch;
+    for (uint test = 0; test <= 2; test++) {
+      int32_t *ptr = nullptr;
+      uint32_t correct = 0;
+      uint32_t sample = 0;
+      std::string trainingPhase;
+      spi_send(spi, 0x00010000, 0x00000001);
+      if (test == 0) {
+        trainingPhase = "training";
+        spi_send(spi, 0x00010009, 0x00000007);
+        ptr = train_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_low);
+      } else if (test == 1) {
+        trainingPhase = "test";
+        spi_send(spi, 0x00010009, 0x00000000);
+        ptr = train_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_high);
+      } else {
+        trainingPhase = "testAfterTraining";
+        spi_send(spi, 0x00010009, 0x00000000);
+        ptr = test_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_high);
+      }
+
+      spi_send(spi, 0x00010000, 0x00000000);
+      SLEEP(100);
+      uint32_t len = (uint32_t)ptr[sample];  // NOLINT
+      // uint32_t len = static_cast<uint32_t>(ptr[sample++]); // NOLINT
+      sample++;
+      int32_t evt_target = 0;
+      double global_sample_time = 0.0;
+      double global_dma_time = 0.0;
+      // sample++;
+
+      for (uint curr_sample = 0; curr_sample < len; curr_sample++) {
+        double start = get_timestamp();
+        memset((void *)input_buffer_hptr, (uint32_t)0, 1000);  // NOLINT
+        input_buffer->Sync(SyncType::HostToDevice);
+        memset((void *)send_buffer_hptr, (uint32_t)0, 1000);  // NOLINT
+        send_buffer->Sync(SyncType::HostToDevice);
+        // gpio_transaction(gpio, GpioTransaction::SAMPLE_low);
+        int32_t evt_neur = ptr[sample++];
+        int32_t evt_time = ptr[sample++];
+
+        //   std::cout << "Sample: " << curr_sample << " " << evt_neur << " " <<
+        //   evt_time << std::endl;
+
+        uint32_t i = 0;
+
+        while (true) {
+          input_buffer_hptr[i] =
+              (uint32_t)((int32_t)(evt_neur * 65536) +  // NOLINT
+                         (int32_t)evt_time);            // NOLINT
+          i++;
+
+          if (evt_neur == -1) break;
+          if (evt_neur == -2) evt_target = evt_time;
+
+          evt_neur = ptr[sample++];
+          evt_time = ptr[sample++];
+        }
+
+        for (uint32_t j = 0; j < i; ++j) {
+          send_buffer_hptr[j] = input_buffer_hptr[j];
+        }
+        // std::memcpy((void*)send_buffer_hptr,(void*)input_buffer_hptr,sizeof(uint32_t)*i);
+        // input_buffer->Sync(SyncType::HostToDevice);
+        // send_buffer->Sync(SyncType::HostToDevice);
+
+        // std::cout << "Sending Buffer" << std::endl;
+        dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
+        //  std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
+        //  gpio_transaction(gpio, GpioTransaction::SAMPLE_high);
+        double endDma = get_timestamp();
+        uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
+
+        for (int tr = 0; tr < 1000000; ++tr) {
+          kk = gpio_transaction(gpio, GpioTransaction::OK_read);
+          if (kk) break;
+        }
+        // std::cout << "OK signal received" << std::endl;
+        double inference_time = get_timestamp();
+        int32_t inference =
+            gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);  // NOLINT
+
+        correct += (uint32_t)(inference == evt_target);  // NOLINT
+        global_sample_time =
+            global_sample_time + (inference_time - start);     // NOLINT
+        global_dma_time = global_dma_time + (endDma - start);  // NOLINT
+      }
+
+      // std::cout << "Correct Events: " << correct << std::endl;
+      double precision = correct / (double)len;  // NOLINT
+      double dmaTimes = global_dma_time;         // NOLINT
+      double sampleTimes = global_sample_time;   // NOLINT
+
+      if (test == 1) {
+        testEpoch.precision = precision;      //	 NOLINT
+        testEpoch.dmaTimes = dmaTimes;        // NOLINT
+        testEpoch.sampleTimes = sampleTimes;  // NOLINT
+      } else if (test == 0) {
+        trainEpoch.precision = precision;      // NOLINT
+        trainEpoch.dmaTimes = dmaTimes;        // NOLINT
+        trainEpoch.sampleTimes = sampleTimes;  // NOLINT
+      } else {
+        afterTrainEpoch.precision = precision;      // NOLINT
+        afterTrainEpoch.dmaTimes = dmaTimes;        // NOLINT
+        afterTrainEpoch.sampleTimes = sampleTimes;  // NOLINT
+      }
+    }
+    testData.push_back(testEpoch.precision);
+    trainData.push_back(trainEpoch.precision);
+    afterTrainData.push_back(afterTrainEpoch.precision);
+    // std::cout << "epoch number: ";
+    // std::cout << epoch << std::endl;
+  }
+  double ending = get_timestamp();
+  double total_time = ending - beggining;
+  std::cout << "Finished experiment" << std::endl;
+  std::cout << "Total time: " << total_time << std::endl;
+  std::cout << "\n";
+  std::vector<std::vector<double>> data;
+  data.push_back(trainData);
+  data.push_back(testData);
+  data.push_back(afterTrainData);
+  return data;
+}
+
+void __attribute__((optimize("O0")))
+trainReckon(int first, py::dict &input, py::function &callback) {
+  // NOTE: This is a basic example. Error checking has been removed to keep
+  // simplicity but it is always recommended
+  using namespace cynq;  // NOLINT
+  // py::scoped_interpreter guard{};
+  // Create the platform
+  std::shared_ptr<IHardware> platform =
+      IHardware::Create(HardwareArchitecture::UltraScale);
+
+  /*
+     auto clocks = platform->GetClocks();
+     clocks[0] = 125.f;  // Same frequency as PYNQ
+     platform->SetClocks(clocks);
+  */
+  // Get IP cores involved
+  std::vector<EpochData> trainData;
+  std::vector<EpochData> testData;
+  std::vector<EpochData> afterTrainData;
+
+  auto spi = platform->GetAccelerator(0x80000000);
+  auto gpio = std::make_shared<AXIGPIO>(0x80010000);
+  auto dma = platform->GetDataMover(0x80020000);
+
+  std::ifstream test_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/test_wb.bin",
+      std::ios::binary);
+  std::ifstream train_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/train_wb.bin",
+      std::ios::binary);
+  std::ifstream inp_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_inp_cueAcc.bin",
+      std::ios::binary);
+  std::ifstream rec_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_rec_cueAcc.bin",
+      std::ios::binary);
+  std::ifstream out_file(
+      "/home/ubuntu/cynq/examples/zynq-mpsoc/reckon/"
+      "init_rand_weights_out_cueAcc.bin",
       std::ios::binary);
 
   // Copy the data
@@ -672,40 +935,54 @@ int __attribute__((optimize("O0"))) main() {
   uint32_t recNeur = SPI_NUM_REC_NEUR + 1;
   uint32_t outNeur = SPI_NUM_OUT_NEUR + 1;
   // experiment parameters
-  experiment ex = e4;
+  uint32_t alpha = input["alpha"].cast<uint32_t>();        // NOLINT
+  uint32_t firing = input["firing"].cast<uint32_t>();      // NOLINT
+  uint32_t lr_p_inp = input["lr_p_inp"].cast<uint32_t>();  // NOLINT
+  uint32_t lr_p_rec = input["lr_p_rec"].cast<uint32_t>();  // NOLINT
+  uint32_t lr_p_out = input["lr_p_out"].cast<uint32_t>();  // NOLINT
+  uint32_t epoch = 100;
+  experiment experimentInput = {.alpha = alpha,
+                                .firing = firing,
+                                .lr_p_inp = lr_p_inp,
+                                .lr_p_rec = lr_p_rec,
+                                .lr_p_out = lr_p_out,
+                                .epoch = epoch};
+  experiment ex;
+  if (first == 0) {
+    ex = e4;
+  } else {
+    ex = experimentInput;
+  }
   uint32_t Alpha_12lsb = ex.alpha;
   uint32_t Firing_TH = ex.firing;
   uint32_t epochs = ex.epoch;
-  bool read = ex.read_sram;
-  // end parameters
-  if (read) {
-    SPI_FORCE_TRACES = 1;
-  }
 
   SPI_LR_P_WINP = ex.lr_p_inp;
   SPI_LR_P_WREC = ex.lr_p_rec;
   SPI_LR_P_WOUT = ex.lr_p_out;
   // Configure
 
+  // gpio_transaction(gpio, GpioTransaction::RST_high);
+  // gpio_transaction(gpio, GpioTransaction::RST_low);
   config_spi(spi);
-
   // Check configuration
-  check_status(gpio);
-  gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
-  gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  // check_status(gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
   send_snn_parameters(spi);
-  gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
   spi_send(spi, 0x00010000, SPI_EN_CONF);
   transmit_input(spi, inpNeur, recNeur, inp_ptr, inp_buffer.size());
+  SLEEP(1);
   transmit_rec(spi, recNeur, rec_ptr, rec_buffer.size());
+  SLEEP(1);
   transmit_out(spi, recNeur, outNeur, out_ptr, out_buffer.size());
   SLEEP(1);
   initialise_neurons(spi, recNeur, Alpha_12lsb, Firing_TH);
   spi_send(spi, 0x00010000, 0x00000000);
-  SLEEP(1);
-  spi_send(spi, 0x00010000, 0x00000000);
 
   // Create buffer
+
   std::cout << "Training-Test Loop" << std::endl;
   auto input_buffer = dma->GetBuffer(1000 * sizeof(uint32_t));
   uint32_t *input_buffer_hptr = input_buffer->HostAddress<uint32_t>().get();
@@ -713,47 +990,55 @@ int __attribute__((optimize("O0"))) main() {
   uint32_t *send_buffer_hptr = send_buffer->HostAddress<uint32_t>().get();
 
   check_status(gpio);
-  uint32_t correct_test = 0;
-  uint32_t correct_train = 0;
-
-  std::vector<uint32_t> outputData;
-
-  uint32_t epoch_phase = 0;
-  for (uint epoch = 0; epoch <= epochs; epoch++) {
-    for (uint test = 0; test <= 1; test++) {
+  // gpio_transaction(gpio, GpioTransaction::Select_AERIN_gpio);
+  double beggining = get_timestamp();
+  for (uint epoch = 0; epoch < epochs; epoch++) {
+    EpochData trainEpoch;
+    EpochData testEpoch;
+    EpochData afterTrainEpoch;
+    trainEpoch.number = epoch;
+    testEpoch.number = epoch;
+    afterTrainEpoch.number = epoch;
+    spi_send(spi, 0x00010000, 0x00000001);
+    for (uint test = 0; test <= 2; test++) {
+      std::string trainingPhase;
       int32_t *ptr = nullptr;
-
-      spi_send(spi, 0x00010000, 0x00000001);
-      if (test) {
-        spi_send(spi, 0x00010009, 0x00000000);
-        ptr = test_ptr;
-        gpio_transaction(gpio, GpioTransaction::TEST_high);
-        epoch_phase += 1;
-      } else {
+      if (test == 0) {  // NOLINT
+        trainingPhase = "training";
         spi_send(spi, 0x00010009, 0x00000007);
         ptr = train_ptr;
         gpio_transaction(gpio, GpioTransaction::TEST_low);
+      } else if (test == 1) {  // NOLINT
+        trainingPhase = "test";
+        spi_send(spi, 0x00010009, 0x00000000);
+        ptr = train_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_high);
+      } else {  // NOLINT
+        trainingPhase = "testAfterTraining";
+        spi_send(spi, 0x00010009, 0x00000000);
+        ptr = test_ptr;
+        gpio_transaction(gpio, GpioTransaction::TEST_high);
       }
-
       spi_send(spi, 0x00010000, 0x00000000);
 
       uint32_t sample = 0;
-
-      int32_t evt_target = 0;
-
       uint32_t correct = 0;
-      SLEEP(1);
-
-      for (uint curr_sample = 0; curr_sample < 50; curr_sample++) {
+      int32_t evt_target = 0;
+      double global_sample_time = 0.0;
+      double global_dma_time = 0.0;
+      uint32_t len = static_cast<uint32_t>(ptr[sample++]);
+      for (uint curr_sample = 0; curr_sample < len; curr_sample++) {
+        double start = get_timestamp();
         memset((void *)input_buffer_hptr, (int)0, 1000);  // NOLINT
         input_buffer->Sync(SyncType::HostToDevice);
         memset((void *)send_buffer_hptr, (int)0, 1000);  // NOLINT
         send_buffer->Sync(SyncType::HostToDevice);
+
         int32_t evt_neur = 0;
         int32_t evt_time = 0;
         if (curr_sample != 0) {
           evt_neur = ptr[sample++];
-          evt_time = ptr[sample++];
+          evt_neur = ptr[sample++];
         }
         //   std::cout << "Sample: " << curr_sample << " " << evt_neur << " " <<
         //   evt_time << std::endl;
@@ -775,55 +1060,82 @@ int __attribute__((optimize("O0"))) main() {
         for (uint32_t j = 0; j < i; ++j) {
           send_buffer_hptr[j] = input_buffer_hptr[j];
         }
+        // std::memcpy((void*)send_buffer_hptr,(void*)input_buffer_hptr,sizeof(uint32_t)*i);
+        // // NOLINT input_buffer->Sync(SyncType::HostToDevice);
+        // send_buffer->Sync(SyncType::HostToDevice);
 
         // std::cout << "Sending Buffer" << std::endl;
         dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
         //  std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
-
+        double endDma = get_timestamp();
         uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
 
         for (int tr = 0; tr < 1000000; ++tr) {
           kk = gpio_transaction(gpio, GpioTransaction::OK_read);
           if (kk) break;
         }
-
         // std::cout << "OK signal received" << std::endl;
 
         int32_t inference =
             gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);  // NOLINT
-        /*
-      if (test) {
-        std::cout << "Test: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
-      } else {
-        std::cout << "Train: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
-      }*/
+        double inference_time = get_timestamp();
         correct += (uint32_t)(inference == evt_target);  // NOLINT
-        if (test) {
-          correct_test += correct;
-        } else {
-          correct_train += correct;
-        }
-        SLEEP(1);
+        global_sample_time =
+            global_sample_time + (inference_time - start);     // NOLINT
+        global_dma_time = global_dma_time + (endDma - start);  // NOLINT
       }
-      if (read) {
-        spi_send(spi, 0x00010000, 0x00000001);
-        // save data here
-        spi_send(spi, 0x00010000, 0x0000000);
-      }
+
       // std::cout << "Correct Events: " << correct << std::endl;
-      SLEEP(1);
-      if (epoch % 100 == 0 || epoch == 0) {
-        std::cout << "epoch number: ";
-        std::cout << epoch << std::endl;
-        std::cout << "correct trains: " << correct_train << std::endl;
-        std::cout << "correct tests: " << correct_test << std::endl;
+      double precision = correct / (double)50;  // NOLINT
+      double dmaTimes = global_dma_time;        // NOLINT
+      double sampleTimes = global_sample_time;  // NOLINT
+
+      if (test == 1) {
+        testEpoch.precision = precision;
+        testEpoch.dmaTimes = dmaTimes;
+        testEpoch.sampleTimes = sampleTimes;
+      } else if (test == 0) {
+        trainEpoch.precision = precision;
+        trainEpoch.dmaTimes = dmaTimes;
+        trainEpoch.sampleTimes = sampleTimes;
+      } else {
+        afterTrainEpoch.precision = precision;
+        afterTrainEpoch.dmaTimes = dmaTimes;
+        afterTrainEpoch.sampleTimes = sampleTimes;
       }
     }
+    std::vector<EpochData> data;
+    data.push_back(testEpoch);        // NOLINT
+    data.push_back(trainEpoch);       // NOLINT
+    data.push_back(afterTrainEpoch);  // NOLINT
+    callback(py::cast(data));
+    // testData.push_back(testEpoch);
+    // trainData.push_back(trainEpoch);
+    // afterTrainData.push_back(afterTrainEpoch);
+    std::cout << "epoch number: ";
+    std::cout << epoch << std::endl;
   }
+  double ending = get_timestamp();
+  double total_time = ending - beggining;
+  std::cout << "Finished experiment" << std::endl;
+  std::cout << "Total time: " << total_time << std::endl;
+  std::cout << "\n";
+  return;
+}
 
-  return 0;
+PYBIND11_MODULE(reckon_wb, m) {
+  py::class_<EpochData>(m, "EpochData")
+      .def(py::init<>())
+      .def_readonly("number", &EpochData::number)
+      .def_readonly("name", &EpochData::name)
+      .def_readonly("precision", &EpochData::precision,
+                    py::return_value_policy::copy)
+      .def_readonly("sampleTimes", &EpochData::sampleTimes,
+                    py::return_value_policy::copy)
+      .def_readonly("dmaTimes", &EpochData::dmaTimes,
+                    py::return_value_policy::copy);
+  m.def("singleRun", &singleRun, "Call reckon training from python.",
+        py::return_value_policy::copy);
+  m.def("trainReckon", &trainReckon, "Get data of a single training session",
+        py::return_value_policy::copy);
 }
