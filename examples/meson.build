@@ -1,4 +1,4 @@
-#
+
 # See LICENSE for more information about licensing
 #  Copyright 2023
 #
@@ -18,6 +18,9 @@ executable('matrix-multiplication-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+
+
+
 executable('reckon-kria',
   ['zynq-mpsoc/reckon.cpp'],
   include_directories: [projectinc],
@@ -25,11 +28,22 @@ executable('reckon-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
-executable('xfopencv-filter2d-kria',
-  ['zynq-mpsoc/xfopencv-filter2d.cpp'],
+
+
+py3 = import('python').find_installation(pure: false)
+py_dep = py3.dependency(embed: true)
+pybind_dep = dependency('pybind11')
+
+py3.extension_module('reckon_wb',
+  ['zynq-mpsoc/reckon_wb.cpp'],
   include_directories: [projectinc],
-  cpp_args : cpp_args,
-  dependencies : [project_deps, libcynq_dep]
+  cpp_args : [cpp_args,'-std=c++20'],
+  dependencies : [project_deps, 
+  libcynq_dep, 
+  pybind_dep,
+  py_dep
+  ],
+  install: true
 )
 
 executable('xfopencv-warp-perspective-kria',
