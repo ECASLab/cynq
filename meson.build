@@ -9,8 +9,7 @@
 
 project('cynq',['c','cpp'],version : '0.3.1',
   default_options : ['warning_level=3',
-                     'cpp_std=c++17',
-                     'cpp_args=-Werror'])
+                     'cpp_std=c++17'])
 
 add_global_arguments(
   '-Wno-ignored-qualifiers',
@@ -33,6 +32,12 @@ c_args = []
 
 # dependencies
 project_deps = []
+
+cmake = import('cmake')
+
+# wandb_dep = dependency('wandb-cpp', method: 'cmake')
+
+# project_deps += wandb_dep
 
 # Install pre-commit hooks
 developer_mode = get_option('developer-mode')
@@ -70,3 +75,5 @@ if build_tests
   gmock_dep = gtest_proj.get_variable('gmock_dep')
   subdir('tests')
 endif
+
+

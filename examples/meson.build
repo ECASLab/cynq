@@ -25,6 +25,13 @@ executable('reckon-kria',
   dependencies : [project_deps, libcynq_dep]
 )
 
+executable('riscv_experiment',
+  ['zynq-mpsoc/riscv_experiment.cpp'],
+  include_directories: [projectinc],
+  cpp_args : cpp_args,
+  dependencies : [project_deps, libcynq_dep]
+)
+
 executable('xfopencv-filter2d-kria',
   ['zynq-mpsoc/xfopencv-filter2d.cpp'],
   include_directories: [projectinc],
