@@ -9,8 +9,10 @@
 
 #include <unistd.h>
 
+#include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <ctime>
 #include <cynq/accelerator.hpp>
 #include <cynq/datamover.hpp>
 #include <cynq/enums.hpp>
@@ -124,6 +126,12 @@ constexpr uint32_t SPI_REGUL_K_MUL = 0x00000000;
 constexpr uint32_t SPI_NOISE_STR = 0x00000000;
 constexpr uint64_t SLAVE_NO_SELECTION = 0xFFFFFFFF;
 typedef struct {
+  uint32_t number;
+  double precision;
+  std::vector<double> sampleTimes;
+  std::vector<double> dmaTimes;
+} EpochData;
+typedef struct {
   uint32_t alpha;
   uint32_t firing;
   uint32_t lr_p_inp;
@@ -175,7 +183,7 @@ experiment e4 = {.alpha = 3825,
                  .lr_p_inp = 8,
                  .lr_p_rec = 8,
                  .lr_p_out = 12,
-                 .epoch = 1000,
+                 .epoch = 100,
                  .read_sram = false};
 #pragma GCC diagnostic pop
 #define CHECK_CYNQ_ERROR(err) \
@@ -195,6 +203,12 @@ spi_write_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr,
   SLEEP(1);
   return err;
 }
+static double __attribute__((optimize("O0"))) get_timestamp() {
+  double time = std::chrono::duration_cast<std::chrono::duration<double>>(
+                    std::chrono::system_clock::now().time_since_epoch())
+                    .count();
+  return time;
+}
 
 static uint32_t __attribute__((optimize("O0")))
 spi_read_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr) {
@@ -207,7 +221,7 @@ spi_read_word(std::shared_ptr<cynq::IAccelerator> spi, uint64_t addr) {
 
 static void __attribute__((optimize("O0")))
 config_spi(std::shared_ptr<cynq::IAccelerator> spi) {
-  td::cout << "Configure device" << std::endl;
+  std::cout << "Configure device" << std::endl;
   uint32_t ControlReg = 0;
 
   // Reset the SPI device
@@ -525,9 +539,8 @@ static void check_status(std::shared_ptr<cynq::AXIGPIO> gpio) {
 #pragma GCC diagnostic ignored "-Wall"
 static void transmit_input(std::shared_ptr<cynq::IAccelerator> spi, uint Ninp,
                            uint Nrec, int32_t *buffer,
-                           uint32_t /*buffer_size*/) {
-    // NOLINT
-      uint32_t counter = 0;
+                           uint32_t /*buffer_size*/) {  // NOLINT
+  uint32_t counter = 0;
   for (uint i = 0; i < Ninp; ++i) {
     spi_half_send(spi, (0x30 << 24 | ((uint32_t)(Nrec / 4) << 16)) |  // NOLINT
                            (0x3fc0 & (i << 6)));                      // NOLINT
@@ -637,6 +650,8 @@ int __attribute__((optimize("O0"))) main() {
     platform->SetClocks(clocks);
   */
   // Get IP cores involved
+  std::vector<EpochData> trainData;
+  std::vector<EpochData> testData;
   auto spi = platform->GetAccelerator(0x80000000);
   auto gpio = std::make_shared<AXIGPIO>(0x80010000);
   auto dma = platform->GetDataMover(0x80020000);
@@ -713,25 +728,26 @@ int __attribute__((optimize("O0"))) main() {
   uint32_t *send_buffer_hptr = send_buffer->HostAddress<uint32_t>().get();
 
   check_status(gpio);
-  uint32_t correct_test = 0;
-  uint32_t correct_train = 0;
 
-  std::vector<uint32_t> outputData;
-
-  uint32_t epoch_phase = 0;
   for (uint epoch = 0; epoch <= epochs; epoch++) {
+    EpochData trainEpoch;
+    EpochData testEpoch;
+    trainEpoch.number = epoch;
+    testEpoch.number = epoch;
+    uint32_t correct = 0;
     for (uint test = 0; test <= 1; test++) {
       int32_t *ptr = nullptr;
 
       spi_send(spi, 0x00010000, 0x00000001);
       if (test) {
         spi_send(spi, 0x00010009, 0x00000000);
+        correct = 0;
         ptr = test_ptr;
         gpio_transaction(gpio, GpioTransaction::TEST_high);
-        epoch_phase += 1;
       } else {
         spi_send(spi, 0x00010009, 0x00000007);
         ptr = train_ptr;
+        correct = 0;
         gpio_transaction(gpio, GpioTransaction::TEST_low);
       }
 
@@ -741,10 +757,8 @@ int __attribute__((optimize("O0"))) main() {
 
       int32_t evt_target = 0;
 
-      uint32_t correct = 0;
-      SLEEP(1);
-
       for (uint curr_sample = 0; curr_sample < 50; curr_sample++) {
+        double start = get_timestamp();
         memset((void *)input_buffer_hptr, (int)0, 1000);  // NOLINT
         input_buffer->Sync(SyncType::HostToDevice);
         memset((void *)send_buffer_hptr, (int)0, 1000);  // NOLINT
@@ -775,55 +789,56 @@ int __attribute__((optimize("O0"))) main() {
         for (uint32_t j = 0; j < i; ++j) {
           send_buffer_hptr[j] = input_buffer_hptr[j];
         }
+        // std::memcpy((void*)send_buffer_hptr,(void*)input_buffer_hptr,sizeof(uint32_t)*i);
+        // // NOLINT input_buffer->Sync(SyncType::HostToDevice);
+        // send_buffer->Sync(SyncType::HostToDevice);
 
         // std::cout << "Sending Buffer" << std::endl;
         dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
         //  std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
-
+        double endDma = get_timestamp();
         uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
 
         for (int tr = 0; tr < 1000000; ++tr) {
           kk = gpio_transaction(gpio, GpioTransaction::OK_read);
           if (kk) break;
         }
-
         // std::cout << "OK signal received" << std::endl;
 
         int32_t inference =
             gpio_transaction(gpio, GpioTransaction::AEROUTbus_read);  // NOLINT
-        /*
-      if (test) {
-        std::cout << "Test: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
-      } else {
-        std::cout << "Train: inference = " << inference
-                  << " and target = " << evt_target << " Num Samples = " << i
-                  << std::endl;
-      }*/
+        double inference_time = get_timestamp();
         correct += (uint32_t)(inference == evt_target);  // NOLINT
         if (test) {
-          correct_test += correct;
+          testEpoch.sampleTimes.push_back(inference_time - start);
+          testEpoch.dmaTimes.push_back(endDma - start);
         } else {
-          correct_train += correct;
+          trainEpoch.sampleTimes.push_back(inference_time - start);
+          trainEpoch.dmaTimes.push_back(endDma - start);
         }
-        SLEEP(1);
       }
+
       if (read) {
         spi_send(spi, 0x00010000, 0x00000001);
         // save data here
         spi_send(spi, 0x00010000, 0x0000000);
       }
       // std::cout << "Correct Events: " << correct << std::endl;
-      SLEEP(1);
+
       if (epoch % 100 == 0 || epoch == 0) {
         std::cout << "epoch number: ";
         std::cout << epoch << std::endl;
-        std::cout << "correct trains: " << correct_train << std::endl;
-        std::cout << "correct tests: " << correct_test << std::endl;
+      }
+
+      if (test) {
+        testEpoch.precision = correct / (double)50;  // NOLINT
+        testData.push_back(testEpoch);
+      } else {
+        trainEpoch.precision = correct / (double)50;  // NOLINT
+        trainData.push_back(trainEpoch);
       }
     }
   }
-
+  std::cout << "Finished experiment" << std::endl;
   return 0;
 }
