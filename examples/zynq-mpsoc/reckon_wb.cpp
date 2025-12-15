@@ -106,11 +106,11 @@ constexpr uint32_t SPI_H_1 = 0x00000000;
 constexpr uint32_t SPI_H_2 = 0x00000000;
 constexpr uint32_t SPI_H_3 = 0x00000000;
 constexpr uint32_t SPI_H_4 = 0x00000001;
-uint32_t SPI_LR_R_WINP = 0x00000000;
+static uint32_t SPI_LR_R_WINP = 0x00000000;
 static uint32_t SPI_LR_P_WINP = 0x00000008;
-uint32_t SPI_LR_R_WREC = 0x00000000;
+static uint32_t SPI_LR_R_WREC = 0x00000000;
 static uint32_t SPI_LR_P_WREC = 0x00000008;
-uint32_t SPI_LR_R_WOUT = 0x00000000;
+static uint32_t SPI_LR_R_WOUT = 0x00000000;
 static uint32_t SPI_LR_P_WOUT = 0x0000000e;
 constexpr uint32_t SPI_SEED_INP = 0x0000f0f0;
 constexpr uint32_t SPI_SEED_REC = 0x0000f1f1;
@@ -188,7 +188,7 @@ experiment e4 = {.alpha = 3825,
                  .lr_p_inp = 8,
                  .lr_p_rec = 8,
                  .lr_p_out = 12,
-                 .epoch = 1000};
+                 .epoch = 100};
 
 #pragma GCC diagnostic pop
 #define CHECK_CYNQ_ERROR(err) \
@@ -285,6 +285,7 @@ enum class GpioTransaction {
 
 static uint32_t gpio_transaction(std::shared_ptr<cynq::AXIGPIO> gpio,
                                  GpioTransaction trans, uint32_t data = 0) {
+  SLEEP(1);
   uint32_t val = 0;
   switch (trans) {
     case GpioTransaction::TIME_TICK_high: {
@@ -384,7 +385,6 @@ static uint32_t gpio_transaction(std::shared_ptr<cynq::AXIGPIO> gpio,
     default:
       break;
   }
-  SLEEP(10);
   return val;
 }
 
@@ -393,7 +393,7 @@ xfer(std::shared_ptr<cynq::IAccelerator> spi, uint32_t *packet, uint32_t len) {
   uint32_t ControlReg = 0, StatusReg = 0, RxFifoStatus = 0, temp = 0;
   // std::cout << "Transfer data" << std::endl;
 
-  for (uint i = 0; i < len; ++i) {
+  for (uint i = 0; i < len; i++) {
     spi_write_word(spi, XSP_DTR_OFFSET, packet[i]);
   }
 
@@ -572,10 +572,11 @@ static void transmit_input(std::shared_ptr<cynq::IAccelerator> spi, uint Ninp,
 #pragma GCC diagnostic ignored "-Wall"
 static void transmit_rec(std::shared_ptr<cynq::IAccelerator> spi, uint Nrec,
                          int32_t *buffer, uint32_t /*buffer_size*/) {  // NOLINT
+  SLEEP(100);
   uint32_t counter = 0;
   for (int32_t i = 0; i < (int32_t)Nrec; i++) {                    // NOLINT
     spi_half_send(spi, (0x40 << 24 | (int32_t)(Nrec / 4) << 16) |  // NOLINT
-                           (0x3fc0 & (i << 6)));                   // NOLINT
+                           (0x3fc0 & ((uint32_t)i << 6)));         // NOLINT
     for (int32_t j = 0; j < (int32_t)(Nrec / 4); j++) {            // NOLINT
       uint32_t prog_val32 = 0;
       for (uint32_t k = 0; k < 4; k++) {
@@ -708,22 +709,22 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
   int32_t *inp_ptr = reinterpret_cast<int32_t *>(inp_buffer.data());
   int32_t *rec_ptr = reinterpret_cast<int32_t *>(rec_buffer.data());
   int32_t *out_ptr = reinterpret_cast<int32_t *>(out_buffer.data());
-  size_t test_count = test_buffer.size() / sizeof(int32_t);
-  size_t train_count = train_buffer.size() / sizeof(int32_t);
+  // size_t test_count = test_buffer.size() / sizeof(int32_t);
+  // size_t train_count = train_buffer.size() / sizeof(int32_t);
 
+  experiment ex = e4;
+  SPI_LR_P_WINP = ex.lr_p_inp;
+  SPI_LR_P_WREC = ex.lr_p_rec;
+  SPI_LR_P_WOUT = ex.lr_p_out;
   uint32_t inpNeur = SPI_NUM_INP_NEUR + 1;  // NOLINT
   uint32_t recNeur = SPI_NUM_REC_NEUR + 1;  // NOLINT
   uint32_t outNeur = SPI_NUM_OUT_NEUR + 1;  // NOLINT
   // experiment parameters
-  experiment ex = e4;
 
   uint32_t Alpha_12lsb = ex.alpha;
   uint32_t Firing_TH = ex.firing;
   uint32_t epochs = ex.epoch;
 
-  SPI_LR_P_WINP = ex.lr_p_inp;
-  SPI_LR_P_WREC = ex.lr_p_rec;
-  SPI_LR_P_WOUT = ex.lr_p_out;
   // Configure
 
   // gpio_transaction(gpio, GpioTransaction::RST_high);
@@ -788,7 +789,6 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
       }
 
       spi_send(spi, 0x00010000, 0x00000000);
-      SLEEP(10);
       uint32_t len = (uint32_t)ptr[sample];  // NOLINT
       // uint32_t len = static_cast<uint32_t>(ptr[sample++]); // NOLINT
       sample++;
@@ -799,23 +799,14 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
 
       for (uint curr_sample = 0; curr_sample < len; curr_sample++) {
         double start = get_timestamp();
-        if (train_count <= sample && (test == 1 || test == 0)) {
-          sample = 1;
-        } else if (test_count <= sample && test == 2) {
-          sample = 1;
-        }
         memset((void *)input_buffer_hptr, (uint32_t)0, 1000);  // NOLINT
         input_buffer->Sync(SyncType::HostToDevice);
         memset((void *)send_buffer_hptr, (uint32_t)0, 1000);  // NOLINT
         send_buffer->Sync(SyncType::HostToDevice);
         // gpio_transaction(gpio, GpioTransaction::SAMPLE_low);
+
         int32_t evt_neur = ptr[sample++];
         int32_t evt_time = ptr[sample++];
-        if (train_count <= sample && (test == 1 || test == 0)) {
-          sample = 1;
-        } else if (test_count <= sample && test == 2) {
-          sample = 1;
-        }
         //   std::cout << "Sample: " << curr_sample << " " << evt_neur << " " <<
         //   evt_time << std::endl;
 
@@ -823,8 +814,8 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
 
         while (true) {
           input_buffer_hptr[i] =
-              (uint32_t)((int32_t)(evt_neur * 65536) +  // NOLINT
-                         (int32_t)evt_time);            // NOLINT
+              (uint32_t)((uint32_t)(evt_neur * 65536) +  // NOLINT
+                         (uint32_t)evt_time);            // NOLINT
           i++;
 
           if (evt_neur == -1) break;
@@ -832,31 +823,32 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
 
           evt_neur = ptr[sample++];
           evt_time = ptr[sample++];
-          if (train_count <= sample && (test == 1 || test == 0)) {
-            sample = 1;
-          } else if (test_count <= sample && test == 2) {
-            sample = 1;
-          }
         }
 
-        for (uint32_t j = 0; j < i; ++j) {
+        for (uint32_t j = 0; j < i; j++) {
           send_buffer_hptr[j] = input_buffer_hptr[j];
         }
-        // std::memcpy((void*)send_buffer_hptr,(void*)input_buffer_hptr,sizeof(uint32_t)*i);
+        for (uint32_t j = i; j < 1000; j++) {
+          send_buffer_hptr[j] = 0;
+          input_buffer_hptr[j] = 0;
+        }
+        // std::memcpy((void*)send_buffer_hptr,(void*)input_buffer_hptr,sizeof(uint32_t)*1000);
         // input_buffer->Sync(SyncType::HostToDevice);
         // send_buffer->Sync(SyncType::HostToDevice);
 
         // std::cout << "Sending Buffer" << std::endl;
-        dma->Upload(send_buffer, send_buffer->Size(), 0, ExecutionType::Sync);
+        dma->Upload(input_buffer, input_buffer->Size(), 0, ExecutionType::Sync);
+        // dma->Upload(send_buffer, send_buffer->Size(), 0,
+        // ExecutionType::Sync);
         //  std::cout << "Buffer Send. Waiting for OK signal" << std::endl;
-        //  gpio_transaction(gpio, GpioTransaction::SAMPLE_high);
+        // gpio_transaction(gpio, GpioTransaction::SAMPLE_high);
         double endDma = get_timestamp();
         uint32_t kk = gpio_transaction(gpio, GpioTransaction::OK_read);
 
-        for (int tr = 0; tr < 1000000; ++tr) {
+        while (!kk) {
           kk = gpio_transaction(gpio, GpioTransaction::OK_read);
-          if (kk) break;
         }
+
         // std::cout << "OK signal received" << std::endl;
         double inference_time = get_timestamp();
         int32_t inference =
@@ -866,7 +858,6 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
         global_sample_time =
             global_sample_time + (inference_time - start);     // NOLINT
         global_dma_time = global_dma_time + (endDma - start);  // NOLINT
-        SLEEP(1);
       }
 
       // std::cout << "Correct Events: " << correct << std::endl;
@@ -888,8 +879,9 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
         afterTrainEpoch.sampleTimes = sampleTimes;  // NOLINT
       }
     }
-    testData.push_back(testEpoch.precision);
+
     trainData.push_back(trainEpoch.precision);
+    testData.push_back(testEpoch.precision);
     afterTrainData.push_back(afterTrainEpoch.precision);
     // std::cout << "epoch number: ";
     // std::cout << epoch << std::endl;
