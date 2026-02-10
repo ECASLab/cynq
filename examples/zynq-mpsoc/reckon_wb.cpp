@@ -860,7 +860,7 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
       double dmaTimes = global_dma_time;         // NOLINT
       double sampleTimes = global_sample_time;   // NOLINT
 
-      if (test == 1) {
+      if (test == 2) {
         testEpoch.precision = precision;      //	 NOLINT
         testEpoch.dmaTimes = dmaTimes;        // NOLINT
         testEpoch.sampleTimes = sampleTimes;  // NOLINT
@@ -887,8 +887,8 @@ std::vector<std::vector<double>> __attribute__((optimize("O0"))) singleRun() {
   std::cout << "Total time: " << total_time << std::endl;
   std::cout << "\n";
   std::vector<std::vector<double>> data;
-  data.push_back(trainData);
   data.push_back(testData);
+  data.push_back(trainData);
   data.push_back(afterTrainData);
   return data;
 }
@@ -1116,7 +1116,7 @@ trainReckon(int first, py::dict &input, py::function &callback) {
       double dmaTimes = global_dma_time;         // NOLINT
       double sampleTimes = global_sample_time;   // NOLINT
 
-      if (test == 1) {
+      if (test == 2) {
         testEpoch.precision = precision;      //	 NOLINT
         testEpoch.dmaTimes = dmaTimes;        // NOLINT
         testEpoch.sampleTimes = sampleTimes;  // NOLINT
@@ -1133,8 +1133,8 @@ trainReckon(int first, py::dict &input, py::function &callback) {
 
     std::vector<EpochData> data;
     data.push_back(testEpoch);        // NOLINT
-    data.push_back(trainEpoch);       // NOLINT
     data.push_back(afterTrainEpoch);  // NOLINT
+    data.push_back(trainEpoch);       // NOLINT
     callback(py::cast(data));
     //  std::cout << "epoch number: ";
     //  std::cout << epoch << std::endl;
